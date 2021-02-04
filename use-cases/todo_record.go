@@ -34,3 +34,24 @@ func (useCase TodoRecord) Create(baseURL *url.URL, todo models.TodoRecord) (
 	presentationTodo := models.NewPresentationTodoRecord(baseURL, todo)
 	return presentationTodo, nil
 }
+
+// Update ...
+func (useCase TodoRecord) Update(
+	baseURL *url.URL,
+	id int,
+	todo models.TodoRecord,
+) (
+	models.PresentationTodoRecord,
+	error,
+) {
+	err := useCase.Storage.Update(id, todo)
+	if err != nil {
+		return models.PresentationTodoRecord{},
+			fmt.Errorf("unable to update a to-do record: %v", err)
+	}
+
+	todo.ID = id
+
+	presentationTodo := models.NewPresentationTodoRecord(baseURL, todo)
+	return presentationTodo, nil
+}
