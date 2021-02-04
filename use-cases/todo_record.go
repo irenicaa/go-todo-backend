@@ -10,6 +10,7 @@ import (
 // Storage ...
 type Storage interface {
 	Create(todo models.TodoRecord) (id int, err error)
+	Update(id int, todo models.TodoRecord) error
 }
 
 // TodoRecord ...
