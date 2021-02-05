@@ -9,6 +9,85 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestTodoRecord_GetSingle(t *testing.T) {
+	type fields struct {
+		Storage Storage
+	}
+	type args struct {
+		baseURL *url.URL
+		id      int
+	}
+
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    models.PresentationTodoRecord
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "success",
+			fields: fields{
+				Storage: func() Storage {
+					todo := models.TodoRecord{
+						ID:        23,
+						Title:     "test",
+						Completed: true,
+						Order:     42,
+					}
+
+					storage := &MockStorage{}
+					storage.InnerMock.On("GetSingle", 23).Return(todo, nil)
+
+					return storage
+				}(),
+			},
+			args: args{
+				baseURL: &url.URL{Scheme: "https", Host: "example.com"},
+				id:      23,
+			},
+			want: models.PresentationTodoRecord{
+				URL:       "https://example.com/api/v1/todos/23",
+				Title:     "test",
+				Completed: true,
+				Order:     42,
+			},
+			wantErr: assert.NoError,
+		},
+		{
+			name: "error",
+			fields: fields{
+				Storage: func() Storage {
+					storage := &MockStorage{}
+					storage.InnerMock.
+						On("GetSingle", 23).
+						Return(models.TodoRecord{}, iotest.ErrTimeout)
+
+					return storage
+				}(),
+			},
+			args: args{
+				baseURL: &url.URL{Scheme: "https", Host: "example.com"},
+				id:      23,
+			},
+			want:    models.PresentationTodoRecord{},
+			wantErr: assert.Error,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			useCase := TodoRecord{
+				Storage: tt.fields.Storage,
+			}
+			got, err := useCase.GetSingle(tt.args.baseURL, tt.args.id)
+
+			tt.fields.Storage.(*MockStorage).InnerMock.AssertExpectations(t)
+			assert.Equal(t, tt.want, got)
+			tt.wantErr(t, err)
+		})
+	}
+}
+
 func TestTodoRecord_Create(t *testing.T) {
 	type fields struct {
 		Storage Storage
