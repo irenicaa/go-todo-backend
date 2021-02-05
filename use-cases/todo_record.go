@@ -20,6 +20,21 @@ type TodoRecord struct {
 	Storage Storage
 }
 
+// GetSingle ...
+func (useCase TodoRecord) GetSingle(baseURL *url.URL, id int) (
+	models.PresentationTodoRecord,
+	error,
+) {
+	todo, err := useCase.Storage.GetSingle(id)
+	if err != nil {
+		return models.PresentationTodoRecord{},
+			fmt.Errorf("unable to get the to-do record: %v", err)
+	}
+
+	presentationTodo := models.NewPresentationTodoRecord(baseURL, todo)
+	return presentationTodo, nil
+}
+
 // Create ...
 func (useCase TodoRecord) Create(baseURL *url.URL, todo models.TodoRecord) (
 	models.PresentationTodoRecord,
@@ -48,7 +63,7 @@ func (useCase TodoRecord) Update(
 ) {
 	if err := useCase.Storage.Update(id, todo); err != nil {
 		return models.PresentationTodoRecord{},
-			fmt.Errorf("unable to update a to-do record: %v", err)
+			fmt.Errorf("unable to update the to-do record: %v", err)
 	}
 
 	todo.ID = id
@@ -60,7 +75,7 @@ func (useCase TodoRecord) Update(
 // Delete ...
 func (useCase TodoRecord) Delete(id int) error {
 	if err := useCase.Storage.Delete(id); err != nil {
-		return fmt.Errorf("unable to delete a to-do record: %v", err)
+		return fmt.Errorf("unable to delete the to-do record: %v", err)
 	}
 
 	return nil
