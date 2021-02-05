@@ -45,8 +45,7 @@ func (useCase TodoRecord) Update(
 	models.PresentationTodoRecord,
 	error,
 ) {
-	err := useCase.Storage.Update(id, todo)
-	if err != nil {
+	if err := useCase.Storage.Update(id, todo); err != nil {
 		return models.PresentationTodoRecord{},
 			fmt.Errorf("unable to update a to-do record: %v", err)
 	}
@@ -55,4 +54,13 @@ func (useCase TodoRecord) Update(
 
 	presentationTodo := models.NewPresentationTodoRecord(baseURL, todo)
 	return presentationTodo, nil
+}
+
+// Delete ...
+func (useCase TodoRecord) Delete(id int) error {
+	if err := useCase.Storage.Delete(id); err != nil {
+		return fmt.Errorf("unable to delete a to-do record: %v", err)
+	}
+
+	return nil
 }
