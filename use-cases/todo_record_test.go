@@ -199,3 +199,57 @@ func TestTodoRecord_Update(t *testing.T) {
 		})
 	}
 }
+
+func TestTodoRecord_Delete(t *testing.T) {
+	type fields struct {
+		Storage Storage
+	}
+	type args struct {
+		id int
+	}
+
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "success",
+			fields: fields{
+				Storage: func() Storage {
+					storage := &MockStorage{}
+					storage.InnerMock.On("Delete", 42).Return(nil)
+
+					return storage
+				}(),
+			},
+			args:    args{id: 42},
+			wantErr: assert.NoError,
+		},
+		{
+			name: "error",
+			fields: fields{
+				Storage: func() Storage {
+					storage := &MockStorage{}
+					storage.InnerMock.On("Delete", 42).Return(iotest.ErrTimeout)
+
+					return storage
+				}(),
+			},
+			args:    args{id: 42},
+			wantErr: assert.Error,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			useCase := TodoRecord{
+				Storage: tt.fields.Storage,
+			}
+			err := useCase.Delete(tt.args.id)
+
+			tt.fields.Storage.(*MockStorage).InnerMock.AssertExpectations(t)
+			tt.wantErr(t, err)
+		})
+	}
+}
