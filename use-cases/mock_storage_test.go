@@ -9,6 +9,11 @@ type MockStorage struct {
 	InnerMock mock.Mock
 }
 
+func (mock *MockStorage) GetAll() ([]models.TodoRecord, error) {
+	results := mock.InnerMock.Called()
+	return results.Get(0).([]models.TodoRecord), results.Error(1)
+}
+
 func (mock *MockStorage) GetSingle(id int) (models.TodoRecord, error) {
 	results := mock.InnerMock.Called(id)
 	return results.Get(0).(models.TodoRecord), results.Error(1)

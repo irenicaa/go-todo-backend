@@ -9,6 +9,7 @@ import (
 
 // Storage ...
 type Storage interface {
+	GetAll() ([]models.TodoRecord, error)
 	GetSingle(id int) (models.TodoRecord, error)
 	Create(todo models.TodoRecord) (id int, err error)
 	Update(id int, todo models.TodoRecord) error
