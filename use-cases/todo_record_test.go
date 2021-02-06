@@ -9,6 +9,114 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestTodoRecord_GetAll(t *testing.T) {
+	type fields struct {
+		Storage Storage
+	}
+	type args struct {
+		baseURL *url.URL
+	}
+
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    []models.PresentationTodoRecord
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "success without todos",
+			fields: fields{
+				Storage: func() Storage {
+					storage := &MockStorage{}
+					storage.InnerMock.On("GetAll").Return([]models.TodoRecord(nil), nil)
+
+					return storage
+				}(),
+			},
+			args: args{
+				baseURL: &url.URL{Scheme: "https", Host: "example.com"},
+			},
+			want:    nil,
+			wantErr: assert.NoError,
+		},
+		{
+			name: "success with todos",
+			fields: fields{
+				Storage: func() Storage {
+					todos := []models.TodoRecord{
+						{
+							ID:        5,
+							Title:     "test",
+							Completed: true,
+							Order:     12,
+						},
+						{
+							ID:        23,
+							Title:     "test",
+							Completed: true,
+							Order:     42,
+						},
+					}
+
+					storage := &MockStorage{}
+					storage.InnerMock.On("GetAll").Return(todos, nil)
+
+					return storage
+				}(),
+			},
+			args: args{
+				baseURL: &url.URL{Scheme: "https", Host: "example.com"},
+			},
+			want: []models.PresentationTodoRecord{
+				{
+					URL:       "https://example.com/api/v1/todos/5",
+					Title:     "test",
+					Completed: true,
+					Order:     12,
+				},
+				{
+					URL:       "https://example.com/api/v1/todos/23",
+					Title:     "test",
+					Completed: true,
+					Order:     42,
+				},
+			},
+			wantErr: assert.NoError,
+		},
+		{
+			name: "error",
+			fields: fields{
+				Storage: func() Storage {
+					storage := &MockStorage{}
+					storage.InnerMock.
+						On("GetAll").
+						Return([]models.TodoRecord(nil), iotest.ErrTimeout)
+
+					return storage
+				}(),
+			},
+			args: args{
+				baseURL: &url.URL{Scheme: "https", Host: "example.com"},
+			},
+			want:    nil,
+			wantErr: assert.Error,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			useCase := TodoRecord{
+				Storage: tt.fields.Storage,
+			}
+			got, err := useCase.GetAll(tt.args.baseURL)
+
+			tt.fields.Storage.(*MockStorage).InnerMock.AssertExpectations(t)
+			assert.Equal(t, tt.want, got)
+			tt.wantErr(t, err)
+		})
+	}
+}
+
 func TestTodoRecord_GetSingle(t *testing.T) {
 	type fields struct {
 		Storage Storage
