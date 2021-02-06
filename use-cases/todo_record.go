@@ -21,6 +21,25 @@ type TodoRecord struct {
 	Storage Storage
 }
 
+// GetAll ...
+func (useCase TodoRecord) GetAll(baseURL *url.URL) (
+	[]models.PresentationTodoRecord,
+	error,
+) {
+	todos, err := useCase.Storage.GetAll()
+	if err != nil {
+		return nil, fmt.Errorf("unable to get the to-do records: %v", err)
+	}
+
+	var presentationTodos []models.PresentationTodoRecord
+	for _, record := range todos {
+		presentationTodo := models.NewPresentationTodoRecord(baseURL, record)
+		presentationTodos = append(presentationTodos, presentationTodo)
+	}
+
+	return presentationTodos, nil
+}
+
 // GetSingle ...
 func (useCase TodoRecord) GetSingle(baseURL *url.URL, id int) (
 	models.PresentationTodoRecord,
