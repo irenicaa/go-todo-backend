@@ -92,6 +92,26 @@ func (useCase TodoRecord) Update(
 	return presentationTodo, nil
 }
 
+// Patch ...
+func (useCase TodoRecord) Patch(
+	baseURL *url.URL,
+	id int,
+	todoPatch models.TodoRecordPatch,
+) (
+	models.PresentationTodoRecord,
+	error,
+) {
+	todo, err := useCase.Storage.GetSingle(id)
+	if err != nil {
+		return models.PresentationTodoRecord{},
+			fmt.Errorf("unable to get the to-do record: %v", err)
+	}
+
+	todo.Patch(todoPatch)
+
+	return useCase.Update(baseURL, id, todo)
+}
+
 // Delete ...
 func (useCase TodoRecord) Delete(id int) error {
 	if err := useCase.Storage.Delete(id); err != nil {
