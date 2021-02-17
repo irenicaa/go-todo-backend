@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 
+	"github.com/irenicaa/go-todo-backend/models"
 	_ "github.com/lib/pq"
 )
 
@@ -20,4 +21,19 @@ func OpenDB(dataSourceName string) (DB, error) {
 
 	db := DB{pool: pool}
 	return db, nil
+}
+
+// Create ...
+func (db DB) Create(todo models.TodoRecord) (id int, err error) {
+	err = db.pool.
+		QueryRow(
+			`INSERT INTO todo_records (title, completed, "order")
+			VALUES ($1, $2, $3)
+			RETURNING id`,
+			todo.Title,
+			todo.Completed,
+			todo.Order,
+		).
+		Scan(&id)
+	return id, err
 }
