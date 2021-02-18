@@ -37,3 +37,17 @@ func (db DB) Create(todo models.TodoRecord) (id int, err error) {
 		Scan(&id)
 	return id, err
 }
+
+// Update ...
+func (db DB) Update(id int, todo models.TodoRecord) error {
+	_, err := db.pool.Exec(
+		`UPDATE todo_records
+		SET title = $1, completed = $2, "order" = $3
+		WHERE id = $4`,
+		todo.Title,
+		todo.Completed,
+		todo.Order,
+		id,
+	)
+	return err
+}
