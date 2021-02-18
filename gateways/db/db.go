@@ -51,3 +51,9 @@ func (db DB) Update(id int, todo models.TodoRecord) error {
 	)
 	return err
 }
+
+// Delete ...
+func (db DB) Delete(id int) error {
+	_, err := db.pool.Exec(`DELETE FROM todo_records WHERE id = $1`, id)
+	return err
+}
