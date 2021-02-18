@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/irenicaa/go-todo-backend/models"
 	_ "github.com/lib/pq"
@@ -21,6 +22,28 @@ func OpenDB(dataSourceName string) (DB, error) {
 
 	db := DB{pool: pool}
 	return db, nil
+}
+
+// GetAll ...
+func (db DB) GetAll() ([]models.TodoRecord, error) {
+	rows, err := db.pool.Query(`SELECT * FROM todo_records`)
+	if err != nil {
+		return nil, fmt.Errorf("unable to create a cursor: %v", err)
+	}
+	defer rows.Close()
+
+	var todos []models.TodoRecord
+	for rows.Next() {
+		var todo models.TodoRecord
+		err := rows.Scan(&todo.ID, &todo.Title, &todo.Completed, &todo.Order)
+		if err != nil {
+			return nil, fmt.Errorf("unable to unmarshal the row: %v", err)
+		}
+
+		todos = append(todos, todo)
+	}
+
+	return todos, nil
 }
 
 // GetSingle ...
