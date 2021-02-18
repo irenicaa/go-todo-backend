@@ -23,6 +23,15 @@ func OpenDB(dataSourceName string) (DB, error) {
 	return db, nil
 }
 
+// GetSingle ...
+func (db DB) GetSingle(id int) (models.TodoRecord, error) {
+	var todo models.TodoRecord
+	err := db.pool.
+		QueryRow(`SELECT * FROM todo_records WHERE id = $1`, id).
+		Scan(&todo.ID, &todo.Title, &todo.Completed, &todo.Order)
+	return todo, err
+}
+
 // Create ...
 func (db DB) Create(todo models.TodoRecord) (id int, err error) {
 	err = db.pool.
