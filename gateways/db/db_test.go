@@ -1,6 +1,7 @@
 package db
 
 import (
+	"database/sql"
 	"flag"
 	"testing"
 
@@ -95,6 +96,47 @@ func TestDB_Update(t *testing.T) {
 			require.NoError(t, err)
 
 			assert.Equal(t, tt.args.updatedTodo, todo)
+		})
+	}
+}
+
+func TestDB_Delete(t *testing.T) {
+	type args struct {
+		todo models.TodoRecord
+	}
+
+	tests := []struct {
+		name    string
+		args    args
+		wantErr error
+	}{
+		{
+			name: "success",
+			args: args{
+				todo: models.TodoRecord{
+					Title:     "test",
+					Completed: true,
+					Order:     42,
+				},
+			},
+			wantErr: sql.ErrNoRows,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			db, err := OpenDB(*dataSourceName)
+			require.NoError(t, err)
+
+			id, err := db.Create(tt.args.todo)
+			require.NoError(t, err)
+
+			err = db.Delete(id)
+			require.NoError(t, err)
+
+			todo, err := db.GetSingle(id)
+
+			assert.Equal(t, models.TodoRecord{}, todo)
+			assert.Equal(t, tt.wantErr, err)
 		})
 	}
 }
