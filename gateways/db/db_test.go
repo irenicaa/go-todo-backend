@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/irenicaa/go-todo-backend/models"
-	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -16,6 +15,53 @@ var dataSourceName = flag.String(
 	"postgresql://postgres:postgres@localhost:5432/postgres?sslmode=disable",
 	"DB connection string",
 )
+
+func TestDB_GetAll(t *testing.T) {
+	type args struct {
+		todos []models.TodoRecord
+	}
+
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "success",
+			args: args{
+				todos: []models.TodoRecord{
+					{
+						Title:     "test",
+						Completed: true,
+						Order:     23,
+					},
+					{
+						Title:     "test2",
+						Completed: false,
+						Order:     42,
+					},
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			db, err := OpenDB(*dataSourceName)
+			require.NoError(t, err)
+
+			for index, todo := range tt.args.todos {
+				id, err2 := db.Create(todo)
+				require.NoError(t, err2)
+
+				tt.args.todos[index].ID = id
+			}
+
+			todos, err := db.GetAll()
+			require.NoError(t, err)
+
+			assert.Equal(t, tt.args.todos, todos)
+		})
+	}
+}
 
 func TestDB_Create(t *testing.T) {
 	type args struct {
