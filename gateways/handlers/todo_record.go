@@ -179,3 +179,23 @@ func (handler TodoRecord) Patch(
 
 	httputils.HandleJSON(writer, handler.Logger, presentationTodo)
 }
+
+// Delete ...
+func (handler TodoRecord) Delete(
+	writer http.ResponseWriter,
+	request *http.Request,
+) {
+	if err := handler.UseCase.Delete(0); err != nil {
+		httputils.HandleError(
+			writer,
+			handler.Logger,
+			http.StatusInternalServerError,
+			"%s",
+			err,
+		)
+
+		return
+	}
+
+	writer.WriteHeader(http.StatusNoContent)
+}
