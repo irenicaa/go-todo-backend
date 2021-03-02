@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/url"
 
+	httputils "github.com/irenicaa/go-todo-backend/http-utils"
 	"github.com/irenicaa/go-todo-backend/models"
 )
 
@@ -32,6 +33,7 @@ type TodoRecordUseCase interface {
 type TodoRecord struct {
 	URLScheme string
 	UseCase   TodoRecordUseCase
+	Logger    httputils.Logger
 }
 
 // Create ...
@@ -41,16 +43,26 @@ func (handler TodoRecord) Create(
 ) {
 	body, err := ioutil.ReadAll(request.Body)
 	if err != nil {
-		writer.WriteHeader(http.StatusBadRequest)
-		writer.Write([]byte(err.Error()))
+		httputils.HandleError(
+			writer,
+			handler.Logger,
+			http.StatusBadRequest,
+			"unable to read the request body: %s",
+			err,
+		)
 
 		return
 	}
 
 	var todo models.TodoRecord
 	if err := json.Unmarshal(body, &todo); err != nil {
-		writer.WriteHeader(http.StatusBadRequest)
-		writer.Write([]byte(err.Error()))
+		httputils.HandleError(
+			writer,
+			handler.Logger,
+			http.StatusBadRequest,
+			"unable to unmarshal the request body: %s",
+			err,
+		)
 
 		return
 	}
@@ -58,20 +70,16 @@ func (handler TodoRecord) Create(
 	baseURL := &url.URL{Scheme: handler.URLScheme, Host: request.Host}
 	presentationTodo, err := handler.UseCase.Create(baseURL, todo)
 	if err != nil {
-		writer.WriteHeader(http.StatusInternalServerError)
-		writer.Write([]byte(err.Error()))
+		httputils.HandleError(
+			writer,
+			handler.Logger,
+			http.StatusInternalServerError,
+			"%s",
+			err,
+		)
 
 		return
 	}
 
-	response, err := json.Marshal(presentationTodo)
-	if err != nil {
-		writer.WriteHeader(http.StatusInternalServerError)
-		writer.Write([]byte(err.Error()))
-
-		return
-	}
-
-	writer.Header().Set("Content-Type", "application/json")
-	writer.Write(response)
+	httputils.HandleJSON(writer, handler.Logger, presentationTodo)
 }
