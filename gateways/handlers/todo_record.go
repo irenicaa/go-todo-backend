@@ -83,3 +83,51 @@ func (handler TodoRecord) Create(
 
 	httputils.HandleJSON(writer, handler.Logger, presentationTodo)
 }
+
+// Update ...
+func (handler TodoRecord) Update(
+	writer http.ResponseWriter,
+	request *http.Request,
+) {
+	body, err := ioutil.ReadAll(request.Body)
+	if err != nil {
+		httputils.HandleError(
+			writer,
+			handler.Logger,
+			http.StatusBadRequest,
+			"unable to read the request body: %s",
+			err,
+		)
+
+		return
+	}
+
+	var todo models.TodoRecord
+	if err := json.Unmarshal(body, &todo); err != nil {
+		httputils.HandleError(
+			writer,
+			handler.Logger,
+			http.StatusBadRequest,
+			"unable to unmarshal the request body: %s",
+			err,
+		)
+
+		return
+	}
+
+	baseURL := &url.URL{Scheme: handler.URLScheme, Host: request.Host}
+	presentationTodo, err := handler.UseCase.Update(baseURL, 0, todo)
+	if err != nil {
+		httputils.HandleError(
+			writer,
+			handler.Logger,
+			http.StatusInternalServerError,
+			"%s",
+			err,
+		)
+
+		return
+	}
+
+	httputils.HandleJSON(writer, handler.Logger, presentationTodo)
+}
