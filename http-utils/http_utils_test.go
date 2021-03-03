@@ -7,9 +7,85 @@ import (
 	"net/http/httptest"
 	"strconv"
 	"testing"
+	"testing/iotest"
 
+	"github.com/irenicaa/go-todo-backend/models"
 	"github.com/stretchr/testify/assert"
 )
+
+func TestGetRequestBody(t *testing.T) {
+	type args struct {
+		request     *http.Request
+		requestData interface{}
+	}
+
+	tests := []struct {
+		name            string
+		args            args
+		wantRequestData interface{}
+		wantErr         assert.ErrorAssertionFunc
+	}{
+		{
+			name: "success",
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodPost,
+					"http://example.com/",
+					bytes.NewReader([]byte(`{
+						"Title": "test",
+						"Completed": true,
+						"Order": 23
+					}`)),
+				),
+				requestData: &models.TodoRecord{},
+			},
+			wantRequestData: &models.TodoRecord{
+				Title:     "test",
+				Completed: true,
+				Order:     23,
+			},
+			wantErr: assert.NoError,
+		},
+		{
+			name: "error on reading",
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodPost,
+					"http://example.com/",
+					iotest.TimeoutReader(bytes.NewReader([]byte(`{
+						"Title": "test",
+						"Completed": true,
+						"Order": 23
+					}`))),
+				),
+				requestData: &models.TodoRecord{},
+			},
+			wantRequestData: &models.TodoRecord{},
+			wantErr:         assert.Error,
+		},
+		{
+			name: "error on unmarshalling",
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodPost,
+					"http://example.com/",
+					bytes.NewReader([]byte("incorrect")),
+				),
+				requestData: &models.TodoRecord{},
+			},
+			wantRequestData: &models.TodoRecord{},
+			wantErr:         assert.Error,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := GetRequestBody(tt.args.request, tt.args.requestData)
+
+			assert.Equal(t, tt.wantRequestData, tt.args.requestData)
+			tt.wantErr(t, err)
+		})
+	}
+}
 
 func TestHandleError(t *testing.T) {
 	type args struct {
