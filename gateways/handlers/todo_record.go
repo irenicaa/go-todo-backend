@@ -36,6 +36,28 @@ type TodoRecord struct {
 	Logger    httputils.Logger
 }
 
+// GetSingle ...
+func (handler TodoRecord) GetSingle(
+	writer http.ResponseWriter,
+	request *http.Request,
+) {
+	baseURL := &url.URL{Scheme: handler.URLScheme, Host: request.Host}
+	presentationTodo, err := handler.UseCase.GetSingle(baseURL, 0)
+	if err != nil {
+		httputils.HandleError(
+			writer,
+			handler.Logger,
+			http.StatusInternalServerError,
+			"%s",
+			err,
+		)
+
+		return
+	}
+
+	httputils.HandleJSON(writer, handler.Logger, presentationTodo)
+}
+
 // Create ...
 func (handler TodoRecord) Create(
 	writer http.ResponseWriter,
