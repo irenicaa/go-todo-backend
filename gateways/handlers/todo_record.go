@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 
@@ -85,26 +83,13 @@ func (handler TodoRecord) Create(
 	writer http.ResponseWriter,
 	request *http.Request,
 ) {
-	body, err := ioutil.ReadAll(request.Body)
-	if err != nil {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusBadRequest,
-			"unable to read the request body: %s",
-			err,
-		)
-
-		return
-	}
-
 	var todo models.TodoRecord
-	if err := json.Unmarshal(body, &todo); err != nil {
+	if err := httputils.GetRequestBody(request, &todo); err != nil {
 		httputils.HandleError(
 			writer,
 			handler.Logger,
 			http.StatusBadRequest,
-			"unable to unmarshal the request body: %s",
+			"unable to get the request body: %s",
 			err,
 		)
 
@@ -133,26 +118,13 @@ func (handler TodoRecord) Update(
 	writer http.ResponseWriter,
 	request *http.Request,
 ) {
-	body, err := ioutil.ReadAll(request.Body)
-	if err != nil {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusBadRequest,
-			"unable to read the request body: %s",
-			err,
-		)
-
-		return
-	}
-
 	var todo models.TodoRecord
-	if err := json.Unmarshal(body, &todo); err != nil {
+	if err := httputils.GetRequestBody(request, &todo); err != nil {
 		httputils.HandleError(
 			writer,
 			handler.Logger,
 			http.StatusBadRequest,
-			"unable to unmarshal the request body: %s",
+			"unable to get the request body: %s",
 			err,
 		)
 
@@ -181,26 +153,13 @@ func (handler TodoRecord) Patch(
 	writer http.ResponseWriter,
 	request *http.Request,
 ) {
-	body, err := ioutil.ReadAll(request.Body)
-	if err != nil {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusBadRequest,
-			"unable to read the request body: %s",
-			err,
-		)
-
-		return
-	}
-
 	var todoPatch models.TodoRecordPatch
-	if err := json.Unmarshal(body, &todoPatch); err != nil {
+	if err := httputils.GetRequestBody(request, &todoPatch); err != nil {
 		httputils.HandleError(
 			writer,
 			handler.Logger,
 			http.StatusBadRequest,
-			"unable to unmarshal the request body: %s",
+			"unable to get the request body: %s",
 			err,
 		)
 
