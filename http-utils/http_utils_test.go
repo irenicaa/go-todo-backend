@@ -13,6 +13,64 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestGetIDFromURL(t *testing.T) {
+	type args struct {
+		request *http.Request
+	}
+
+	tests := []struct {
+		name    string
+		args    args
+		want    int
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "success",
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos/23",
+					nil,
+				),
+			},
+			want:    23,
+			wantErr: assert.NoError,
+		},
+		{
+			name: "error on finding",
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos",
+					nil,
+				),
+			},
+			want:    0,
+			wantErr: assert.Error,
+		},
+		{
+			name: "error on parsing",
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos/99999999999999999999999999",
+					nil,
+				),
+			},
+			want:    0,
+			wantErr: assert.Error,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := GetIDFromURL(tt.args.request)
+
+			assert.Equal(t, tt.want, got)
+			tt.wantErr(t, err)
+		})
+	}
+}
+
 func TestGetRequestBody(t *testing.T) {
 	type args struct {
 		request     *http.Request

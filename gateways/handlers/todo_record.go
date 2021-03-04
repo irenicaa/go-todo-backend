@@ -61,8 +61,21 @@ func (handler TodoRecord) GetSingle(
 	writer http.ResponseWriter,
 	request *http.Request,
 ) {
+	id, err := httputils.GetIDFromURL(request)
+	if err != nil {
+		httputils.HandleError(
+			writer,
+			handler.Logger,
+			http.StatusBadRequest,
+			"unable to get an ID: %s",
+			err,
+		)
+
+		return
+	}
+
 	baseURL := &url.URL{Scheme: handler.URLScheme, Host: request.Host}
-	presentationTodo, err := handler.UseCase.GetSingle(baseURL, 0)
+	presentationTodo, err := handler.UseCase.GetSingle(baseURL, id)
 	if err != nil {
 		httputils.HandleError(
 			writer,
@@ -118,6 +131,19 @@ func (handler TodoRecord) Update(
 	writer http.ResponseWriter,
 	request *http.Request,
 ) {
+	id, err := httputils.GetIDFromURL(request)
+	if err != nil {
+		httputils.HandleError(
+			writer,
+			handler.Logger,
+			http.StatusBadRequest,
+			"unable to get an ID: %s",
+			err,
+		)
+
+		return
+	}
+
 	var todo models.TodoRecord
 	if err := httputils.GetRequestBody(request, &todo); err != nil {
 		httputils.HandleError(
@@ -132,7 +158,7 @@ func (handler TodoRecord) Update(
 	}
 
 	baseURL := &url.URL{Scheme: handler.URLScheme, Host: request.Host}
-	presentationTodo, err := handler.UseCase.Update(baseURL, 0, todo)
+	presentationTodo, err := handler.UseCase.Update(baseURL, id, todo)
 	if err != nil {
 		httputils.HandleError(
 			writer,
@@ -153,6 +179,19 @@ func (handler TodoRecord) Patch(
 	writer http.ResponseWriter,
 	request *http.Request,
 ) {
+	id, err := httputils.GetIDFromURL(request)
+	if err != nil {
+		httputils.HandleError(
+			writer,
+			handler.Logger,
+			http.StatusBadRequest,
+			"unable to get an ID: %s",
+			err,
+		)
+
+		return
+	}
+
 	var todoPatch models.TodoRecordPatch
 	if err := httputils.GetRequestBody(request, &todoPatch); err != nil {
 		httputils.HandleError(
@@ -167,7 +206,7 @@ func (handler TodoRecord) Patch(
 	}
 
 	baseURL := &url.URL{Scheme: handler.URLScheme, Host: request.Host}
-	presentationTodo, err := handler.UseCase.Patch(baseURL, 0, todoPatch)
+	presentationTodo, err := handler.UseCase.Patch(baseURL, id, todoPatch)
 	if err != nil {
 		httputils.HandleError(
 			writer,
@@ -188,7 +227,20 @@ func (handler TodoRecord) Delete(
 	writer http.ResponseWriter,
 	request *http.Request,
 ) {
-	if err := handler.UseCase.Delete(0); err != nil {
+	id, err := httputils.GetIDFromURL(request)
+	if err != nil {
+		httputils.HandleError(
+			writer,
+			handler.Logger,
+			http.StatusBadRequest,
+			"unable to get an ID: %s",
+			err,
+		)
+
+		return
+	}
+
+	if err := handler.UseCase.Delete(id); err != nil {
 		httputils.HandleError(
 			writer,
 			handler.Logger,
