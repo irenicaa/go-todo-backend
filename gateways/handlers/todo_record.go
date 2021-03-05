@@ -39,7 +39,7 @@ func (handler TodoRecord) GetAll(
 	writer http.ResponseWriter,
 	request *http.Request,
 ) {
-	baseURL := &url.URL{Scheme: handler.URLScheme, Host: request.Host}
+	baseURL := handler.getBaseURL(request)
 	presentationTodo, err := handler.UseCase.GetAll(baseURL)
 	if err != nil {
 		httputils.HandleError(
@@ -74,7 +74,7 @@ func (handler TodoRecord) GetSingle(
 		return
 	}
 
-	baseURL := &url.URL{Scheme: handler.URLScheme, Host: request.Host}
+	baseURL := handler.getBaseURL(request)
 	presentationTodo, err := handler.UseCase.GetSingle(baseURL, id)
 	if err != nil {
 		httputils.HandleError(
@@ -109,7 +109,7 @@ func (handler TodoRecord) Create(
 		return
 	}
 
-	baseURL := &url.URL{Scheme: handler.URLScheme, Host: request.Host}
+	baseURL := handler.getBaseURL(request)
 	presentationTodo, err := handler.UseCase.Create(baseURL, todo)
 	if err != nil {
 		httputils.HandleError(
@@ -157,7 +157,7 @@ func (handler TodoRecord) Update(
 		return
 	}
 
-	baseURL := &url.URL{Scheme: handler.URLScheme, Host: request.Host}
+	baseURL := handler.getBaseURL(request)
 	presentationTodo, err := handler.UseCase.Update(baseURL, id, todo)
 	if err != nil {
 		httputils.HandleError(
@@ -205,7 +205,7 @@ func (handler TodoRecord) Patch(
 		return
 	}
 
-	baseURL := &url.URL{Scheme: handler.URLScheme, Host: request.Host}
+	baseURL := handler.getBaseURL(request)
 	presentationTodo, err := handler.UseCase.Patch(baseURL, id, todoPatch)
 	if err != nil {
 		httputils.HandleError(
@@ -253,4 +253,8 @@ func (handler TodoRecord) Delete(
 	}
 
 	writer.WriteHeader(http.StatusNoContent)
+}
+
+func (handler TodoRecord) getBaseURL(request *http.Request) *url.URL {
+	return &url.URL{Scheme: handler.URLScheme, Host: request.Host}
 }
