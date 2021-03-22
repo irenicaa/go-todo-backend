@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net/http"
 	"os"
@@ -13,7 +14,17 @@ import (
 )
 
 func main() {
-	const dbDSN = "postgresql://postgres:postgres@localhost:5432/postgres?sslmode=disable"
+	port, ok := os.LookupEnv("PORT")
+	if !ok {
+		port = "8080"
+	}
+	dbDSN, ok := os.LookupEnv("DB_DSN")
+	if !ok {
+		dbDSN = "postgresql://postgres:postgres@localhost:5432" +
+			"/postgres?sslmode=disable"
+	}
+	flag.Parse()
+
 	logger := log.New(os.Stderr, "", log.Ldate|log.Ltime|log.Lmicroseconds)
 	storage, err := db.OpenDB(dbDSN)
 	if err != nil {
@@ -35,7 +46,7 @@ func main() {
 		logger,
 		time.Now,
 	)
-	if err := http.ListenAndServe(":8080", handler); err != nil {
+	if err := http.ListenAndServe(":"+port, handler); err != nil {
 		logger.Fatal(err)
 	}
 }
