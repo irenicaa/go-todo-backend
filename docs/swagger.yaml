@@ -1,0 +1,192 @@
+definitions:
+  models.PresentationTodoRecord:
+    properties:
+      Completed:
+        type: boolean
+      Order:
+        type: integer
+      Title:
+        type: string
+      URL:
+        type: string
+    type: object
+  models.TodoRecord:
+    properties:
+      Completed:
+        type: boolean
+      ID:
+        type: integer
+      Order:
+        type: integer
+      Title:
+        type: string
+    type: object
+  models.TodoRecordPatch:
+    properties:
+      Completed:
+        type: boolean
+      Order:
+        type: integer
+      Title:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  license:
+    name: MIT
+  title: go-todo-backend API
+  version: 1.0.0
+paths:
+  /api/v1/todos:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.PresentationTodoRecord'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: get all to-do records
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: to-do record data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.TodoRecord'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.PresentationTodoRecord'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: create a to-do record
+  /api/v1/todos/{id}:
+    delete:
+      parameters:
+      - description: to-do record ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: delete the to-do record
+    get:
+      parameters:
+      - description: to-do record ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.PresentationTodoRecord'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: get the single to-do record
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: to-do record ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: to-do record patch
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.TodoRecordPatch'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.PresentationTodoRecord'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: patch the to-do record
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: to-do record ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: to-do record data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.TodoRecord'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.PresentationTodoRecord'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: update the to-do record
+swagger: "2.0"

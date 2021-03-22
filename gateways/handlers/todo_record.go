@@ -35,6 +35,11 @@ type TodoRecord struct {
 }
 
 // GetAll ...
+//   @router /api/v1/todos [GET]
+//   @summary get all to-do records
+//   @produce json
+//   @success 200 {array} models.PresentationTodoRecord
+//   @failure 500 {string} string
 func (handler TodoRecord) GetAll(
 	writer http.ResponseWriter,
 	request *http.Request,
@@ -57,6 +62,13 @@ func (handler TodoRecord) GetAll(
 }
 
 // GetSingle ...
+//   @router /api/v1/todos/{id} [GET]
+//   @summary get the single to-do record
+//   @param id path integer true "to-do record ID"
+//   @produce json
+//   @success 200 {object} models.PresentationTodoRecord
+//   @failure 400 {string} string
+//   @failure 500 {string} string
 func (handler TodoRecord) GetSingle(
 	writer http.ResponseWriter,
 	request *http.Request,
@@ -92,6 +104,14 @@ func (handler TodoRecord) GetSingle(
 }
 
 // Create ...
+//   @router /api/v1/todos [POST]
+//   @summary create a to-do record
+//   @param body body models.TodoRecord true "to-do record data"
+//   @accept json
+//   @produce json
+//   @success 200 {object} models.PresentationTodoRecord
+//   @failure 400 {string} string
+//   @failure 500 {string} string
 func (handler TodoRecord) Create(
 	writer http.ResponseWriter,
 	request *http.Request,
@@ -127,6 +147,15 @@ func (handler TodoRecord) Create(
 }
 
 // Update ...
+//   @router /api/v1/todos/{id} [PUT]
+//   @summary update the to-do record
+//   @param id path integer true "to-do record ID"
+//   @param body body models.TodoRecord true "to-do record data"
+//   @accept json
+//   @produce json
+//   @success 200 {object} models.PresentationTodoRecord
+//   @failure 400 {string} string
+//   @failure 500 {string} string
 func (handler TodoRecord) Update(
 	writer http.ResponseWriter,
 	request *http.Request,
@@ -175,6 +204,15 @@ func (handler TodoRecord) Update(
 }
 
 // Patch ...
+//   @router /api/v1/todos/{id} [PATCH]
+//   @summary patch the to-do record
+//   @param id path integer true "to-do record ID"
+//   @param body body models.TodoRecordPatch true "to-do record patch"
+//   @accept json
+//   @produce json
+//   @success 200 {object} models.PresentationTodoRecord
+//   @failure 400 {string} string
+//   @failure 500 {string} string
 func (handler TodoRecord) Patch(
 	writer http.ResponseWriter,
 	request *http.Request,
@@ -223,6 +261,13 @@ func (handler TodoRecord) Patch(
 }
 
 // Delete ...
+//   @router /api/v1/todos/{id} [DELETE]
+//   @summary delete the to-do record
+//   @param id path integer true "to-do record ID"
+//   @produce json
+//   @success 204 {string} string
+//   @failure 400 {string} string
+//   @failure 500 {string} string
 func (handler TodoRecord) Delete(
 	writer http.ResponseWriter,
 	request *http.Request,
