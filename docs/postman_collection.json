@@ -1,0 +1,166 @@
+{
+	"info": {
+		"_postman_id": "0fe9b0ea-11bb-4df1-b65e-5edd2019c489",
+		"name": "go-todo-backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/api/v1/todos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/todos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"todos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/v1/todos/{id}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/todos/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"todos",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/v1/todos",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Title\": \"{{$randomPhrase}}\",\n    \"Completed\": {{$randomBoolean}},\n    \"Order\": {{$randomInt}}\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/todos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"todos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/v1/todos/{id}",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Title\": \"{{$randomPhrase}}\",\n    \"Completed\": {{$randomBoolean}},\n    \"Order\": {{$randomInt}}\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/todos/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"todos",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/v1/todos/{id}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Title\": \"{{$randomPhrase}}\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/todos/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"todos",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/v1/todos/{id}",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/todos/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"todos",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
