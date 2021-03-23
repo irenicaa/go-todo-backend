@@ -49,8 +49,11 @@ func TestDB_GetAll(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			pool, err := OpenDB(*dataSourceName)
 			require.NoError(t, err)
-			db := NewDB(pool)
 
+			_, err = pool.Exec(`DELETE FROM todo_records`)
+			require.NoError(t, err)
+
+			db := NewDB(pool)
 			for index, todo := range tt.args.todos {
 				id, err2 := db.Create(todo)
 				require.NoError(t, err2)
