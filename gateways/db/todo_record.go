@@ -5,12 +5,7 @@ import (
 	"fmt"
 
 	"github.com/irenicaa/go-todo-backend/models"
-	_ "github.com/lib/pq"
 )
-
-// DefaultDataSourceName ...
-const DefaultDataSourceName = "postgresql://postgres:postgres@localhost:5432" +
-	"/postgres?sslmode=disable"
 
 // TodoRecord ...
 type TodoRecord struct {

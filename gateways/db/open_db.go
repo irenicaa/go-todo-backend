@@ -3,7 +3,13 @@ package db
 import (
 	"database/sql"
 	"fmt"
+
+	_ "github.com/lib/pq"
 )
+
+// DefaultDataSourceName ...
+const DefaultDataSourceName = "postgresql://postgres:postgres@localhost:5432" +
+	"/postgres?sslmode=disable"
 
 // OpenDB ...
 func OpenDB(dataSourceName string) (*sql.DB, error) {
