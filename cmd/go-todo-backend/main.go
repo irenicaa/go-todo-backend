@@ -20,8 +20,7 @@ func main() {
 	}
 	dbDSN, ok := os.LookupEnv("DB_DSN")
 	if !ok {
-		dbDSN = "postgresql://postgres:postgres@localhost:5432" +
-			"/postgres?sslmode=disable"
+		dbDSN = db.DefaultDataSourceName
 	}
 	flag.Parse()
 

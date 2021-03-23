@@ -14,7 +14,7 @@ import (
 
 var dataSourceName = flag.String(
 	"dataSourceName",
-	"postgresql://postgres:postgres@localhost:5432/postgres?sslmode=disable",
+	DefaultDataSourceName,
 	"DB connection string",
 )
 

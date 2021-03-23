@@ -8,6 +8,10 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// DefaultDataSourceName ...
+const DefaultDataSourceName = "postgresql://postgres:postgres@localhost:5432" +
+	"/postgres?sslmode=disable"
+
 // DB ...
 type DB struct {
 	pool *sql.DB
