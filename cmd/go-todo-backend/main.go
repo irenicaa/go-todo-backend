@@ -25,7 +25,7 @@ func main() {
 	flag.Parse()
 
 	logger := log.New(os.Stderr, "", log.Ldate|log.Ltime|log.Lmicroseconds)
-	storage, err := db.OpenDB(dbDSN)
+	dbPool, err := db.OpenDB(dbDSN)
 	if err != nil {
 		logger.Fatal(err)
 	}
@@ -36,7 +36,7 @@ func main() {
 			TodoRecord: handlers.TodoRecord{
 				URLScheme: "http",
 				UseCase: usecases.TodoRecord{
-					Storage: storage,
+					Storage: db.NewDB(dbPool),
 				},
 				Logger: logger,
 			},

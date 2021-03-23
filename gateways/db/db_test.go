@@ -47,8 +47,9 @@ func TestDB_GetAll(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			db, err := OpenDB(*dataSourceName)
+			pool, err := OpenDB(*dataSourceName)
 			require.NoError(t, err)
+			db := NewDB(pool)
 
 			for index, todo := range tt.args.todos {
 				id, err2 := db.Create(todo)
@@ -87,8 +88,9 @@ func TestDB_Create(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			db, err := OpenDB(*dataSourceName)
+			pool, err := OpenDB(*dataSourceName)
 			require.NoError(t, err)
+			db := NewDB(pool)
 
 			id, err := db.Create(tt.args.todo)
 			require.NoError(t, err)
@@ -130,8 +132,9 @@ func TestDB_Update(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			db, err := OpenDB(*dataSourceName)
+			pool, err := OpenDB(*dataSourceName)
 			require.NoError(t, err)
+			db := NewDB(pool)
 
 			id, err := db.Create(tt.args.originalTodo)
 			require.NoError(t, err)
@@ -172,8 +175,9 @@ func TestDB_Delete(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			db, err := OpenDB(*dataSourceName)
+			pool, err := OpenDB(*dataSourceName)
 			require.NoError(t, err)
+			db := NewDB(pool)
 
 			id, err := db.Create(tt.args.todo)
 			require.NoError(t, err)

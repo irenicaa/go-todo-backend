@@ -17,19 +17,9 @@ type DB struct {
 	pool *sql.DB
 }
 
-// OpenDB ...
-func OpenDB(dataSourceName string) (DB, error) {
-	pool, err := sql.Open("postgres", dataSourceName)
-	if err != nil {
-		return DB{}, fmt.Errorf("unable to create a pool of DB connections: %v", err)
-	}
-
-	if err := pool.Ping(); err != nil {
-		return DB{}, fmt.Errorf("unable to ping the DB: %v", err)
-	}
-
-	db := DB{pool: pool}
-	return db, nil
+// NewDB ...
+func NewDB(pool *sql.DB) DB {
+	return DB{pool: pool}
 }
 
 // GetAll ...
