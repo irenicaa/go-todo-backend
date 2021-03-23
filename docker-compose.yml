@@ -1,5 +1,12 @@
 version: "3"
 services:
+  go-todo-backend:
+    build: .
+    environment:
+      DB_DSN: postgresql://postgres:postgres@db:5432/postgres?sslmode=disable
+    ports:
+      - 8080:8080
+
   db:
     image: postgres:13.2-alpine
     environment:
