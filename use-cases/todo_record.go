@@ -7,8 +7,8 @@ import (
 	"github.com/irenicaa/go-todo-backend/models"
 )
 
-// Storage ...
-type Storage interface {
+// TodoRecordStorage ...
+type TodoRecordStorage interface {
 	GetAll() ([]models.TodoRecord, error)
 	GetSingle(id int) (models.TodoRecord, error)
 	Create(todo models.TodoRecord) (id int, err error)
@@ -18,7 +18,7 @@ type Storage interface {
 
 // TodoRecord ...
 type TodoRecord struct {
-	Storage Storage
+	Storage TodoRecordStorage
 }
 
 // GetAll ...

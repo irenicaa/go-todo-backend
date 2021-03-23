@@ -11,7 +11,7 @@ import (
 
 func TestTodoRecord_GetAll(t *testing.T) {
 	type fields struct {
-		Storage Storage
+		Storage TodoRecordStorage
 	}
 	type args struct {
 		baseURL *url.URL
@@ -27,7 +27,7 @@ func TestTodoRecord_GetAll(t *testing.T) {
 		{
 			name: "success without todos",
 			fields: fields{
-				Storage: func() Storage {
+				Storage: func() TodoRecordStorage {
 					storage := &MockStorage{}
 					storage.InnerMock.On("GetAll").Return([]models.TodoRecord(nil), nil)
 
@@ -43,7 +43,7 @@ func TestTodoRecord_GetAll(t *testing.T) {
 		{
 			name: "success with todos",
 			fields: fields{
-				Storage: func() Storage {
+				Storage: func() TodoRecordStorage {
 					todos := []models.TodoRecord{
 						{
 							ID:        5,
@@ -87,7 +87,7 @@ func TestTodoRecord_GetAll(t *testing.T) {
 		{
 			name: "error",
 			fields: fields{
-				Storage: func() Storage {
+				Storage: func() TodoRecordStorage {
 					storage := &MockStorage{}
 					storage.InnerMock.
 						On("GetAll").
@@ -119,7 +119,7 @@ func TestTodoRecord_GetAll(t *testing.T) {
 
 func TestTodoRecord_GetSingle(t *testing.T) {
 	type fields struct {
-		Storage Storage
+		Storage TodoRecordStorage
 	}
 	type args struct {
 		baseURL *url.URL
@@ -136,7 +136,7 @@ func TestTodoRecord_GetSingle(t *testing.T) {
 		{
 			name: "success",
 			fields: fields{
-				Storage: func() Storage {
+				Storage: func() TodoRecordStorage {
 					todo := models.TodoRecord{
 						ID:        23,
 						Title:     "test",
@@ -165,7 +165,7 @@ func TestTodoRecord_GetSingle(t *testing.T) {
 		{
 			name: "error",
 			fields: fields{
-				Storage: func() Storage {
+				Storage: func() TodoRecordStorage {
 					storage := &MockStorage{}
 					storage.InnerMock.
 						On("GetSingle", 23).
@@ -198,7 +198,7 @@ func TestTodoRecord_GetSingle(t *testing.T) {
 
 func TestTodoRecord_Create(t *testing.T) {
 	type fields struct {
-		Storage Storage
+		Storage TodoRecordStorage
 	}
 	type args struct {
 		baseURL *url.URL
@@ -215,7 +215,7 @@ func TestTodoRecord_Create(t *testing.T) {
 		{
 			name: "success",
 			fields: fields{
-				Storage: func() Storage {
+				Storage: func() TodoRecordStorage {
 					todo := models.TodoRecord{
 						ID:        23,
 						Title:     "test",
@@ -249,7 +249,7 @@ func TestTodoRecord_Create(t *testing.T) {
 		{
 			name: "error",
 			fields: fields{
-				Storage: func() Storage {
+				Storage: func() TodoRecordStorage {
 					todo := models.TodoRecord{
 						ID:        23,
 						Title:     "test",
@@ -292,7 +292,7 @@ func TestTodoRecord_Create(t *testing.T) {
 
 func TestTodoRecord_Update(t *testing.T) {
 	type fields struct {
-		Storage Storage
+		Storage TodoRecordStorage
 	}
 	type args struct {
 		baseURL *url.URL
@@ -310,7 +310,7 @@ func TestTodoRecord_Update(t *testing.T) {
 		{
 			name: "success",
 			fields: fields{
-				Storage: func() Storage {
+				Storage: func() TodoRecordStorage {
 					todo := models.TodoRecord{
 						ID:        23,
 						Title:     "test",
@@ -345,7 +345,7 @@ func TestTodoRecord_Update(t *testing.T) {
 		{
 			name: "error",
 			fields: fields{
-				Storage: func() Storage {
+				Storage: func() TodoRecordStorage {
 					todo := models.TodoRecord{
 						ID:        23,
 						Title:     "test",
@@ -389,7 +389,7 @@ func TestTodoRecord_Update(t *testing.T) {
 
 func TestTodoRecord_Patch(t *testing.T) {
 	type fields struct {
-		Storage Storage
+		Storage TodoRecordStorage
 	}
 	type args struct {
 		baseURL   *url.URL
@@ -407,7 +407,7 @@ func TestTodoRecord_Patch(t *testing.T) {
 		{
 			name: "success",
 			fields: fields{
-				Storage: func() Storage {
+				Storage: func() TodoRecordStorage {
 					todo := models.TodoRecord{
 						ID:        23,
 						Title:     "test",
@@ -449,7 +449,7 @@ func TestTodoRecord_Patch(t *testing.T) {
 		{
 			name: "error with getting",
 			fields: fields{
-				Storage: func() Storage {
+				Storage: func() TodoRecordStorage {
 					storage := &MockStorage{}
 					storage.InnerMock.
 						On("GetSingle", 23).
@@ -474,7 +474,7 @@ func TestTodoRecord_Patch(t *testing.T) {
 		{
 			name: "error with updating",
 			fields: fields{
-				Storage: func() Storage {
+				Storage: func() TodoRecordStorage {
 					todo := models.TodoRecord{
 						ID:        23,
 						Title:     "test",
@@ -525,7 +525,7 @@ func TestTodoRecord_Patch(t *testing.T) {
 
 func TestTodoRecord_Delete(t *testing.T) {
 	type fields struct {
-		Storage Storage
+		Storage TodoRecordStorage
 	}
 	type args struct {
 		id int
@@ -540,7 +540,7 @@ func TestTodoRecord_Delete(t *testing.T) {
 		{
 			name: "success",
 			fields: fields{
-				Storage: func() Storage {
+				Storage: func() TodoRecordStorage {
 					storage := &MockStorage{}
 					storage.InnerMock.On("Delete", 42).Return(nil)
 
@@ -553,7 +553,7 @@ func TestTodoRecord_Delete(t *testing.T) {
 		{
 			name: "error",
 			fields: fields{
-				Storage: func() Storage {
+				Storage: func() TodoRecordStorage {
 					storage := &MockStorage{}
 					storage.InnerMock.On("Delete", 42).Return(iotest.ErrTimeout)
 
