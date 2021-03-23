@@ -36,7 +36,7 @@ func main() {
 			TodoRecord: handlers.TodoRecord{
 				URLScheme: "http",
 				UseCase: usecases.TodoRecord{
-					Storage: db.NewDB(dbPool),
+					Storage: db.NewTodoRecord(dbPool),
 				},
 				Logger: logger,
 			},

@@ -12,18 +12,18 @@ import (
 const DefaultDataSourceName = "postgresql://postgres:postgres@localhost:5432" +
 	"/postgres?sslmode=disable"
 
-// DB ...
-type DB struct {
+// TodoRecord ...
+type TodoRecord struct {
 	pool *sql.DB
 }
 
-// NewDB ...
-func NewDB(pool *sql.DB) DB {
-	return DB{pool: pool}
+// NewTodoRecord ...
+func NewTodoRecord(pool *sql.DB) TodoRecord {
+	return TodoRecord{pool: pool}
 }
 
 // GetAll ...
-func (db DB) GetAll() ([]models.TodoRecord, error) {
+func (db TodoRecord) GetAll() ([]models.TodoRecord, error) {
 	rows, err := db.pool.Query(`SELECT * FROM todo_records`)
 	if err != nil {
 		return nil, fmt.Errorf("unable to create a cursor: %v", err)
@@ -45,7 +45,7 @@ func (db DB) GetAll() ([]models.TodoRecord, error) {
 }
 
 // GetSingle ...
-func (db DB) GetSingle(id int) (models.TodoRecord, error) {
+func (db TodoRecord) GetSingle(id int) (models.TodoRecord, error) {
 	var todo models.TodoRecord
 	err := db.pool.
 		QueryRow(`SELECT * FROM todo_records WHERE id = $1`, id).
@@ -54,7 +54,7 @@ func (db DB) GetSingle(id int) (models.TodoRecord, error) {
 }
 
 // Create ...
-func (db DB) Create(todo models.TodoRecord) (id int, err error) {
+func (db TodoRecord) Create(todo models.TodoRecord) (id int, err error) {
 	err = db.pool.
 		QueryRow(
 			`INSERT INTO todo_records (title, completed, "order")
@@ -69,7 +69,7 @@ func (db DB) Create(todo models.TodoRecord) (id int, err error) {
 }
 
 // Update ...
-func (db DB) Update(id int, todo models.TodoRecord) error {
+func (db TodoRecord) Update(id int, todo models.TodoRecord) error {
 	_, err := db.pool.Exec(
 		`UPDATE todo_records
 		SET title = $1, completed = $2, "order" = $3
@@ -83,7 +83,7 @@ func (db DB) Update(id int, todo models.TodoRecord) error {
 }
 
 // Delete ...
-func (db DB) Delete(id int) error {
+func (db TodoRecord) Delete(id int) error {
 	_, err := db.pool.Exec(`DELETE FROM todo_records WHERE id = $1`, id)
 	return err
 }

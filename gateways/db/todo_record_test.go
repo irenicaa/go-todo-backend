@@ -53,7 +53,7 @@ func TestDB_GetAll(t *testing.T) {
 			_, err = pool.Exec(`DELETE FROM todo_records`)
 			require.NoError(t, err)
 
-			db := NewDB(pool)
+			db := NewTodoRecord(pool)
 			for index, todo := range tt.args.todos {
 				id, err2 := db.Create(todo)
 				require.NoError(t, err2)
@@ -93,7 +93,7 @@ func TestDB_Create(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			pool, err := OpenDB(*dataSourceName)
 			require.NoError(t, err)
-			db := NewDB(pool)
+			db := NewTodoRecord(pool)
 
 			id, err := db.Create(tt.args.todo)
 			require.NoError(t, err)
@@ -137,7 +137,7 @@ func TestDB_Update(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			pool, err := OpenDB(*dataSourceName)
 			require.NoError(t, err)
-			db := NewDB(pool)
+			db := NewTodoRecord(pool)
 
 			id, err := db.Create(tt.args.originalTodo)
 			require.NoError(t, err)
@@ -180,7 +180,7 @@ func TestDB_Delete(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			pool, err := OpenDB(*dataSourceName)
 			require.NoError(t, err)
-			db := NewDB(pool)
+			db := NewTodoRecord(pool)
 
 			id, err := db.Create(tt.args.todo)
 			require.NoError(t, err)
