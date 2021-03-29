@@ -23,7 +23,22 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 		originalTodo models.TodoRecord
 		action       func(t *testing.T, todoURL string)
 		wantTodo     models.PresentationTodoRecord
-	}{}
+	}{
+		{
+			name: "creation",
+			originalTodo: models.TodoRecord{
+				Title:     "test",
+				Completed: true,
+				Order:     42,
+			},
+			action: func(t *testing.T, todoURL string) {},
+			wantTodo: models.PresentationTodoRecord{
+				Title:     "test",
+				Completed: true,
+				Order:     42,
+			},
+		},
+	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			requestBytes, err := json.Marshal(tt.originalTodo)
@@ -45,6 +60,7 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 			gotTodo, err := unmarshalTodoRecord(response.Body)
 			require.NoError(t, err)
 
+			tt.wantTodo.URL = createdTodo.URL
 			assert.Equal(t, tt.wantTodo, gotTodo)
 		})
 	}
