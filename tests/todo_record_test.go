@@ -51,11 +51,39 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 					Completed: true,
 					Order:     42,
 				}
+
 				requestBytes, err := json.Marshal(newTodo)
 				require.NoError(t, err)
 
 				request, err :=
 					http.NewRequest(http.MethodPut, todoURL, bytes.NewReader(requestBytes))
+				require.NoError(t, err)
+
+				_, err = http.DefaultClient.Do(request)
+				require.NoError(t, err)
+			},
+			wantTodo: models.PresentationTodoRecord{
+				Title:     "test2",
+				Completed: true,
+				Order:     42,
+			},
+		},
+		{
+			name: "patching",
+			originalTodo: models.TodoRecord{
+				Title:     "test",
+				Completed: true,
+				Order:     42,
+			},
+			action: func(t *testing.T, todoURL string) {
+				todoPatchTitle := "test2"
+				todoPatch := models.TodoRecordPatch{Title: &todoPatchTitle}
+
+				requestBytes, err := json.Marshal(todoPatch)
+				require.NoError(t, err)
+
+				request, err :=
+					http.NewRequest(http.MethodPatch, todoURL, bytes.NewReader(requestBytes))
 				require.NoError(t, err)
 
 				_, err = http.DefaultClient.Do(request)
