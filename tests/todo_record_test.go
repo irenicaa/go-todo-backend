@@ -123,6 +123,45 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 	}
 }
 
+func TestTodoRecord_withDeleting(t *testing.T) {
+	originalTodo := models.TodoRecord{
+		Title:     "test",
+		Completed: true,
+		Order:     42,
+	}
+
+	requestBytes, err := json.Marshal(originalTodo)
+	require.NoError(t, err)
+
+	url := fmt.Sprintf("http://localhost:%d/api/v1/todos", *port)
+	response, err :=
+		http.Post(url, "application/json", bytes.NewReader(requestBytes))
+	require.NoError(t, err)
+
+	createdTodo, err := unmarshalTodoRecord(response.Body)
+	require.NoError(t, err)
+
+	request, err := http.NewRequest(http.MethodDelete, createdTodo.URL, nil)
+	require.NoError(t, err)
+
+	_, err = http.DefaultClient.Do(request)
+	require.NoError(t, err)
+
+	response, err = http.Get(createdTodo.URL)
+	require.NoError(t, err)
+	defer response.Body.Close()
+
+	responseBytes, err := ioutil.ReadAll(response.Body)
+	require.NoError(t, err)
+
+	assert.Equal(t, http.StatusInternalServerError, response.StatusCode)
+	assert.Equal(
+		t,
+		"unable to get the to-do record: sql: no rows in result set",
+		string(responseBytes),
+	)
+}
+
 func unmarshalTodoRecord(reader io.ReadCloser) (
 	models.PresentationTodoRecord,
 	error,
