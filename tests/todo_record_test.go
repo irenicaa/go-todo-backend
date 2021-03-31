@@ -8,14 +8,21 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"testing"
 
+	"github.com/irenicaa/go-todo-backend/gateways/db"
 	"github.com/irenicaa/go-todo-backend/models"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 var port = flag.Int("port", 8080, "server port")
+var dataSourceName = flag.String(
+	"dataSourceName",
+	db.DefaultDataSourceName,
+	"DB connection string",
+)
 
 func TestTodoRecord_withSingleModel(t *testing.T) {
 	tests := []struct {
@@ -121,6 +128,49 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 			assert.Equal(t, tt.wantTodo, gotTodo)
 		})
 	}
+}
+
+func TestTodoRecord_withGetting(t *testing.T) {
+	pool, err := db.OpenDB(*dataSourceName)
+	require.NoError(t, err)
+
+	_, err = pool.Exec(`DELETE FROM todo_records`)
+	require.NoError(t, err)
+
+	var createdTodos []models.PresentationTodoRecord
+	url := fmt.Sprintf("http://localhost:%d/api/v1/todos", *port)
+	for i := 0; i <= 10; i++ {
+		originalTodo := models.TodoRecord{
+			Title:     "test" + strconv.Itoa(i),
+			Completed: true,
+			Order:     i,
+		}
+
+		requestBytes, err := json.Marshal(originalTodo)
+		require.NoError(t, err)
+
+		response, err :=
+			http.Post(url, "application/json", bytes.NewReader(requestBytes))
+		require.NoError(t, err)
+
+		createdTodo, err := unmarshalTodoRecord(response.Body)
+		require.NoError(t, err)
+
+		createdTodos = append(createdTodos, createdTodo)
+	}
+
+	response, err := http.Get(url)
+	require.NoError(t, err)
+	defer response.Body.Close()
+
+	responseBytes, err := ioutil.ReadAll(response.Body)
+	require.NoError(t, err)
+
+	var gotTodos []models.PresentationTodoRecord
+	err = json.Unmarshal(responseBytes, &gotTodos)
+	require.NoError(t, err)
+
+	assert.Equal(t, createdTodos, gotTodos)
 }
 
 func TestTodoRecord_withDeleting(t *testing.T) {
