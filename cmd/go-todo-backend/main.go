@@ -31,7 +31,7 @@ func main() {
 	}
 
 	handler := httputils.LoggingMiddleware(
-		handlers.Router{
+		httputils.CORSMiddleware(handlers.Router{
 			BaseURL: "/api/v1",
 			TodoRecord: handlers.TodoRecord{
 				URLScheme: "http",
@@ -41,7 +41,7 @@ func main() {
 				Logger: logger,
 			},
 			Logger: logger,
-		},
+		}),
 		logger,
 		time.Now,
 	)
