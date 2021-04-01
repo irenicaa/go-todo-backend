@@ -7,10 +7,10 @@ import (
 
 // PresentationTodoRecord ...
 type PresentationTodoRecord struct {
-	URL       string
-	Title     string
-	Completed bool
-	Order     int
+	URL       string `json:"url"`
+	Title     string `json:"title"`
+	Completed bool   `json:"completed"`
+	Order     int    `json:"order"`
 }
 
 // NewPresentationTodoRecord ...
