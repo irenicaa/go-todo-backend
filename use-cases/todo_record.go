@@ -13,7 +13,8 @@ type TodoRecordStorage interface {
 	GetSingle(id int) (models.TodoRecord, error)
 	Create(todo models.TodoRecord) (id int, err error)
 	Update(id int, todo models.TodoRecord) error
-	Delete(id int) error
+	DeleteAll() error
+	DeleteSingle(id int) error
 }
 
 // TodoRecord ...
@@ -112,9 +113,18 @@ func (useCase TodoRecord) Patch(
 	return useCase.Update(baseURL, id, todo)
 }
 
-// Delete ...
-func (useCase TodoRecord) Delete(id int) error {
-	if err := useCase.Storage.Delete(id); err != nil {
+// DeleteAll ...
+func (useCase TodoRecord) DeleteAll() error {
+	if err := useCase.Storage.DeleteAll(); err != nil {
+		return fmt.Errorf("unable to delete the to-do records: %v", err)
+	}
+
+	return nil
+}
+
+// DeleteSingle ...
+func (useCase TodoRecord) DeleteSingle(id int) error {
+	if err := useCase.Storage.DeleteSingle(id); err != nil {
 		return fmt.Errorf("unable to delete the to-do record: %v", err)
 	}
 

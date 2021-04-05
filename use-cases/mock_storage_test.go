@@ -29,7 +29,12 @@ func (mock *MockStorage) Update(id int, todo models.TodoRecord) error {
 	return results.Error(0)
 }
 
-func (mock *MockStorage) Delete(id int) error {
+func (mock *MockStorage) DeleteAll() error {
+	results := mock.InnerMock.Called()
+	return results.Error(0)
+}
+
+func (mock *MockStorage) DeleteSingle(id int) error {
 	results := mock.InnerMock.Called(id)
 	return results.Error(0)
 }
