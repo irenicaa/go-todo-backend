@@ -52,7 +52,12 @@ func (mock *MockTodoRecordUseCase) Patch(
 	return results.Get(0).(models.PresentationTodoRecord), results.Error(1)
 }
 
-func (mock *MockTodoRecordUseCase) Delete(id int) error {
+func (mock *MockTodoRecordUseCase) DeleteAll() error {
+	results := mock.InnerMock.Called()
+	return results.Error(0)
+}
+
+func (mock *MockTodoRecordUseCase) DeleteSingle(id int) error {
 	results := mock.InnerMock.Called(id)
 	return results.Error(0)
 }

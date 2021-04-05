@@ -293,7 +293,7 @@ func TestRouter_ServeHTTP(t *testing.T) {
 				URLScheme: "http",
 				UseCase: func() TodoRecordUseCase {
 					useCase := &MockTodoRecordUseCase{}
-					useCase.InnerMock.On("Delete", 12).Return(nil)
+					useCase.InnerMock.On("DeleteSingle", 12).Return(nil)
 
 					return useCase
 				}(),

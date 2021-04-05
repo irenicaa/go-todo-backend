@@ -24,7 +24,8 @@ type TodoRecordUseCase interface {
 		models.PresentationTodoRecord,
 		error,
 	)
-	Delete(id int) error
+	DeleteAll() error
+	DeleteSingle(id int) error
 }
 
 // TodoRecord ...
@@ -260,7 +261,33 @@ func (handler TodoRecord) Patch(
 	httputils.HandleJSON(writer, handler.Logger, presentationTodo)
 }
 
-// Delete ...
+// DeleteAll ...
+//   @router /api/v1/todos [DELETE]
+//   @summary delete the to-do records
+//   @produce json
+//   @success 204 {string} string
+//   @failure 400 {string} string
+//   @failure 500 {string} string
+func (handler TodoRecord) DeleteAll(
+	writer http.ResponseWriter,
+	request *http.Request,
+) {
+	if err := handler.UseCase.DeleteAll(); err != nil {
+		httputils.HandleError(
+			writer,
+			handler.Logger,
+			http.StatusInternalServerError,
+			"%s",
+			err,
+		)
+
+		return
+	}
+
+	writer.WriteHeader(http.StatusNoContent)
+}
+
+// DeleteSingle ...
 //   @router /api/v1/todos/{id} [DELETE]
 //   @summary delete the to-do record
 //   @param id path integer true "to-do record ID"
@@ -268,7 +295,7 @@ func (handler TodoRecord) Patch(
 //   @success 204 {string} string
 //   @failure 400 {string} string
 //   @failure 500 {string} string
-func (handler TodoRecord) Delete(
+func (handler TodoRecord) DeleteSingle(
 	writer http.ResponseWriter,
 	request *http.Request,
 ) {
@@ -285,7 +312,7 @@ func (handler TodoRecord) Delete(
 		return
 	}
 
-	if err := handler.UseCase.Delete(id); err != nil {
+	if err := handler.UseCase.DeleteSingle(id); err != nil {
 		httputils.HandleError(
 			writer,
 			handler.Logger,

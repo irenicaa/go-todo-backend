@@ -34,7 +34,11 @@ func (router Router) ServeHTTP(
 		case http.MethodPatch:
 			router.TodoRecord.Patch(writer, request)
 		case http.MethodDelete:
-			router.TodoRecord.Delete(writer, request)
+			if request.URL.Path == router.BaseURL+"/todos" {
+				router.TodoRecord.DeleteAll(writer, request)
+			} else {
+				router.TodoRecord.DeleteSingle(writer, request)
+			}
 		}
 
 		return

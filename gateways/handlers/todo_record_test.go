@@ -906,7 +906,7 @@ func TestTodoRecord_Patch(t *testing.T) {
 	}
 }
 
-func TestTodoRecord_Delete(t *testing.T) {
+func TestTodoRecord_DeleteSingle(t *testing.T) {
 	type fields struct {
 		URLScheme string
 		UseCase   TodoRecordUseCase
@@ -928,7 +928,7 @@ func TestTodoRecord_Delete(t *testing.T) {
 				URLScheme: "http",
 				UseCase: func() TodoRecordUseCase {
 					useCase := &MockTodoRecordUseCase{}
-					useCase.InnerMock.On("Delete", 12).Return(nil)
+					useCase.InnerMock.On("DeleteSingle", 12).Return(nil)
 
 					return useCase
 				}(),
@@ -998,7 +998,7 @@ func TestTodoRecord_Delete(t *testing.T) {
 				URLScheme: "http",
 				UseCase: func() TodoRecordUseCase {
 					useCase := &MockTodoRecordUseCase{}
-					useCase.InnerMock.On("Delete", 12).Return(iotest.ErrTimeout)
+					useCase.InnerMock.On("DeleteSingle", 12).Return(iotest.ErrTimeout)
 
 					return useCase
 				}(),
@@ -1040,7 +1040,7 @@ func TestTodoRecord_Delete(t *testing.T) {
 				UseCase:   tt.fields.UseCase,
 				Logger:    tt.fields.Logger,
 			}
-			handler.Delete(responseRecorder, tt.args.request)
+			handler.DeleteSingle(responseRecorder, tt.args.request)
 
 			tt.fields.UseCase.(*MockTodoRecordUseCase).InnerMock.AssertExpectations(t)
 			tt.fields.Logger.(*MockLogger).InnerMock.AssertExpectations(t)
