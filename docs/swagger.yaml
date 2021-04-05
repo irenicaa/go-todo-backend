@@ -1,13 +1,13 @@
 definitions:
   models.PresentationTodoRecord:
     properties:
-      Completed:
+      completed:
         type: boolean
-      Order:
+      order:
         type: integer
-      Title:
+      title:
         type: string
-      URL:
+      url:
         type: string
     type: object
   models.TodoRecord:
@@ -39,6 +39,23 @@ info:
   version: 1.0.0
 paths:
   /api/v1/todos:
+    delete:
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: delete the to-do records
     get:
       produces:
       - application/json
