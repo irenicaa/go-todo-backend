@@ -46,7 +46,7 @@ func (handler TodoRecord) GetAll(
 	request *http.Request,
 ) {
 	baseURL := handler.getBaseURL(request)
-	presentationTodo, err := handler.UseCase.GetAll(baseURL)
+	presentationTodos, err := handler.UseCase.GetAll(baseURL)
 	if err != nil {
 		httputils.HandleError(
 			writer,
@@ -59,7 +59,10 @@ func (handler TodoRecord) GetAll(
 		return
 	}
 
-	httputils.HandleJSON(writer, handler.Logger, presentationTodo)
+	if presentationTodos == nil {
+		presentationTodos = []models.PresentationTodoRecord{}
+	}
+	httputils.HandleJSON(writer, handler.Logger, presentationTodos)
 }
 
 // GetSingle ...
