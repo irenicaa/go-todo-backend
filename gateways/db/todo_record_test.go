@@ -154,7 +154,7 @@ func TestDB_Update(t *testing.T) {
 	}
 }
 
-func TestDB_Delete(t *testing.T) {
+func TestDB_DeleteSingle(t *testing.T) {
 	type args struct {
 		todo models.TodoRecord
 	}
@@ -185,7 +185,7 @@ func TestDB_Delete(t *testing.T) {
 			id, err := db.Create(tt.args.todo)
 			require.NoError(t, err)
 
-			err = db.Delete(id)
+			err = db.DeleteSingle(id)
 			require.NoError(t, err)
 
 			todo, err := db.GetSingle(id)

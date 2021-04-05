@@ -77,8 +77,14 @@ func (db TodoRecord) Update(id int, todo models.TodoRecord) error {
 	return err
 }
 
-// Delete ...
-func (db TodoRecord) Delete(id int) error {
+// DeleteAll ...
+func (db TodoRecord) DeleteAll() error {
+	_, err := db.pool.Exec(`DELETE FROM todo_records`)
+	return err
+}
+
+// DeleteSingle ...
+func (db TodoRecord) DeleteSingle(id int) error {
 	_, err := db.pool.Exec(`DELETE FROM todo_records WHERE id = $1`, id)
 	return err
 }
