@@ -32,7 +32,7 @@ func TestTodoRecord_GetAll(t *testing.T) {
 		wantResponse *http.Response
 	}{
 		{
-			name: "success",
+			name: "success with to-do records",
 			fields: fields{
 				URLScheme: "http",
 				UseCase: func() TodoRecordUseCase {
@@ -84,6 +84,40 @@ func TestTodoRecord_GetAll(t *testing.T) {
 						`"completed":true,` +
 						`"order":42}]`,
 				))),
+				ContentLength: -1,
+			},
+		},
+		{
+			name: "success without to-do records",
+			fields: fields{
+				URLScheme: "http",
+				UseCase: func() TodoRecordUseCase {
+					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
+					presentationTodos := []models.PresentationTodoRecord(nil)
+
+					useCase := &MockTodoRecordUseCase{}
+					useCase.InnerMock.On("GetAll", baseURL).Return(presentationTodos, nil)
+
+					return useCase
+				}(),
+				Logger: &MockLogger{},
+			},
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos",
+					nil,
+				),
+			},
+			wantResponse: &http.Response{
+				Status: strconv.Itoa(http.StatusOK) + " " +
+					http.StatusText(http.StatusOK),
+				StatusCode:    http.StatusOK,
+				Proto:         "HTTP/1.1",
+				ProtoMajor:    1,
+				ProtoMinor:    1,
+				Header:        http.Header{"Content-Type": {"application/json"}},
+				Body:          ioutil.NopCloser(bytes.NewReader([]byte(`[]`))),
 				ContentLength: -1,
 			},
 		},
