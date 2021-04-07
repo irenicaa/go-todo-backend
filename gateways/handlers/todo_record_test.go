@@ -75,14 +75,14 @@ func TestTodoRecord_GetAll(t *testing.T) {
 				ProtoMinor: 1,
 				Header:     http.Header{"Content-Type": {"application/json"}},
 				Body: ioutil.NopCloser(bytes.NewReader([]byte(
-					`[{"URL":"http://example.com/api/v1/todos/5",` +
-						`"Title":"test",` +
-						`"Completed":true,` +
-						`"Order":12},` +
-						`{"URL":"http://example.com/api/v1/todos/23",` +
-						`"Title":"test",` +
-						`"Completed":true,` +
-						`"Order":42}]`,
+					`[{"url":"http://example.com/api/v1/todos/5",` +
+						`"title":"test",` +
+						`"completed":true,` +
+						`"order":12},` +
+						`{"url":"http://example.com/api/v1/todos/23",` +
+						`"title":"test",` +
+						`"completed":true,` +
+						`"order":42}]`,
 				))),
 				ContentLength: -1,
 			},
@@ -202,10 +202,10 @@ func TestTodoRecord_GetSingle(t *testing.T) {
 				ProtoMinor: 1,
 				Header:     http.Header{"Content-Type": {"application/json"}},
 				Body: ioutil.NopCloser(bytes.NewReader([]byte(
-					`{"URL":"http://example.com/api/v1/todos/12",` +
-						`"Title":"test",` +
-						`"Completed":true,` +
-						`"Order":23}`,
+					`{"url":"http://example.com/api/v1/todos/12",` +
+						`"title":"test",` +
+						`"completed":true,` +
+						`"order":23}`,
 				))),
 				ContentLength: -1,
 			},
@@ -367,10 +367,10 @@ func TestTodoRecord_Create(t *testing.T) {
 				ProtoMinor: 1,
 				Header:     http.Header{"Content-Type": {"application/json"}},
 				Body: ioutil.NopCloser(bytes.NewReader([]byte(
-					`{"URL":"http://example.com/api/v1/todos/12",` +
-						`"Title":"test",` +
-						`"Completed":true,` +
-						`"Order":23}`,
+					`{"url":"http://example.com/api/v1/todos/12",` +
+						`"title":"test",` +
+						`"completed":true,` +
+						`"order":23}`,
 				))),
 				ContentLength: -1,
 			},
@@ -541,10 +541,10 @@ func TestTodoRecord_Update(t *testing.T) {
 				ProtoMinor: 1,
 				Header:     http.Header{"Content-Type": {"application/json"}},
 				Body: ioutil.NopCloser(bytes.NewReader([]byte(
-					`{"URL":"http://example.com/api/v1/todos/12",` +
-						`"Title":"test",` +
-						`"Completed":true,` +
-						`"Order":23}`,
+					`{"url":"http://example.com/api/v1/todos/12",` +
+						`"title":"test",` +
+						`"completed":true,` +
+						`"order":23}`,
 				))),
 				ContentLength: -1,
 			},
@@ -755,10 +755,10 @@ func TestTodoRecord_Patch(t *testing.T) {
 				ProtoMinor: 1,
 				Header:     http.Header{"Content-Type": {"application/json"}},
 				Body: ioutil.NopCloser(bytes.NewReader([]byte(
-					`{"URL":"http://example.com/api/v1/todos/12",` +
-						`"Title":"test",` +
-						`"Completed":true,` +
-						`"Order":23}`,
+					`{"url":"http://example.com/api/v1/todos/12",` +
+						`"title":"test",` +
+						`"completed":true,` +
+						`"order":23}`,
 				))),
 				ContentLength: -1,
 			},
