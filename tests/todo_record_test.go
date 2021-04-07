@@ -134,7 +134,8 @@ func TestTodoRecord_withGetting(t *testing.T) {
 	pool, err := db.OpenDB(*dataSourceName)
 	require.NoError(t, err)
 
-	_, err = pool.Exec(`DELETE FROM todo_records`)
+	db := db.NewTodoRecord(pool)
+	err = db.DeleteAll()
 	require.NoError(t, err)
 
 	var createdTodos []models.PresentationTodoRecord

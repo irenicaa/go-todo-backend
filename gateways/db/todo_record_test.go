@@ -50,10 +50,10 @@ func TestDB_GetAll(t *testing.T) {
 			pool, err := OpenDB(*dataSourceName)
 			require.NoError(t, err)
 
-			_, err = pool.Exec(`DELETE FROM todo_records`)
+			db := NewTodoRecord(pool)
+			err = db.DeleteAll()
 			require.NoError(t, err)
 
-			db := NewTodoRecord(pool)
 			for index, todo := range tt.args.todos {
 				id, err2 := db.Create(todo)
 				require.NoError(t, err2)
