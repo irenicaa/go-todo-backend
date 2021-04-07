@@ -287,7 +287,39 @@ func TestRouter_ServeHTTP(t *testing.T) {
 			},
 		},
 		{
-			name: "success with deleting of a record",
+			name: "success with deleting of all records",
+			fields: fields{
+				BaseURL:   "/api/v1",
+				URLScheme: "http",
+				UseCase: func() TodoRecordUseCase {
+					useCase := &MockTodoRecordUseCase{}
+					useCase.InnerMock.On("DeleteAll").Return(nil)
+
+					return useCase
+				}(),
+				Logger: &MockLogger{},
+			},
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodDelete,
+					"http://example.com/api/v1/todos",
+					nil,
+				),
+			},
+			wantResponse: &http.Response{
+				Status: strconv.Itoa(http.StatusNoContent) + " " +
+					http.StatusText(http.StatusNoContent),
+				StatusCode:    http.StatusNoContent,
+				Proto:         "HTTP/1.1",
+				ProtoMajor:    1,
+				ProtoMinor:    1,
+				Header:        http.Header{},
+				Body:          ioutil.NopCloser(bytes.NewReader(nil)),
+				ContentLength: -1,
+			},
+		},
+		{
+			name: "success with deleting of a single record",
 			fields: fields{
 				BaseURL:   "/api/v1",
 				URLScheme: "http",

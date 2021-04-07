@@ -906,6 +906,110 @@ func TestTodoRecord_Patch(t *testing.T) {
 	}
 }
 
+func TestTodoRecord_DeleteAll(t *testing.T) {
+	type fields struct {
+		URLScheme string
+		UseCase   TodoRecordUseCase
+		Logger    httputils.Logger
+	}
+	type args struct {
+		request *http.Request
+	}
+
+	tests := []struct {
+		name         string
+		fields       fields
+		args         args
+		wantResponse *http.Response
+	}{
+		{
+			name: "success",
+			fields: fields{
+				URLScheme: "http",
+				UseCase: func() TodoRecordUseCase {
+					useCase := &MockTodoRecordUseCase{}
+					useCase.InnerMock.On("DeleteAll").Return(nil)
+
+					return useCase
+				}(),
+				Logger: &MockLogger{},
+			},
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodDelete,
+					"http://example.com/api/v1/todos",
+					nil,
+				),
+			},
+			wantResponse: &http.Response{
+				Status: strconv.Itoa(http.StatusNoContent) + " " +
+					http.StatusText(http.StatusNoContent),
+				StatusCode:    http.StatusNoContent,
+				Proto:         "HTTP/1.1",
+				ProtoMajor:    1,
+				ProtoMinor:    1,
+				Header:        http.Header{},
+				Body:          ioutil.NopCloser(bytes.NewReader(nil)),
+				ContentLength: -1,
+			},
+		},
+		{
+			name: "error",
+			fields: fields{
+				URLScheme: "http",
+				UseCase: func() TodoRecordUseCase {
+					useCase := &MockTodoRecordUseCase{}
+					useCase.InnerMock.On("DeleteAll").Return(iotest.ErrTimeout)
+
+					return useCase
+				}(),
+				Logger: func() httputils.Logger {
+					logger := &MockLogger{}
+					logger.InnerMock.
+						On("Print", []interface{}{"timeout"}).
+						Return().
+						Times(1)
+
+					return logger
+				}(),
+			},
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodDelete,
+					"http://example.com/api/v1/todos",
+					nil,
+				),
+			},
+			wantResponse: &http.Response{
+				Status: strconv.Itoa(http.StatusInternalServerError) + " " +
+					http.StatusText(http.StatusInternalServerError),
+				StatusCode:    http.StatusInternalServerError,
+				Proto:         "HTTP/1.1",
+				ProtoMajor:    1,
+				ProtoMinor:    1,
+				Header:        http.Header{},
+				Body:          ioutil.NopCloser(bytes.NewReader([]byte("timeout"))),
+				ContentLength: -1,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			responseRecorder := httptest.NewRecorder()
+			handler := TodoRecord{
+				URLScheme: tt.fields.URLScheme,
+				UseCase:   tt.fields.UseCase,
+				Logger:    tt.fields.Logger,
+			}
+			handler.DeleteAll(responseRecorder, tt.args.request)
+
+			tt.fields.UseCase.(*MockTodoRecordUseCase).InnerMock.AssertExpectations(t)
+			tt.fields.Logger.(*MockLogger).InnerMock.AssertExpectations(t)
+			assert.Equal(t, tt.wantResponse, responseRecorder.Result())
+		})
+	}
+}
+
 func TestTodoRecord_DeleteSingle(t *testing.T) {
 	type fields struct {
 		URLScheme string
