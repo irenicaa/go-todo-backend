@@ -523,6 +523,54 @@ func TestTodoRecord_Patch(t *testing.T) {
 	}
 }
 
+func TestTodoRecord_DeleteAll(t *testing.T) {
+	type fields struct {
+		Storage TodoRecordStorage
+	}
+
+	tests := []struct {
+		name    string
+		fields  fields
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "success",
+			fields: fields{
+				Storage: func() TodoRecordStorage {
+					storage := &MockStorage{}
+					storage.InnerMock.On("DeleteAll").Return(nil)
+
+					return storage
+				}(),
+			},
+			wantErr: assert.NoError,
+		},
+		{
+			name: "error",
+			fields: fields{
+				Storage: func() TodoRecordStorage {
+					storage := &MockStorage{}
+					storage.InnerMock.On("DeleteAll").Return(iotest.ErrTimeout)
+
+					return storage
+				}(),
+			},
+			wantErr: assert.Error,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			useCase := TodoRecord{
+				Storage: tt.fields.Storage,
+			}
+			err := useCase.DeleteAll()
+
+			tt.fields.Storage.(*MockStorage).InnerMock.AssertExpectations(t)
+			tt.wantErr(t, err)
+		})
+	}
+}
+
 func TestTodoRecord_DeleteSingle(t *testing.T) {
 	type fields struct {
 		Storage TodoRecordStorage
