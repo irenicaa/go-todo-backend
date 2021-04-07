@@ -154,6 +154,55 @@ func TestDB_Update(t *testing.T) {
 	}
 }
 
+func TestDB_DeleteAll(t *testing.T) {
+	type args struct {
+		todos []models.TodoRecord
+	}
+
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "success",
+			args: args{
+				todos: []models.TodoRecord{
+					{
+						Title:     "test",
+						Completed: true,
+						Order:     23,
+					},
+					{
+						Title:     "test2",
+						Completed: false,
+						Order:     42,
+					},
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			pool, err := OpenDB(*dataSourceName)
+			require.NoError(t, err)
+
+			db := NewTodoRecord(pool)
+			for _, todo := range tt.args.todos {
+				_, err2 := db.Create(todo)
+				require.NoError(t, err2)
+			}
+
+			err = db.DeleteAll()
+			require.NoError(t, err)
+
+			todos, err := db.GetAll()
+			require.NoError(t, err)
+
+			assert.Empty(t, todos)
+		})
+	}
+}
+
 func TestDB_DeleteSingle(t *testing.T) {
 	type args struct {
 		todo models.TodoRecord
