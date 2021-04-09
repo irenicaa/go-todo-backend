@@ -59,9 +59,11 @@ func (handler TodoRecord) GetAll(
 		return
 	}
 
+	// force empty array instead of null in the JSON representation
 	if presentationTodos == nil {
 		presentationTodos = []models.PresentationTodoRecord{}
 	}
+
 	httputils.HandleJSON(writer, handler.Logger, presentationTodos)
 }
 
