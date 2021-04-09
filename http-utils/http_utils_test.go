@@ -2,6 +2,7 @@ package httputils
 
 import (
 	"bytes"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -71,33 +72,29 @@ func TestGetIDFromURL(t *testing.T) {
 	}
 }
 
-func TestGetRequestBody(t *testing.T) {
+func TestGetJSONData(t *testing.T) {
 	type args struct {
-		request     *http.Request
-		requestData interface{}
+		reader io.Reader
+		data   interface{}
 	}
 
 	tests := []struct {
-		name            string
-		args            args
-		wantRequestData interface{}
-		wantErr         assert.ErrorAssertionFunc
+		name     string
+		args     args
+		wantData interface{}
+		wantErr  assert.ErrorAssertionFunc
 	}{
 		{
 			name: "success",
 			args: args{
-				request: httptest.NewRequest(
-					http.MethodPost,
-					"http://example.com/",
-					bytes.NewReader([]byte(`{
-						"Title": "test",
-						"Completed": true,
-						"Order": 23
-					}`)),
-				),
-				requestData: &models.TodoRecord{},
+				reader: bytes.NewReader([]byte(`{
+					"Title": "test",
+					"Completed": true,
+					"Order": 23
+				}`)),
+				data: &models.TodoRecord{},
 			},
-			wantRequestData: &models.TodoRecord{
+			wantData: &models.TodoRecord{
 				Title:     "test",
 				Completed: true,
 				Order:     23,
@@ -107,39 +104,31 @@ func TestGetRequestBody(t *testing.T) {
 		{
 			name: "error on reading",
 			args: args{
-				request: httptest.NewRequest(
-					http.MethodPost,
-					"http://example.com/",
-					iotest.TimeoutReader(bytes.NewReader([]byte(`{
-						"Title": "test",
-						"Completed": true,
-						"Order": 23
-					}`))),
-				),
-				requestData: &models.TodoRecord{},
+				reader: iotest.TimeoutReader(bytes.NewReader([]byte(`{
+					"Title": "test",
+					"Completed": true,
+					"Order": 23
+				}`))),
+				data: &models.TodoRecord{},
 			},
-			wantRequestData: &models.TodoRecord{},
-			wantErr:         assert.Error,
+			wantData: &models.TodoRecord{},
+			wantErr:  assert.Error,
 		},
 		{
 			name: "error on unmarshalling",
 			args: args{
-				request: httptest.NewRequest(
-					http.MethodPost,
-					"http://example.com/",
-					bytes.NewReader([]byte("incorrect")),
-				),
-				requestData: &models.TodoRecord{},
+				reader: bytes.NewReader([]byte("incorrect")),
+				data:   &models.TodoRecord{},
 			},
-			wantRequestData: &models.TodoRecord{},
-			wantErr:         assert.Error,
+			wantData: &models.TodoRecord{},
+			wantErr:  assert.Error,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := GetRequestBody(tt.args.request, tt.args.requestData)
+			err := GetJSONData(tt.args.reader, tt.args.data)
 
-			assert.Equal(t, tt.wantRequestData, tt.args.requestData)
+			assert.Equal(t, tt.wantData, tt.args.data)
 			tt.wantErr(t, err)
 		})
 	}

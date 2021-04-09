@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"regexp"
@@ -32,15 +33,15 @@ func GetIDFromURL(request *http.Request) (int, error) {
 	return id, nil
 }
 
-// GetRequestBody ...
-func GetRequestBody(request *http.Request, requestData interface{}) error {
-	body, err := ioutil.ReadAll(request.Body)
+// GetJSONData ...
+func GetJSONData(reader io.Reader, data interface{}) error {
+	dataAsJSON, err := ioutil.ReadAll(reader)
 	if err != nil {
-		return fmt.Errorf("unable to read the request body: %s", err)
+		return fmt.Errorf("unable to read the JSON data: %s", err)
 	}
 
-	if err := json.Unmarshal(body, requestData); err != nil {
-		return fmt.Errorf("unable to unmarshal the request body: %s", err)
+	if err := json.Unmarshal(dataAsJSON, data); err != nil {
+		return fmt.Errorf("unable to unmarshal the JSON data: %s", err)
 	}
 
 	return nil

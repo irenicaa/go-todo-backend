@@ -12,6 +12,7 @@ import (
 	"testing"
 
 	"github.com/irenicaa/go-todo-backend/gateways/db"
+	httputils "github.com/irenicaa/go-todo-backend/http-utils"
 	"github.com/irenicaa/go-todo-backend/models"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -164,11 +165,8 @@ func TestTodoRecord_withGetting(t *testing.T) {
 	require.NoError(t, err)
 	defer response.Body.Close()
 
-	responseBytes, err := ioutil.ReadAll(response.Body)
-	require.NoError(t, err)
-
 	var gotTodos []models.PresentationTodoRecord
-	err = json.Unmarshal(responseBytes, &gotTodos)
+	err = httputils.GetJSONData(response.Body, &gotTodos)
 	require.NoError(t, err)
 
 	assert.Equal(t, createdTodos, gotTodos)
@@ -219,13 +217,8 @@ func unmarshalTodoRecord(reader io.ReadCloser) (
 ) {
 	defer reader.Close()
 
-	responseBytes, err := ioutil.ReadAll(reader)
-	if err != nil {
-		return models.PresentationTodoRecord{}, err
-	}
-
 	var todo models.PresentationTodoRecord
-	if err := json.Unmarshal(responseBytes, &todo); err != nil {
+	if err := httputils.GetJSONData(reader, &todo); err != nil {
 		return models.PresentationTodoRecord{}, err
 	}
 

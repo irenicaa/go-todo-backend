@@ -123,7 +123,7 @@ func (handler TodoRecord) Create(
 	request *http.Request,
 ) {
 	var todo models.TodoRecord
-	if err := httputils.GetRequestBody(request, &todo); err != nil {
+	if err := httputils.GetJSONData(request.Body, &todo); err != nil {
 		httputils.HandleError(
 			writer,
 			handler.Logger,
@@ -180,7 +180,7 @@ func (handler TodoRecord) Update(
 	}
 
 	var todo models.TodoRecord
-	if err := httputils.GetRequestBody(request, &todo); err != nil {
+	if err := httputils.GetJSONData(request.Body, &todo); err != nil {
 		httputils.HandleError(
 			writer,
 			handler.Logger,
@@ -237,7 +237,7 @@ func (handler TodoRecord) Patch(
 	}
 
 	var todoPatch models.TodoRecordPatch
-	if err := httputils.GetRequestBody(request, &todoPatch); err != nil {
+	if err := httputils.GetJSONData(request.Body, &todoPatch); err != nil {
 		httputils.HandleError(
 			writer,
 			handler.Logger,

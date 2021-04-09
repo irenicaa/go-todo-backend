@@ -416,7 +416,7 @@ func TestTodoRecord_Create(t *testing.T) {
 				UseCase:   &MockTodoRecordUseCase{},
 				Logger: func() httputils.Logger {
 					message := "unable to get the request body: " +
-						"unable to unmarshal the request body: " +
+						"unable to unmarshal the JSON data: " +
 						"invalid character 'i' looking for beginning of value"
 					logger := &MockLogger{}
 					logger.InnerMock.
@@ -444,7 +444,7 @@ func TestTodoRecord_Create(t *testing.T) {
 				Header:     http.Header{},
 				Body: ioutil.NopCloser(bytes.NewReader([]byte(
 					"unable to get the request body: " +
-						"unable to unmarshal the request body: " +
+						"unable to unmarshal the JSON data: " +
 						"invalid character 'i' looking for beginning of value",
 				))),
 				ContentLength: -1,
@@ -633,7 +633,7 @@ func TestTodoRecord_Update(t *testing.T) {
 				UseCase:   &MockTodoRecordUseCase{},
 				Logger: func() httputils.Logger {
 					message := "unable to get the request body: " +
-						"unable to unmarshal the request body: " +
+						"unable to unmarshal the JSON data: " +
 						"invalid character 'i' looking for beginning of value"
 					logger := &MockLogger{}
 					logger.InnerMock.
@@ -661,7 +661,7 @@ func TestTodoRecord_Update(t *testing.T) {
 				Header:     http.Header{},
 				Body: ioutil.NopCloser(bytes.NewReader([]byte(
 					"unable to get the request body: " +
-						"unable to unmarshal the request body: " +
+						"unable to unmarshal the JSON data: " +
 						"invalid character 'i' looking for beginning of value",
 				))),
 				ContentLength: -1,
@@ -843,7 +843,7 @@ func TestTodoRecord_Patch(t *testing.T) {
 				UseCase:   &MockTodoRecordUseCase{},
 				Logger: func() httputils.Logger {
 					message := "unable to get the request body: " +
-						"unable to unmarshal the request body: " +
+						"unable to unmarshal the JSON data: " +
 						"invalid character 'i' looking for beginning of value"
 					logger := &MockLogger{}
 					logger.InnerMock.
@@ -871,7 +871,7 @@ func TestTodoRecord_Patch(t *testing.T) {
 				Header:     http.Header{},
 				Body: ioutil.NopCloser(bytes.NewReader([]byte(
 					"unable to get the request body: " +
-						"unable to unmarshal the request body: " +
+						"unable to unmarshal the JSON data: " +
 						"invalid character 'i' looking for beginning of value",
 				))),
 				ContentLength: -1,
