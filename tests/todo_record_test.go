@@ -13,7 +13,6 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/irenicaa/go-todo-backend/gateways/db"
 	httputils "github.com/irenicaa/go-todo-backend/http-utils"
 	"github.com/irenicaa/go-todo-backend/models"
 	"github.com/stretchr/testify/assert"
@@ -21,11 +20,6 @@ import (
 )
 
 var port = flag.Int("port", 8080, "server port")
-var dataSourceName = flag.String(
-	"dataSourceName",
-	db.DefaultDataSourceName,
-	"DB connection string",
-)
 
 func TestTodoRecord_withSingleModel(t *testing.T) {
 	tests := []struct {
@@ -134,15 +128,14 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 }
 
 func TestTodoRecord_withGetting(t *testing.T) {
-	pool, err := db.OpenDB(*dataSourceName)
+	url := fmt.Sprintf("http://localhost:%d/api/v1/todos", *port)
+	request, err := http.NewRequest(http.MethodDelete, url, nil)
 	require.NoError(t, err)
 
-	db := db.NewTodoRecord(pool)
-	err = db.DeleteAll()
+	_, err = http.DefaultClient.Do(request)
 	require.NoError(t, err)
 
 	var createdTodos []models.PresentationTodoRecord
-	url := fmt.Sprintf("http://localhost:%d/api/v1/todos", *port)
 	for i := 0; i <= 10; i++ {
 		originalTodo := models.TodoRecord{
 			Title:     "test" + strconv.Itoa(i),
