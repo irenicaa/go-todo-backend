@@ -271,7 +271,6 @@ func (handler TodoRecord) Patch(
 //   @summary delete the to-do records
 //   @produce json
 //   @success 204 {string} string
-//   @failure 400 {string} string
 //   @failure 500 {string} string
 func (handler TodoRecord) DeleteAll(
 	writer http.ResponseWriter,

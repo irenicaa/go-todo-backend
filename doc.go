@@ -1,4 +1,4 @@
-package dicegenerator
+package todobackend
 
 //go:generate swag init --generalInfo doc.go --propertyStrategy pascalcase
 
