@@ -59,11 +59,7 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 				requestBytes, err := json.Marshal(newTodo)
 				require.NoError(t, err)
 
-				request, err :=
-					http.NewRequest(http.MethodPut, todoURL, bytes.NewReader(requestBytes))
-				require.NoError(t, err)
-
-				_, err = http.DefaultClient.Do(request)
+				_, err = sendRequest(http.MethodPut, todoURL, bytes.NewReader(requestBytes))
 				require.NoError(t, err)
 			},
 			wantTodo: models.PresentationTodoRecord{
@@ -86,11 +82,7 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 				requestBytes, err := json.Marshal(todoPatch)
 				require.NoError(t, err)
 
-				request, err :=
-					http.NewRequest(http.MethodPatch, todoURL, bytes.NewReader(requestBytes))
-				require.NoError(t, err)
-
-				_, err = http.DefaultClient.Do(request)
+				_, err = sendRequest(http.MethodPatch, todoURL, bytes.NewReader(requestBytes))
 				require.NoError(t, err)
 			},
 			wantTodo: models.PresentationTodoRecord{
@@ -129,10 +121,7 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 
 func TestTodoRecord_withGetting(t *testing.T) {
 	url := fmt.Sprintf("http://localhost:%d/api/v1/todos", *port)
-	request, err := http.NewRequest(http.MethodDelete, url, nil)
-	require.NoError(t, err)
-
-	_, err = http.DefaultClient.Do(request)
+	_, err := sendRequest(http.MethodDelete, url, nil)
 	require.NoError(t, err)
 
 	var createdTodos []models.PresentationTodoRecord
@@ -185,10 +174,7 @@ func TestTodoRecord_withDeleting(t *testing.T) {
 	createdTodo, err := unmarshalTodoRecord(response.Body)
 	require.NoError(t, err)
 
-	request, err := http.NewRequest(http.MethodDelete, createdTodo.URL, nil)
-	require.NoError(t, err)
-
-	_, err = http.DefaultClient.Do(request)
+	_, err = sendRequest(http.MethodDelete, createdTodo.URL, nil)
 	require.NoError(t, err)
 
 	response, err = http.Get(createdTodo.URL)
@@ -204,6 +190,23 @@ func TestTodoRecord_withDeleting(t *testing.T) {
 		"unable to get the to-do record: sql: no rows in result set",
 		string(responseBytes),
 	)
+}
+
+func sendRequest(method string, url string, body io.Reader) (
+	*http.Response,
+	error,
+) {
+	request, err := http.NewRequest(method, url, body)
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := http.DefaultClient.Do(request)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
 }
 
 func unmarshalTodoRecord(reader io.ReadCloser) (
