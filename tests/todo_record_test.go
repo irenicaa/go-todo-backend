@@ -98,8 +98,7 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 			require.NoError(t, err)
 
 			url := fmt.Sprintf("http://localhost:%d/api/v1/todos", *port)
-			response, err :=
-				http.Post(url, "application/json", bytes.NewReader(requestBytes))
+			response, err := sendRequest(http.MethodPost, url, bytes.NewReader(requestBytes))
 			require.NoError(t, err)
 
 			createdTodo, err := unmarshalTodoRecord(response.Body)
@@ -107,7 +106,7 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 
 			tt.action(t, createdTodo.URL)
 
-			response, err = http.Get(createdTodo.URL)
+			response, err = sendRequest(http.MethodGet, createdTodo.URL, nil)
 			require.NoError(t, err)
 
 			gotTodo, err := unmarshalTodoRecord(response.Body)
@@ -135,8 +134,7 @@ func TestTodoRecord_withGetting(t *testing.T) {
 		requestBytes, err := json.Marshal(originalTodo)
 		require.NoError(t, err)
 
-		response, err :=
-			http.Post(url, "application/json", bytes.NewReader(requestBytes))
+		response, err := sendRequest(http.MethodPost, url, bytes.NewReader(requestBytes))
 		require.NoError(t, err)
 
 		createdTodo, err := unmarshalTodoRecord(response.Body)
@@ -145,7 +143,7 @@ func TestTodoRecord_withGetting(t *testing.T) {
 		createdTodos = append(createdTodos, createdTodo)
 	}
 
-	response, err := http.Get(url)
+	response, err := sendRequest(http.MethodGet, url, nil)
 	require.NoError(t, err)
 	defer response.Body.Close()
 
@@ -167,8 +165,7 @@ func TestTodoRecord_withDeleting(t *testing.T) {
 	require.NoError(t, err)
 
 	url := fmt.Sprintf("http://localhost:%d/api/v1/todos", *port)
-	response, err :=
-		http.Post(url, "application/json", bytes.NewReader(requestBytes))
+	response, err := sendRequest(http.MethodPost, url, bytes.NewReader(requestBytes))
 	require.NoError(t, err)
 
 	createdTodo, err := unmarshalTodoRecord(response.Body)
@@ -177,7 +174,7 @@ func TestTodoRecord_withDeleting(t *testing.T) {
 	_, err = sendRequest(http.MethodDelete, createdTodo.URL, nil)
 	require.NoError(t, err)
 
-	response, err = http.Get(createdTodo.URL)
+	response, err = sendRequest(http.MethodGet, createdTodo.URL, nil)
 	require.NoError(t, err)
 	defer response.Body.Close()
 
