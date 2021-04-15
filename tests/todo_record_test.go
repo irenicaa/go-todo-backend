@@ -56,10 +56,7 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 					Order:     42,
 				}
 
-				requestBytes, err := json.Marshal(newTodo)
-				require.NoError(t, err)
-
-				_, err = sendRequest(http.MethodPut, todoURL, bytes.NewReader(requestBytes))
+				_, err := sendRequest(http.MethodPut, todoURL, newTodo)
 				require.NoError(t, err)
 			},
 			wantTodo: models.PresentationTodoRecord{
@@ -79,10 +76,7 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 				todoPatchTitle := "test2"
 				todoPatch := models.TodoRecordPatch{Title: &todoPatchTitle}
 
-				requestBytes, err := json.Marshal(todoPatch)
-				require.NoError(t, err)
-
-				_, err = sendRequest(http.MethodPatch, todoURL, bytes.NewReader(requestBytes))
+				_, err := sendRequest(http.MethodPatch, todoURL, todoPatch)
 				require.NoError(t, err)
 			},
 			wantTodo: models.PresentationTodoRecord{
@@ -94,11 +88,8 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			requestBytes, err := json.Marshal(tt.originalTodo)
-			require.NoError(t, err)
-
 			url := fmt.Sprintf("http://localhost:%d/api/v1/todos", *port)
-			response, err := sendRequest(http.MethodPost, url, bytes.NewReader(requestBytes))
+			response, err := sendRequest(http.MethodPost, url, tt.originalTodo)
 			require.NoError(t, err)
 
 			createdTodo, err := unmarshalTodoRecord(response.Body)
@@ -131,10 +122,7 @@ func TestTodoRecord_withGetting(t *testing.T) {
 			Order:     i,
 		}
 
-		requestBytes, err := json.Marshal(originalTodo)
-		require.NoError(t, err)
-
-		response, err := sendRequest(http.MethodPost, url, bytes.NewReader(requestBytes))
+		response, err := sendRequest(http.MethodPost, url, originalTodo)
 		require.NoError(t, err)
 
 		createdTodo, err := unmarshalTodoRecord(response.Body)
@@ -161,11 +149,8 @@ func TestTodoRecord_withDeleting(t *testing.T) {
 		Order:     42,
 	}
 
-	requestBytes, err := json.Marshal(originalTodo)
-	require.NoError(t, err)
-
 	url := fmt.Sprintf("http://localhost:%d/api/v1/todos", *port)
-	response, err := sendRequest(http.MethodPost, url, bytes.NewReader(requestBytes))
+	response, err := sendRequest(http.MethodPost, url, originalTodo)
 	require.NoError(t, err)
 
 	createdTodo, err := unmarshalTodoRecord(response.Body)
@@ -189,10 +174,20 @@ func TestTodoRecord_withDeleting(t *testing.T) {
 	)
 }
 
-func sendRequest(method string, url string, body io.Reader) (
+func sendRequest(method string, url string, data interface{}) (
 	*http.Response,
 	error,
 ) {
+	var body io.Reader
+	if data != nil {
+		dataAsJSON, err := json.Marshal(data)
+		if err != nil {
+			return nil, err
+		}
+
+		body = bytes.NewReader(dataAsJSON)
+	}
+
 	request, err := http.NewRequest(method, url, body)
 	if err != nil {
 		return nil, err
