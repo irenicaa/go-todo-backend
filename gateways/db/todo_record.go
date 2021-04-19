@@ -19,7 +19,14 @@ func NewTodoRecord(pool *sql.DB) TodoRecord {
 
 // GetAll ...
 func (db TodoRecord) GetAll(query models.Query) ([]models.TodoRecord, error) {
-	rows, err := db.pool.Query(`SELECT * FROM todo_records`)
+	sql := "SELECT * FROM todo_records"
+	var args []interface{}
+	if query.TitleFragment != "" {
+		sql += " WHERE title LIKE $1"
+		args = append(args, "%"+query.TitleFragment+"%")
+	}
+
+	rows, err := db.pool.Query(sql, args...)
 	if err != nil {
 		return nil, fmt.Errorf("unable to create a cursor: %v", err)
 	}
