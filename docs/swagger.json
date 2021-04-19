@@ -16,6 +16,14 @@
                     "application/json"
                 ],
                 "summary": "get all to-do records",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "search by the title fragment",
+                        "name": "title_fragment",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",

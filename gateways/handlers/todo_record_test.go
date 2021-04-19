@@ -126,6 +126,64 @@ func TestTodoRecord_GetAll(t *testing.T) {
 			},
 		},
 		{
+			name: "success with the title fragment",
+			fields: fields{
+				URLScheme: "http",
+				UseCase: func() TodoRecordUseCase {
+					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
+					presentationTodos := []models.PresentationTodoRecord{
+						{
+							URL:       "http://example.com/api/v1/todos/5",
+							Title:     "test",
+							Completed: true,
+							Order:     12,
+						},
+						{
+							URL:       "http://example.com/api/v1/todos/23",
+							Title:     "test",
+							Completed: true,
+							Order:     42,
+						},
+					}
+
+					useCase := &MockTodoRecordUseCase{}
+					useCase.InnerMock.
+						On("GetAll", baseURL, models.Query{TitleFragment: "test"}).
+						Return(presentationTodos, nil)
+
+					return useCase
+				}(),
+				Logger: &MockLogger{},
+			},
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos?title_fragment=test",
+					nil,
+				),
+			},
+			wantResponse: &http.Response{
+				Status: strconv.Itoa(http.StatusOK) + " " +
+					http.StatusText(http.StatusOK),
+				StatusCode: http.StatusOK,
+				Proto:      "HTTP/1.1",
+				ProtoMajor: 1,
+				ProtoMinor: 1,
+				Header:     http.Header{"Content-Type": {"application/json"}},
+				Body: ioutil.NopCloser(bytes.NewReader([]byte(
+					`[{"url":"http://example.com/api/v1/todos/5",` +
+						`"title":"test",` +
+						`"completed":true,` +
+						`"order":12},` +
+						`{"url":"http://example.com/api/v1/todos/23",` +
+						`"title":"test",` +
+						`"completed":true,` +
+						`"order":42}]`,
+				))),
+				ContentLength: -1,
+			},
+		},
+		{
 			name: "error",
 			fields: fields{
 				URLScheme: "http",

@@ -53,6 +53,11 @@ paths:
             type: string
       summary: delete the to-do records
     get:
+      parameters:
+      - description: search by the title fragment
+        in: query
+        name: title_fragment
+        type: string
       produces:
       - application/json
       responses:

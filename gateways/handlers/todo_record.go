@@ -41,6 +41,7 @@ type TodoRecord struct {
 // GetAll ...
 //   @router /api/v1/todos [GET]
 //   @summary get all to-do records
+//   @param title_fragment query string false "search by the title fragment"
 //   @produce json
 //   @success 200 {array} models.PresentationTodoRecord
 //   @failure 500 {string} string
@@ -49,7 +50,9 @@ func (handler TodoRecord) GetAll(
 	request *http.Request,
 ) {
 	baseURL := handler.getBaseURL(request)
-	presentationTodos, err := handler.UseCase.GetAll(baseURL, models.Query{})
+	presentationTodos, err := handler.UseCase.GetAll(baseURL, models.Query{
+		TitleFragment: request.FormValue("title_fragment"),
+	})
 	if err != nil {
 		httputils.HandleError(
 			writer,
