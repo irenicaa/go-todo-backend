@@ -54,7 +54,9 @@ func TestRouter_ServeHTTP(t *testing.T) {
 					}
 
 					useCase := &MockTodoRecordUseCase{}
-					useCase.InnerMock.On("GetAll", baseURL).Return(presentationTodos, nil)
+					useCase.InnerMock.
+						On("GetAll", baseURL, models.Query{}).
+						Return(presentationTodos, nil)
 
 					return useCase
 				}(),

@@ -15,6 +15,7 @@ func TestTodoRecord_GetAll(t *testing.T) {
 	}
 	type args struct {
 		baseURL *url.URL
+		query   models.Query
 	}
 
 	tests := []struct {
@@ -29,7 +30,9 @@ func TestTodoRecord_GetAll(t *testing.T) {
 			fields: fields{
 				Storage: func() TodoRecordStorage {
 					storage := &MockStorage{}
-					storage.InnerMock.On("GetAll").Return([]models.TodoRecord(nil), nil)
+					storage.InnerMock.
+						On("GetAll", models.Query{}).
+						Return([]models.TodoRecord(nil), nil)
 
 					return storage
 				}(),
@@ -60,7 +63,7 @@ func TestTodoRecord_GetAll(t *testing.T) {
 					}
 
 					storage := &MockStorage{}
-					storage.InnerMock.On("GetAll").Return(todos, nil)
+					storage.InnerMock.On("GetAll", models.Query{}).Return(todos, nil)
 
 					return storage
 				}(),
@@ -90,7 +93,7 @@ func TestTodoRecord_GetAll(t *testing.T) {
 				Storage: func() TodoRecordStorage {
 					storage := &MockStorage{}
 					storage.InnerMock.
-						On("GetAll").
+						On("GetAll", models.Query{}).
 						Return([]models.TodoRecord(nil), iotest.ErrTimeout)
 
 					return storage
@@ -108,7 +111,7 @@ func TestTodoRecord_GetAll(t *testing.T) {
 			useCase := TodoRecord{
 				Storage: tt.fields.Storage,
 			}
-			got, err := useCase.GetAll(tt.args.baseURL)
+			got, err := useCase.GetAll(tt.args.baseURL, tt.args.query)
 
 			tt.fields.Storage.(*MockStorage).InnerMock.AssertExpectations(t)
 			assert.Equal(t, tt.want, got)

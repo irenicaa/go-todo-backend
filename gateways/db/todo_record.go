@@ -18,7 +18,7 @@ func NewTodoRecord(pool *sql.DB) TodoRecord {
 }
 
 // GetAll ...
-func (db TodoRecord) GetAll() ([]models.TodoRecord, error) {
+func (db TodoRecord) GetAll(query models.Query) ([]models.TodoRecord, error) {
 	rows, err := db.pool.Query(`SELECT * FROM todo_records`)
 	if err != nil {
 		return nil, fmt.Errorf("unable to create a cursor: %v", err)

@@ -53,7 +53,9 @@ func TestTodoRecord_GetAll(t *testing.T) {
 					}
 
 					useCase := &MockTodoRecordUseCase{}
-					useCase.InnerMock.On("GetAll", baseURL).Return(presentationTodos, nil)
+					useCase.InnerMock.
+						On("GetAll", baseURL, models.Query{}).
+						Return(presentationTodos, nil)
 
 					return useCase
 				}(),
@@ -96,7 +98,9 @@ func TestTodoRecord_GetAll(t *testing.T) {
 					presentationTodos := []models.PresentationTodoRecord(nil)
 
 					useCase := &MockTodoRecordUseCase{}
-					useCase.InnerMock.On("GetAll", baseURL).Return(presentationTodos, nil)
+					useCase.InnerMock.
+						On("GetAll", baseURL, models.Query{}).
+						Return(presentationTodos, nil)
 
 					return useCase
 				}(),
@@ -130,7 +134,7 @@ func TestTodoRecord_GetAll(t *testing.T) {
 
 					useCase := &MockTodoRecordUseCase{}
 					useCase.InnerMock.
-						On("GetAll", baseURL).
+						On("GetAll", baseURL, models.Query{}).
 						Return([]models.PresentationTodoRecord(nil), iotest.ErrTimeout)
 
 					return useCase

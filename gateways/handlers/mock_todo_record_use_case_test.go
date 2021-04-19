@@ -13,8 +13,9 @@ type MockTodoRecordUseCase struct {
 
 func (mock *MockTodoRecordUseCase) GetAll(
 	baseURL *url.URL,
+	query models.Query,
 ) ([]models.PresentationTodoRecord, error) {
-	results := mock.InnerMock.Called(baseURL)
+	results := mock.InnerMock.Called(baseURL, query)
 	return results.Get(0).([]models.PresentationTodoRecord), results.Error(1)
 }
 

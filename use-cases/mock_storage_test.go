@@ -9,8 +9,11 @@ type MockStorage struct {
 	InnerMock mock.Mock
 }
 
-func (mock *MockStorage) GetAll() ([]models.TodoRecord, error) {
-	results := mock.InnerMock.Called()
+func (mock *MockStorage) GetAll(query models.Query) (
+	[]models.TodoRecord,
+	error,
+) {
+	results := mock.InnerMock.Called(query)
 	return results.Get(0).([]models.TodoRecord), results.Error(1)
 }
 

@@ -9,7 +9,7 @@ import (
 
 // TodoRecordStorage ...
 type TodoRecordStorage interface {
-	GetAll() ([]models.TodoRecord, error)
+	GetAll(query models.Query) ([]models.TodoRecord, error)
 	GetSingle(id int) (models.TodoRecord, error)
 	Create(todo models.TodoRecord) (id int, err error)
 	Update(id int, todo models.TodoRecord) error
@@ -23,11 +23,11 @@ type TodoRecord struct {
 }
 
 // GetAll ...
-func (useCase TodoRecord) GetAll(baseURL *url.URL) (
+func (useCase TodoRecord) GetAll(baseURL *url.URL, query models.Query) (
 	[]models.PresentationTodoRecord,
 	error,
 ) {
-	todos, err := useCase.Storage.GetAll()
+	todos, err := useCase.Storage.GetAll(query)
 	if err != nil {
 		return nil, fmt.Errorf("unable to get the to-do records: %v", err)
 	}

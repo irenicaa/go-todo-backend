@@ -10,7 +10,10 @@ import (
 
 // TodoRecordUseCase ...
 type TodoRecordUseCase interface {
-	GetAll(baseURL *url.URL) ([]models.PresentationTodoRecord, error)
+	GetAll(baseURL *url.URL, query models.Query) (
+		[]models.PresentationTodoRecord,
+		error,
+	)
 	GetSingle(baseURL *url.URL, id int) (models.PresentationTodoRecord, error)
 	Create(baseURL *url.URL, todo models.TodoRecord) (
 		models.PresentationTodoRecord,
@@ -46,7 +49,7 @@ func (handler TodoRecord) GetAll(
 	request *http.Request,
 ) {
 	baseURL := handler.getBaseURL(request)
-	presentationTodos, err := handler.UseCase.GetAll(baseURL)
+	presentationTodos, err := handler.UseCase.GetAll(baseURL, models.Query{})
 	if err != nil {
 		httputils.HandleError(
 			writer,

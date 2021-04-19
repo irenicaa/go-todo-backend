@@ -61,7 +61,7 @@ func TestDB_GetAll(t *testing.T) {
 				tt.args.todos[index].ID = id
 			}
 
-			todos, err := db.GetAll()
+			todos, err := db.GetAll(models.Query{})
 			require.NoError(t, err)
 
 			assert.Equal(t, tt.args.todos, todos)
@@ -195,7 +195,7 @@ func TestDB_DeleteAll(t *testing.T) {
 			err = db.DeleteAll()
 			require.NoError(t, err)
 
-			todos, err := db.GetAll()
+			todos, err := db.GetAll(models.Query{})
 			require.NoError(t, err)
 
 			assert.Empty(t, todos)
