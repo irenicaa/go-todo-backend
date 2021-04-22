@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"math"
 	"net/http"
 	"net/url"
 
@@ -49,9 +50,36 @@ func (handler TodoRecord) GetAll(
 	writer http.ResponseWriter,
 	request *http.Request,
 ) {
+	pageSize, err := httputils.GetIntFormValue(request, "page_size", 1, math.MaxInt32)
+	if err != nil {
+		httputils.HandleError(
+			writer,
+			handler.Logger,
+			http.StatusBadRequest,
+			"unable to get the page_size parameter: %v",
+			err,
+		)
+
+		return
+	}
+
+	page, err := httputils.GetIntFormValue(request, "page", 1, math.MaxInt32)
+	if err != nil {
+		httputils.HandleError(
+			writer,
+			handler.Logger,
+			http.StatusBadRequest,
+			"unable to get the page parameter: %v",
+			err,
+		)
+
+		return
+	}
+
 	baseURL := handler.getBaseURL(request)
 	presentationTodos, err := handler.UseCase.GetAll(baseURL, models.Query{
 		TitleFragment: request.FormValue("title_fragment"),
+		Pagination:    models.Pagination{PageSize: pageSize, Page: page},
 	})
 	if err != nil {
 		httputils.HandleError(
