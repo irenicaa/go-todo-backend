@@ -22,9 +22,18 @@ func NewTodoRecord(pool *sql.DB) TodoRecord {
 func (db TodoRecord) GetAll(query models.Query) ([]models.TodoRecord, error) {
 	sql := "SELECT * FROM todo_records"
 	var args []interface{}
+
 	if query.TitleFragment != "" {
 		sql += " WHERE lower(title) LIKE $1"
 		args = append(args, "%"+strings.ToLower(query.TitleFragment)+"%")
+	}
+
+	if query.Pagination != (models.Pagination{}) {
+		sql += fmt.Sprintf(
+			" ORDER BY \"order\", id OFFSET %d LIMIT %d",
+			(query.Pagination.Page-1)*query.Pagination.PageSize,
+			query.Pagination.PageSize,
+		)
 	}
 
 	rows, err := db.pool.Query(sql, args...)
