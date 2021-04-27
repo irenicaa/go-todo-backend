@@ -51,7 +51,7 @@ func (handler TodoRecord) GetAll(
 	request *http.Request,
 ) {
 	pageSize, err := httputils.GetIntFormValue(request, "page_size", 1, math.MaxInt32)
-	if err != nil {
+	if err != nil && err != httputils.ErrKeyIsMissed {
 		httputils.HandleError(
 			writer,
 			handler.Logger,
@@ -64,7 +64,7 @@ func (handler TodoRecord) GetAll(
 	}
 
 	page, err := httputils.GetIntFormValue(request, "page", 1, math.MaxInt32)
-	if err != nil {
+	if err != nil && err != httputils.ErrKeyIsMissed {
 		httputils.HandleError(
 			writer,
 			handler.Logger,
