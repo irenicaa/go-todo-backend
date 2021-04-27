@@ -184,7 +184,149 @@ func TestTodoRecord_GetAll(t *testing.T) {
 			},
 		},
 		{
-			name: "error",
+			name: "success with the pagination",
+			fields: fields{
+				URLScheme: "http",
+				UseCase: func() TodoRecordUseCase {
+					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
+					presentationTodos := []models.PresentationTodoRecord{
+						{
+							URL:       "http://example.com/api/v1/todos/5",
+							Title:     "test",
+							Completed: true,
+							Order:     12,
+						},
+						{
+							URL:       "http://example.com/api/v1/todos/23",
+							Title:     "test",
+							Completed: true,
+							Order:     42,
+						},
+					}
+
+					useCase := &MockTodoRecordUseCase{}
+					useCase.InnerMock.
+						On("GetAll", baseURL, models.Query{
+							Pagination: models.Pagination{PageSize: 23, Page: 42},
+						}).
+						Return(presentationTodos, nil)
+
+					return useCase
+				}(),
+				Logger: &MockLogger{},
+			},
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos?page_size=23&page=42",
+					nil,
+				),
+			},
+			wantResponse: &http.Response{
+				Status: strconv.Itoa(http.StatusOK) + " " +
+					http.StatusText(http.StatusOK),
+				StatusCode: http.StatusOK,
+				Proto:      "HTTP/1.1",
+				ProtoMajor: 1,
+				ProtoMinor: 1,
+				Header:     http.Header{"Content-Type": {"application/json"}},
+				Body: ioutil.NopCloser(bytes.NewReader([]byte(
+					`[{"url":"http://example.com/api/v1/todos/5",` +
+						`"title":"test",` +
+						`"completed":true,` +
+						`"order":12},` +
+						`{"url":"http://example.com/api/v1/todos/23",` +
+						`"title":"test",` +
+						`"completed":true,` +
+						`"order":42}]`,
+				))),
+				ContentLength: -1,
+			},
+		},
+		{
+			name: "error with the page_size parameter",
+			fields: fields{
+				URLScheme: "http",
+				UseCase:   &MockTodoRecordUseCase{},
+				Logger: func() httputils.Logger {
+					message := "unable to get the page_size parameter: " +
+						"value is incorrect: " +
+						"strconv.Atoi: parsing \"incorrect\": invalid syntax"
+					logger := &MockLogger{}
+					logger.InnerMock.
+						On("Print", []interface{}{message}).
+						Return().
+						Times(1)
+
+					return logger
+				}(),
+			},
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos?page_size=incorrect",
+					nil,
+				),
+			},
+			wantResponse: &http.Response{
+				Status: strconv.Itoa(http.StatusBadRequest) + " " +
+					http.StatusText(http.StatusBadRequest),
+				StatusCode: http.StatusBadRequest,
+				Proto:      "HTTP/1.1",
+				ProtoMajor: 1,
+				ProtoMinor: 1,
+				Header:     http.Header{},
+				Body: ioutil.NopCloser(bytes.NewReader([]byte(
+					"unable to get the page_size parameter: " +
+						"value is incorrect: " +
+						"strconv.Atoi: parsing \"incorrect\": invalid syntax",
+				))),
+				ContentLength: -1,
+			},
+		},
+		{
+			name: "error with the page parameter",
+			fields: fields{
+				URLScheme: "http",
+				UseCase:   &MockTodoRecordUseCase{},
+				Logger: func() httputils.Logger {
+					message := "unable to get the page parameter: " +
+						"value is incorrect: " +
+						"strconv.Atoi: parsing \"incorrect\": invalid syntax"
+					logger := &MockLogger{}
+					logger.InnerMock.
+						On("Print", []interface{}{message}).
+						Return().
+						Times(1)
+
+					return logger
+				}(),
+			},
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos?page=incorrect",
+					nil,
+				),
+			},
+			wantResponse: &http.Response{
+				Status: strconv.Itoa(http.StatusBadRequest) + " " +
+					http.StatusText(http.StatusBadRequest),
+				StatusCode: http.StatusBadRequest,
+				Proto:      "HTTP/1.1",
+				ProtoMajor: 1,
+				ProtoMinor: 1,
+				Header:     http.Header{},
+				Body: ioutil.NopCloser(bytes.NewReader([]byte(
+					"unable to get the page parameter: " +
+						"value is incorrect: " +
+						"strconv.Atoi: parsing \"incorrect\": invalid syntax",
+				))),
+				ContentLength: -1,
+			},
+		},
+		{
+			name: "error with the use case",
 			fields: fields{
 				URLScheme: "http",
 				UseCase: func() TodoRecordUseCase {
