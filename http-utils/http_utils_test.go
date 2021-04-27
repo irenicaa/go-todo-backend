@@ -105,8 +105,10 @@ func TestGetIntFormValue(t *testing.T) {
 				min:     0,
 				max:     100,
 			},
-			want:    0,
-			wantErr: assert.Error,
+			want: 0,
+			wantErr: func(t assert.TestingT, err error, msgAndArgs ...interface{}) bool {
+				return assert.Equal(t, ErrKeyIsMissed, err, msgAndArgs...)
+			},
 		},
 		{
 			name: "error with an incorrect key",

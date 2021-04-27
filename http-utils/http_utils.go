@@ -16,6 +16,8 @@ type Logger interface {
 	Print(arguments ...interface{})
 }
 
+// ErrKeyIsMissed ...
+var ErrKeyIsMissed = errors.New("key is missed")
 var idPattern = regexp.MustCompile(`/\d+`)
 
 // GetIDFromURL ...
@@ -42,7 +44,7 @@ func GetIntFormValue(
 ) (int, error) {
 	value := request.FormValue(key)
 	if value == "" {
-		return 0, errors.New("key is missed")
+		return 0, ErrKeyIsMissed
 	}
 
 	valueAsInt, err := strconv.Atoi(value)
