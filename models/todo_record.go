@@ -1,8 +1,11 @@
 package models
 
+import "time"
+
 // TodoRecord ...
 type TodoRecord struct {
 	ID        int
+	Date      time.Time
 	Title     string
 	Completed bool
 	Order     int
@@ -10,6 +13,9 @@ type TodoRecord struct {
 
 // Patch ...
 func (todo *TodoRecord) Patch(patch TodoRecordPatch) {
+	if patch.Date != nil {
+		todo.Date = *patch.Date
+	}
 	if patch.Title != nil {
 		todo.Title = *patch.Title
 	}
