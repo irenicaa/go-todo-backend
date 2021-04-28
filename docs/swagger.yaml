@@ -58,6 +58,16 @@ paths:
         in: query
         name: title_fragment
         type: string
+      - description: specify the page size for pagination
+        in: query
+        minimum: 1
+        name: page_size
+        type: integer
+      - description: specify the page for pagination
+        in: query
+        minimum: 1
+        name: page
+        type: integer
       produces:
       - application/json
       responses:

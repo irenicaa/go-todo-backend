@@ -22,6 +22,20 @@
                         "description": "search by the title fragment",
                         "name": "title_fragment",
                         "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "specify the page size for pagination",
+                        "name": "page_size",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "specify the page for pagination",
+                        "name": "page",
+                        "in": "query"
                     }
                 ],
                 "responses": {

@@ -43,6 +43,8 @@ type TodoRecord struct {
 //   @router /api/v1/todos [GET]
 //   @summary get all to-do records
 //   @param title_fragment query string false "search by the title fragment"
+//   @param page_size query integer false "specify the page size for pagination" minimum(1)
+//   @param page query integer false "specify the page for pagination" minimum(1)
 //   @produce json
 //   @success 200 {array} models.PresentationTodoRecord
 //   @failure 500 {string} string
