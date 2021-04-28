@@ -1,0 +1,5 @@
+ALTER TABLE todo_records
+ADD COLUMN "date" date NOT NULL DEFAULT '0001-01-01';
+
+ALTER TABLE todo_records
+ALTER COLUMN "date" DROP DEFAULT;
