@@ -3,6 +3,7 @@ package models
 import (
 	"net/url"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -24,6 +25,7 @@ func TestNewPresentationTodoRecord(t *testing.T) {
 				baseURL: &url.URL{Scheme: "https", Host: "example.com"},
 				todo: TodoRecord{
 					ID:        23,
+					Date:      time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC),
 					Title:     "test",
 					Completed: true,
 					Order:     42,
@@ -31,6 +33,7 @@ func TestNewPresentationTodoRecord(t *testing.T) {
 			},
 			want: PresentationTodoRecord{
 				URL:       "https://example.com/api/v1/todos/23",
+				Date:      time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC),
 				Title:     "test",
 				Completed: true,
 				Order:     42,
