@@ -45,7 +45,13 @@ func (db TodoRecord) GetAll(query models.Query) ([]models.TodoRecord, error) {
 	var todos []models.TodoRecord
 	for rows.Next() {
 		var todo models.TodoRecord
-		err := rows.Scan(&todo.ID, &todo.Title, &todo.Completed, &todo.Order)
+		err := rows.Scan(
+			&todo.ID,
+			&todo.Title,
+			&todo.Completed,
+			&todo.Order,
+			&todo.Date,
+		)
 		if err != nil {
 			return nil, fmt.Errorf("unable to unmarshal the row: %v", err)
 		}
@@ -61,7 +67,7 @@ func (db TodoRecord) GetSingle(id int) (models.TodoRecord, error) {
 	var todo models.TodoRecord
 	err := db.pool.
 		QueryRow(`SELECT * FROM todo_records WHERE id = $1`, id).
-		Scan(&todo.ID, &todo.Title, &todo.Completed, &todo.Order)
+		Scan(&todo.ID, &todo.Title, &todo.Completed, &todo.Order, &todo.Date)
 	return todo, err
 }
 
@@ -69,12 +75,13 @@ func (db TodoRecord) GetSingle(id int) (models.TodoRecord, error) {
 func (db TodoRecord) Create(todo models.TodoRecord) (id int, err error) {
 	err = db.pool.
 		QueryRow(
-			`INSERT INTO todo_records (title, completed, "order")
-			VALUES ($1, $2, $3)
+			`INSERT INTO todo_records (title, completed, "order", "date")
+			VALUES ($1, $2, $3, $4)
 			RETURNING id`,
 			todo.Title,
 			todo.Completed,
 			todo.Order,
+			todo.Date,
 		).
 		Scan(&id)
 	return id, err
@@ -84,11 +91,12 @@ func (db TodoRecord) Create(todo models.TodoRecord) (id int, err error) {
 func (db TodoRecord) Update(id int, todo models.TodoRecord) error {
 	_, err := db.pool.Exec(
 		`UPDATE todo_records
-		SET title = $1, completed = $2, "order" = $3
-		WHERE id = $4`,
+		SET title = $1, completed = $2, "order" = $3, "date" = $4
+		WHERE id = $5`,
 		todo.Title,
 		todo.Completed,
 		todo.Order,
+		todo.Date,
 		id,
 	)
 	return err

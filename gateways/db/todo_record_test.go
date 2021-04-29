@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"flag"
 	"testing"
+	"time"
 
 	"github.com/irenicaa/go-todo-backend/models"
 	"github.com/stretchr/testify/assert"
@@ -32,11 +33,13 @@ func TestDB_GetAll(t *testing.T) {
 			args: args{
 				todos: []models.TodoRecord{
 					{
+						Date:      time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC),
 						Title:     "test",
 						Completed: true,
 						Order:     23,
 					},
 					{
+						Date:      time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC),
 						Title:     "test2",
 						Completed: false,
 						Order:     42,
@@ -63,6 +66,9 @@ func TestDB_GetAll(t *testing.T) {
 
 			todos, err := db.GetAll(models.Query{})
 			require.NoError(t, err)
+			for index := range todos {
+				todos[index].Date = todos[index].Date.In(time.UTC)
+			}
 
 			assert.Equal(t, tt.args.todos, todos)
 		})
@@ -82,6 +88,7 @@ func TestDB_Create(t *testing.T) {
 			name: "success",
 			args: args{
 				todo: models.TodoRecord{
+					Date:      time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC),
 					Title:     "test",
 					Completed: true,
 					Order:     42,
@@ -101,6 +108,7 @@ func TestDB_Create(t *testing.T) {
 
 			todo, err := db.GetSingle(id)
 			require.NoError(t, err)
+			todo.Date = todo.Date.In(time.UTC)
 
 			assert.Equal(t, tt.args.todo, todo)
 		})
@@ -121,11 +129,13 @@ func TestDB_Update(t *testing.T) {
 			name: "success",
 			args: args{
 				originalTodo: models.TodoRecord{
+					Date:      time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC),
 					Title:     "test",
 					Completed: true,
 					Order:     23,
 				},
 				updatedTodo: models.TodoRecord{
+					Date:      time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC),
 					Title:     "test2",
 					Completed: false,
 					Order:     42,
@@ -148,6 +158,7 @@ func TestDB_Update(t *testing.T) {
 
 			todo, err := db.GetSingle(id)
 			require.NoError(t, err)
+			todo.Date = todo.Date.In(time.UTC)
 
 			assert.Equal(t, tt.args.updatedTodo, todo)
 		})
@@ -168,11 +179,13 @@ func TestDB_DeleteAll(t *testing.T) {
 			args: args{
 				todos: []models.TodoRecord{
 					{
+						Date:      time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC),
 						Title:     "test",
 						Completed: true,
 						Order:     23,
 					},
 					{
+						Date:      time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC),
 						Title:     "test2",
 						Completed: false,
 						Order:     42,
@@ -217,6 +230,7 @@ func TestDB_DeleteSingle(t *testing.T) {
 			name: "success",
 			args: args{
 				todo: models.TodoRecord{
+					Date:      time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC),
 					Title:     "test",
 					Completed: true,
 					Order:     42,
