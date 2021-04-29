@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"strconv"
 	"testing"
+	"time"
 
 	httputils "github.com/irenicaa/go-todo-backend/http-utils"
 	"github.com/irenicaa/go-todo-backend/models"
@@ -31,12 +32,14 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 		{
 			name: "creation",
 			originalTodo: models.TodoRecord{
+				Date:      time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC),
 				Title:     "test",
 				Completed: true,
 				Order:     42,
 			},
 			action: func(t *testing.T, todoURL string) {},
 			wantTodo: models.PresentationTodoRecord{
+				Date:      time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC),
 				Title:     "test",
 				Completed: true,
 				Order:     42,
@@ -45,12 +48,14 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 		{
 			name: "updating",
 			originalTodo: models.TodoRecord{
+				Date:      time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC),
 				Title:     "test",
 				Completed: true,
 				Order:     23,
 			},
 			action: func(t *testing.T, todoURL string) {
 				newTodo := models.TodoRecord{
+					Date:      time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC),
 					Title:     "test2",
 					Completed: true,
 					Order:     42,
@@ -60,6 +65,7 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 				require.NoError(t, err)
 			},
 			wantTodo: models.PresentationTodoRecord{
+				Date:      time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC),
 				Title:     "test2",
 				Completed: true,
 				Order:     42,
@@ -68,6 +74,7 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 		{
 			name: "patching",
 			originalTodo: models.TodoRecord{
+				Date:      time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC),
 				Title:     "test",
 				Completed: true,
 				Order:     42,
@@ -80,6 +87,7 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 				require.NoError(t, err)
 			},
 			wantTodo: models.PresentationTodoRecord{
+				Date:      time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC),
 				Title:     "test2",
 				Completed: true,
 				Order:     42,
@@ -117,6 +125,7 @@ func TestTodoRecord_withGetting(t *testing.T) {
 	var createdTodos []models.PresentationTodoRecord
 	for i := 0; i <= 10; i++ {
 		originalTodo := models.TodoRecord{
+			Date:      time.Date(2006, time.January, 2+i, 0, 0, 0, 0, time.UTC),
 			Title:     "test" + strconv.Itoa(i),
 			Completed: true,
 			Order:     i,
@@ -144,6 +153,7 @@ func TestTodoRecord_withGetting(t *testing.T) {
 
 func TestTodoRecord_withDeleting(t *testing.T) {
 	originalTodo := models.TodoRecord{
+		Date:      time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC),
 		Title:     "test",
 		Completed: true,
 		Order:     42,
