@@ -3,6 +3,8 @@ definitions:
     properties:
       completed:
         type: boolean
+      date:
+        type: string
       order:
         type: integer
       title:
@@ -14,6 +16,8 @@ definitions:
     properties:
       Completed:
         type: boolean
+      Date:
+        type: string
       ID:
         type: integer
       Order:
@@ -25,6 +29,8 @@ definitions:
     properties:
       Completed:
         type: boolean
+      Date:
+        type: string
       Order:
         type: integer
       Title:

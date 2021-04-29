@@ -291,6 +291,9 @@
                 "completed": {
                     "type": "boolean"
                 },
+                "date": {
+                    "type": "string"
+                },
                 "order": {
                     "type": "integer"
                 },
@@ -308,6 +311,9 @@
                 "Completed": {
                     "type": "boolean"
                 },
+                "Date": {
+                    "type": "string"
+                },
                 "ID": {
                     "type": "integer"
                 },
@@ -324,6 +330,9 @@
             "properties": {
                 "Completed": {
                     "type": "boolean"
+                },
+                "Date": {
+                    "type": "string"
                 },
                 "Order": {
                     "type": "integer"
