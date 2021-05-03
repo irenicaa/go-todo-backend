@@ -11,6 +11,16 @@ type TodoRecord struct {
 	Order     int
 }
 
+// NewTodoRecord ...
+func NewTodoRecord(presentationTodo PresentationTodoRecord) TodoRecord {
+	return TodoRecord{
+		Date:      time.Time(presentationTodo.Date),
+		Title:     presentationTodo.Title,
+		Completed: presentationTodo.Completed,
+		Order:     presentationTodo.Order,
+	}
+}
+
 // Patch ...
 func (todo *TodoRecord) Patch(patch TodoRecordPatch) {
 	if patch.Date != nil {
