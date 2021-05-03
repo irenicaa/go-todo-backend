@@ -74,8 +74,8 @@ func TestTodoRecord_Patch(t *testing.T) {
 			},
 			args: args{
 				patch: TodoRecordPatch{
-					Date: func() *time.Time {
-						date := time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC)
+					Date: func() *Date {
+						date := Date(time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC))
 						return &date
 					}(),
 					Title: func() *string {
@@ -145,8 +145,8 @@ func TestTodoRecord_Patch(t *testing.T) {
 			},
 			args: args{
 				patch: TodoRecordPatch{
-					Date: func() *time.Time {
-						date := time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC)
+					Date: func() *Date {
+						date := Date(time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC))
 						return &date
 					}(),
 					Title: nil,
@@ -179,8 +179,8 @@ func TestTodoRecord_Patch(t *testing.T) {
 			},
 			args: args{
 				patch: TodoRecordPatch{
-					Date: func() *time.Time {
-						date := time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC)
+					Date: func() *Date {
+						date := Date(time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC))
 						return &date
 					}(),
 					Title: func() *string {
@@ -213,8 +213,8 @@ func TestTodoRecord_Patch(t *testing.T) {
 			},
 			args: args{
 				patch: TodoRecordPatch{
-					Date: func() *time.Time {
-						date := time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC)
+					Date: func() *Date {
+						date := Date(time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC))
 						return &date
 					}(),
 					Title: func() *string {

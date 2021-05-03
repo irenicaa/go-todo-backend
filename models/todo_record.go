@@ -24,7 +24,7 @@ func NewTodoRecord(presentationTodo PresentationTodoRecord) TodoRecord {
 // Patch ...
 func (todo *TodoRecord) Patch(patch TodoRecordPatch) {
 	if patch.Date != nil {
-		todo.Date = *patch.Date
+		todo.Date = time.Time(*patch.Date)
 	}
 	if patch.Title != nil {
 		todo.Title = *patch.Title

@@ -1,10 +1,8 @@
 package models
 
-import "time"
-
 // TodoRecordPatch ...
 type TodoRecordPatch struct {
-	Date      *time.Time
+	Date      *Date
 	Title     *string
 	Completed *bool
 	Order     *int
