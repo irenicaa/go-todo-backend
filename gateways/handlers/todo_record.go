@@ -16,11 +16,15 @@ type TodoRecordUseCase interface {
 		error,
 	)
 	GetSingle(baseURL *url.URL, id int) (models.PresentationTodoRecord, error)
-	Create(baseURL *url.URL, todo models.TodoRecord) (
+	Create(baseURL *url.URL, presentationTodo models.PresentationTodoRecord) (
 		models.PresentationTodoRecord,
 		error,
 	)
-	Update(baseURL *url.URL, id int, todo models.TodoRecord) (
+	Update(
+		baseURL *url.URL,
+		id int,
+		presentationTodo models.PresentationTodoRecord,
+	) (
 		models.PresentationTodoRecord,
 		error,
 	)
@@ -158,8 +162,8 @@ func (handler TodoRecord) Create(
 	writer http.ResponseWriter,
 	request *http.Request,
 ) {
-	var todo models.TodoRecord
-	if err := httputils.GetJSONData(request.Body, &todo); err != nil {
+	var presentationTodo models.PresentationTodoRecord
+	if err := httputils.GetJSONData(request.Body, &presentationTodo); err != nil {
 		httputils.HandleError(
 			writer,
 			handler.Logger,
@@ -172,7 +176,7 @@ func (handler TodoRecord) Create(
 	}
 
 	baseURL := handler.getBaseURL(request)
-	presentationTodo, err := handler.UseCase.Create(baseURL, todo)
+	presentationTodo, err := handler.UseCase.Create(baseURL, presentationTodo)
 	if err != nil {
 		httputils.HandleError(
 			writer,
@@ -215,8 +219,8 @@ func (handler TodoRecord) Update(
 		return
 	}
 
-	var todo models.TodoRecord
-	if err := httputils.GetJSONData(request.Body, &todo); err != nil {
+	var presentationTodo models.PresentationTodoRecord
+	if err := httputils.GetJSONData(request.Body, &presentationTodo); err != nil {
 		httputils.HandleError(
 			writer,
 			handler.Logger,
@@ -229,7 +233,7 @@ func (handler TodoRecord) Update(
 	}
 
 	baseURL := handler.getBaseURL(request)
-	presentationTodo, err := handler.UseCase.Update(baseURL, id, todo)
+	presentationTodo, err = handler.UseCase.Update(baseURL, id, presentationTodo)
 	if err != nil {
 		httputils.HandleError(
 			writer,

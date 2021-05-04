@@ -29,18 +29,18 @@ func (mock *MockTodoRecordUseCase) GetSingle(
 
 func (mock *MockTodoRecordUseCase) Create(
 	baseURL *url.URL,
-	todo models.TodoRecord,
+	presentationTodo models.PresentationTodoRecord,
 ) (models.PresentationTodoRecord, error) {
-	results := mock.InnerMock.Called(baseURL, todo)
+	results := mock.InnerMock.Called(baseURL, presentationTodo)
 	return results.Get(0).(models.PresentationTodoRecord), results.Error(1)
 }
 
 func (mock *MockTodoRecordUseCase) Update(
 	baseURL *url.URL,
 	id int,
-	todo models.TodoRecord,
+	presentationTodo models.PresentationTodoRecord,
 ) (models.PresentationTodoRecord, error) {
-	results := mock.InnerMock.Called(baseURL, id, todo)
+	results := mock.InnerMock.Called(baseURL, id, presentationTodo)
 	return results.Get(0).(models.PresentationTodoRecord), results.Error(1)
 }
 
