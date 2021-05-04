@@ -204,8 +204,8 @@ func TestTodoRecord_Create(t *testing.T) {
 		Storage TodoRecordStorage
 	}
 	type args struct {
-		baseURL *url.URL
-		todo    models.TodoRecord
+		baseURL          *url.URL
+		presentationTodo models.PresentationTodoRecord
 	}
 
 	tests := []struct {
@@ -220,10 +220,9 @@ func TestTodoRecord_Create(t *testing.T) {
 			fields: fields{
 				Storage: func() TodoRecordStorage {
 					todo := models.TodoRecord{
-						ID:        23,
 						Title:     "test",
 						Completed: true,
-						Order:     42,
+						Order:     23,
 					}
 
 					storage := &MockStorage{}
@@ -234,18 +233,17 @@ func TestTodoRecord_Create(t *testing.T) {
 			},
 			args: args{
 				baseURL: &url.URL{Scheme: "https", Host: "example.com"},
-				todo: models.TodoRecord{
-					ID:        23,
+				presentationTodo: models.PresentationTodoRecord{
 					Title:     "test",
 					Completed: true,
-					Order:     42,
+					Order:     23,
 				},
 			},
 			want: models.PresentationTodoRecord{
 				URL:       "https://example.com/api/v1/todos/42",
 				Title:     "test",
 				Completed: true,
-				Order:     42,
+				Order:     23,
 			},
 			wantErr: assert.NoError,
 		},
@@ -254,10 +252,9 @@ func TestTodoRecord_Create(t *testing.T) {
 			fields: fields{
 				Storage: func() TodoRecordStorage {
 					todo := models.TodoRecord{
-						ID:        23,
 						Title:     "test",
 						Completed: true,
-						Order:     42,
+						Order:     23,
 					}
 
 					storage := &MockStorage{}
@@ -268,11 +265,10 @@ func TestTodoRecord_Create(t *testing.T) {
 			},
 			args: args{
 				baseURL: &url.URL{Scheme: "https", Host: "example.com"},
-				todo: models.TodoRecord{
-					ID:        23,
+				presentationTodo: models.PresentationTodoRecord{
 					Title:     "test",
 					Completed: true,
-					Order:     42,
+					Order:     23,
 				},
 			},
 			want:    models.PresentationTodoRecord{},
@@ -284,7 +280,7 @@ func TestTodoRecord_Create(t *testing.T) {
 			useCase := TodoRecord{
 				Storage: tt.fields.Storage,
 			}
-			got, err := useCase.Create(tt.args.baseURL, tt.args.todo)
+			got, err := useCase.Create(tt.args.baseURL, tt.args.presentationTodo)
 
 			tt.fields.Storage.(*MockStorage).InnerMock.AssertExpectations(t)
 			assert.Equal(t, tt.want, got)
@@ -298,9 +294,9 @@ func TestTodoRecord_Update(t *testing.T) {
 		Storage TodoRecordStorage
 	}
 	type args struct {
-		baseURL *url.URL
-		id      int
-		todo    models.TodoRecord
+		baseURL          *url.URL
+		id               int
+		presentationTodo models.PresentationTodoRecord
 	}
 
 	tests := []struct {
@@ -315,10 +311,9 @@ func TestTodoRecord_Update(t *testing.T) {
 			fields: fields{
 				Storage: func() TodoRecordStorage {
 					todo := models.TodoRecord{
-						ID:        23,
 						Title:     "test",
 						Completed: true,
-						Order:     42,
+						Order:     23,
 					}
 
 					storage := &MockStorage{}
@@ -330,18 +325,17 @@ func TestTodoRecord_Update(t *testing.T) {
 			args: args{
 				baseURL: &url.URL{Scheme: "https", Host: "example.com"},
 				id:      42,
-				todo: models.TodoRecord{
-					ID:        23,
+				presentationTodo: models.PresentationTodoRecord{
 					Title:     "test",
 					Completed: true,
-					Order:     42,
+					Order:     23,
 				},
 			},
 			want: models.PresentationTodoRecord{
 				URL:       "https://example.com/api/v1/todos/42",
 				Title:     "test",
 				Completed: true,
-				Order:     42,
+				Order:     23,
 			},
 			wantErr: assert.NoError,
 		},
@@ -350,10 +344,9 @@ func TestTodoRecord_Update(t *testing.T) {
 			fields: fields{
 				Storage: func() TodoRecordStorage {
 					todo := models.TodoRecord{
-						ID:        23,
 						Title:     "test",
 						Completed: true,
-						Order:     42,
+						Order:     23,
 					}
 
 					storage := &MockStorage{}
@@ -365,11 +358,10 @@ func TestTodoRecord_Update(t *testing.T) {
 			args: args{
 				baseURL: &url.URL{Scheme: "https", Host: "example.com"},
 				id:      42,
-				todo: models.TodoRecord{
-					ID:        23,
+				presentationTodo: models.PresentationTodoRecord{
 					Title:     "test",
 					Completed: true,
-					Order:     42,
+					Order:     23,
 				},
 			},
 			want:    models.PresentationTodoRecord{},
@@ -381,7 +373,8 @@ func TestTodoRecord_Update(t *testing.T) {
 			useCase := TodoRecord{
 				Storage: tt.fields.Storage,
 			}
-			got, err := useCase.Update(tt.args.baseURL, tt.args.id, tt.args.todo)
+			got, err :=
+				useCase.Update(tt.args.baseURL, tt.args.id, tt.args.presentationTodo)
 
 			tt.fields.Storage.(*MockStorage).InnerMock.AssertExpectations(t)
 			assert.Equal(t, tt.want, got)
@@ -418,7 +411,6 @@ func TestTodoRecord_Patch(t *testing.T) {
 						Order:     42,
 					}
 					patchedTodo := models.TodoRecord{
-						ID:        23,
 						Title:     "test2",
 						Completed: true,
 						Order:     42,
@@ -485,7 +477,6 @@ func TestTodoRecord_Patch(t *testing.T) {
 						Order:     42,
 					}
 					patchedTodo := models.TodoRecord{
-						ID:        23,
 						Title:     "test2",
 						Completed: true,
 						Order:     42,

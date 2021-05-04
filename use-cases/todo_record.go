@@ -57,10 +57,14 @@ func (useCase TodoRecord) GetSingle(baseURL *url.URL, id int) (
 }
 
 // Create ...
-func (useCase TodoRecord) Create(baseURL *url.URL, todo models.TodoRecord) (
+func (useCase TodoRecord) Create(
+	baseURL *url.URL,
+	presentationTodo models.PresentationTodoRecord,
+) (
 	models.PresentationTodoRecord,
 	error,
 ) {
+	todo := models.NewTodoRecord(presentationTodo)
 	id, err := useCase.Storage.Create(todo)
 	if err != nil {
 		return models.PresentationTodoRecord{},
@@ -69,7 +73,7 @@ func (useCase TodoRecord) Create(baseURL *url.URL, todo models.TodoRecord) (
 
 	todo.ID = id
 
-	presentationTodo := models.NewPresentationTodoRecord(baseURL, todo)
+	presentationTodo = models.NewPresentationTodoRecord(baseURL, todo)
 	return presentationTodo, nil
 }
 
@@ -77,11 +81,12 @@ func (useCase TodoRecord) Create(baseURL *url.URL, todo models.TodoRecord) (
 func (useCase TodoRecord) Update(
 	baseURL *url.URL,
 	id int,
-	todo models.TodoRecord,
+	presentationTodo models.PresentationTodoRecord,
 ) (
 	models.PresentationTodoRecord,
 	error,
 ) {
+	todo := models.NewTodoRecord(presentationTodo)
 	if err := useCase.Storage.Update(id, todo); err != nil {
 		return models.PresentationTodoRecord{},
 			fmt.Errorf("unable to update the to-do record: %v", err)
@@ -89,7 +94,7 @@ func (useCase TodoRecord) Update(
 
 	todo.ID = id
 
-	presentationTodo := models.NewPresentationTodoRecord(baseURL, todo)
+	presentationTodo = models.NewPresentationTodoRecord(baseURL, todo)
 	return presentationTodo, nil
 }
 
@@ -110,7 +115,8 @@ func (useCase TodoRecord) Patch(
 
 	todo.Patch(todoPatch)
 
-	return useCase.Update(baseURL, id, todo)
+	presentationTodo := models.NewPresentationTodoRecord(baseURL, todo)
+	return useCase.Update(baseURL, id, presentationTodo)
 }
 
 // DeleteAll ...
