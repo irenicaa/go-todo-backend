@@ -8,6 +8,69 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestDate_UnmarshalJSON(t *testing.T) {
+	type args struct {
+		data []byte
+	}
+
+	tests := []struct {
+		name     string
+		args     args
+		wantDate Date
+		wantErr  assert.ErrorAssertionFunc
+	}{
+		{
+			name: "success with a null",
+			args: args{
+				data: []byte("null"),
+			},
+			wantDate: Date(time.Time{}),
+			wantErr:  assert.NoError,
+		},
+		{
+			name: "success with a non-zero time",
+			args: args{
+				data: []byte(`"2006-01-02"`),
+			},
+			wantDate: Date(time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC)),
+			wantErr:  assert.NoError,
+		},
+		{
+			name: "success with a zero time",
+			args: args{
+				data: []byte(`"0001-01-01"`),
+			},
+			wantDate: Date(time.Time{}),
+			wantErr:  assert.NoError,
+		},
+		{
+			name: "error with unmarshalling",
+			args: args{
+				data: []byte("23"),
+			},
+			wantDate: Date(time.Time{}),
+			wantErr:  assert.Error,
+		},
+		{
+			name: "error with parsing",
+			args: args{
+				data: []byte(`"incorrect"`),
+			},
+			wantDate: Date(time.Time{}),
+			wantErr:  assert.Error,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var date Date
+			err := json.Unmarshal(tt.args.data, &date)
+
+			assert.Equal(t, tt.wantDate, date)
+			tt.wantErr(t, err)
+		})
+	}
+}
+
 func TestDate_MarshalJSON(t *testing.T) {
 	tests := []struct {
 		name    string
