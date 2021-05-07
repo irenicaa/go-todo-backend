@@ -71,7 +71,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.TodoRecord"
+                            "$ref": "#/definitions/models.PresentationTodoRecord"
                         }
                     }
                 ],
@@ -175,7 +175,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.TodoRecord"
+                            "$ref": "#/definitions/models.PresentationTodoRecord"
                         }
                     }
                 ],
@@ -301,26 +301,6 @@
                     "type": "string"
                 },
                 "url": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.TodoRecord": {
-            "type": "object",
-            "properties": {
-                "Completed": {
-                    "type": "boolean"
-                },
-                "Date": {
-                    "type": "string"
-                },
-                "ID": {
-                    "type": "integer"
-                },
-                "Order": {
-                    "type": "integer"
-                },
-                "Title": {
                     "type": "string"
                 }
             }

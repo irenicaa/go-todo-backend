@@ -152,7 +152,7 @@ func (handler TodoRecord) GetSingle(
 // Create ...
 //   @router /api/v1/todos [POST]
 //   @summary create a to-do record
-//   @param body body models.TodoRecord true "to-do record data"
+//   @param body body models.PresentationTodoRecord true "to-do record data"
 //   @accept json
 //   @produce json
 //   @success 200 {object} models.PresentationTodoRecord
@@ -196,7 +196,7 @@ func (handler TodoRecord) Create(
 //   @router /api/v1/todos/{id} [PUT]
 //   @summary update the to-do record
 //   @param id path integer true "to-do record ID"
-//   @param body body models.TodoRecord true "to-do record data"
+//   @param body body models.PresentationTodoRecord true "to-do record data"
 //   @accept json
 //   @produce json
 //   @success 200 {object} models.PresentationTodoRecord

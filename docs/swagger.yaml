@@ -12,19 +12,6 @@ definitions:
       url:
         type: string
     type: object
-  models.TodoRecord:
-    properties:
-      Completed:
-        type: boolean
-      Date:
-        type: string
-      ID:
-        type: integer
-      Order:
-        type: integer
-      Title:
-        type: string
-    type: object
   models.TodoRecordPatch:
     properties:
       Completed:
@@ -97,7 +84,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/models.TodoRecord'
+          $ref: '#/definitions/models.PresentationTodoRecord'
       produces:
       - application/json
       responses:
@@ -206,7 +193,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/models.TodoRecord'
+          $ref: '#/definitions/models.PresentationTodoRecord'
       produces:
       - application/json
       responses:
