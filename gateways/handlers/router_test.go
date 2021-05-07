@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"strconv"
 	"testing"
+	"time"
 
 	httputils "github.com/irenicaa/go-todo-backend/http-utils"
 	"github.com/irenicaa/go-todo-backend/models"
@@ -40,15 +41,25 @@ func TestRouter_ServeHTTP(t *testing.T) {
 					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
 					presentationTodos := []models.PresentationTodoRecord{
 						{
-							URL:       "http://example.com/api/v1/todos/5",
+							URL: "http://example.com/api/v1/todos/5",
+							Date: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
 							Title:     "test",
 							Completed: true,
 							Order:     12,
 						},
 						{
-							URL:       "http://example.com/api/v1/todos/23",
-							Title:     "test",
-							Completed: true,
+							URL: "http://example.com/api/v1/todos/23",
+							Date: models.Date(time.Date(
+								2006, time.January, 3,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+							Title:     "test2",
+							Completed: false,
 							Order:     42,
 						},
 					}
@@ -79,12 +90,14 @@ func TestRouter_ServeHTTP(t *testing.T) {
 				Header:     http.Header{"Content-Type": {"application/json"}},
 				Body: ioutil.NopCloser(bytes.NewReader([]byte(
 					`[{"url":"http://example.com/api/v1/todos/5",` +
+						`"date":"2006-01-02",` +
 						`"title":"test",` +
 						`"completed":true,` +
 						`"order":12},` +
 						`{"url":"http://example.com/api/v1/todos/23",` +
-						`"title":"test",` +
-						`"completed":true,` +
+						`"date":"2006-01-03",` +
+						`"title":"test2",` +
+						`"completed":false,` +
 						`"order":42}]`,
 				))),
 				ContentLength: -1,
@@ -98,7 +111,12 @@ func TestRouter_ServeHTTP(t *testing.T) {
 				UseCase: func() TodoRecordUseCase {
 					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
 					presentationTodo := models.PresentationTodoRecord{
-						URL:       "http://example.com/api/v1/todos/12",
+						URL: "http://example.com/api/v1/todos/12",
+						Date: models.Date(time.Date(
+							2006, time.January, 2,
+							0, 0, 0, 0,
+							time.UTC,
+						)),
 						Title:     "test",
 						Completed: true,
 						Order:     23,
@@ -130,6 +148,7 @@ func TestRouter_ServeHTTP(t *testing.T) {
 				Header:     http.Header{"Content-Type": {"application/json"}},
 				Body: ioutil.NopCloser(bytes.NewReader([]byte(
 					`{"url":"http://example.com/api/v1/todos/12",` +
+						`"date":"2006-01-02",` +
 						`"title":"test",` +
 						`"completed":true,` +
 						`"order":23}`,
@@ -144,16 +163,32 @@ func TestRouter_ServeHTTP(t *testing.T) {
 				URLScheme: "http",
 				UseCase: func() TodoRecordUseCase {
 					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
-					todo := models.TodoRecord{Title: "test", Completed: true, Order: 23}
-					presentationTodo := models.PresentationTodoRecord{
-						URL:       "http://example.com/api/v1/todos/12",
+					presentationTodoIn := models.PresentationTodoRecord{
+						Date: models.Date(time.Date(
+							2006, time.January, 2,
+							0, 0, 0, 0,
+							time.UTC,
+						)),
+						Title:     "test",
+						Completed: true,
+						Order:     23,
+					}
+					presentationTodoOut := models.PresentationTodoRecord{
+						URL: "http://example.com/api/v1/todos/12",
+						Date: models.Date(time.Date(
+							2006, time.January, 2,
+							0, 0, 0, 0,
+							time.UTC,
+						)),
 						Title:     "test",
 						Completed: true,
 						Order:     23,
 					}
 
 					useCase := &MockTodoRecordUseCase{}
-					useCase.InnerMock.On("Create", baseURL, todo).Return(presentationTodo, nil)
+					useCase.InnerMock.
+						On("Create", baseURL, presentationTodoIn).
+						Return(presentationTodoOut, nil)
 
 					return useCase
 				}(),
@@ -164,6 +199,7 @@ func TestRouter_ServeHTTP(t *testing.T) {
 					http.MethodPost,
 					"http://example.com/api/v1/todos/",
 					bytes.NewReader([]byte(`{
+						"Date": "2006-01-02",
 						"Title": "test",
 						"Completed": true,
 						"Order": 23
@@ -180,6 +216,7 @@ func TestRouter_ServeHTTP(t *testing.T) {
 				Header:     http.Header{"Content-Type": {"application/json"}},
 				Body: ioutil.NopCloser(bytes.NewReader([]byte(
 					`{"url":"http://example.com/api/v1/todos/12",` +
+						`"date":"2006-01-02",` +
 						`"title":"test",` +
 						`"completed":true,` +
 						`"order":23}`,
@@ -194,9 +231,23 @@ func TestRouter_ServeHTTP(t *testing.T) {
 				URLScheme: "http",
 				UseCase: func() TodoRecordUseCase {
 					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
-					todo := models.TodoRecord{Title: "test", Completed: true, Order: 23}
-					presentationTodo := models.PresentationTodoRecord{
-						URL:       "http://example.com/api/v1/todos/12",
+					presentationTodoIn := models.PresentationTodoRecord{
+						Date: models.Date(time.Date(
+							2006, time.January, 2,
+							0, 0, 0, 0,
+							time.UTC,
+						)),
+						Title:     "test",
+						Completed: true,
+						Order:     23,
+					}
+					presentationTodoOut := models.PresentationTodoRecord{
+						URL: "http://example.com/api/v1/todos/12",
+						Date: models.Date(time.Date(
+							2006, time.January, 2,
+							0, 0, 0, 0,
+							time.UTC,
+						)),
 						Title:     "test",
 						Completed: true,
 						Order:     23,
@@ -204,8 +255,8 @@ func TestRouter_ServeHTTP(t *testing.T) {
 
 					useCase := &MockTodoRecordUseCase{}
 					useCase.InnerMock.
-						On("Update", baseURL, 12, todo).
-						Return(presentationTodo, nil)
+						On("Update", baseURL, 12, presentationTodoIn).
+						Return(presentationTodoOut, nil)
 
 					return useCase
 				}(),
@@ -216,6 +267,7 @@ func TestRouter_ServeHTTP(t *testing.T) {
 					http.MethodPut,
 					"http://example.com/api/v1/todos/12",
 					bytes.NewReader([]byte(`{
+						"Date": "2006-01-02",
 						"Title": "test",
 						"Completed": true,
 						"Order": 23
@@ -232,6 +284,7 @@ func TestRouter_ServeHTTP(t *testing.T) {
 				Header:     http.Header{"Content-Type": {"application/json"}},
 				Body: ioutil.NopCloser(bytes.NewReader([]byte(
 					`{"url":"http://example.com/api/v1/todos/12",` +
+						`"date":"2006-01-02",` +
 						`"title":"test",` +
 						`"completed":true,` +
 						`"order":23}`,
@@ -249,7 +302,12 @@ func TestRouter_ServeHTTP(t *testing.T) {
 					todoPatchTitle := "test"
 					todoPatch := models.TodoRecordPatch{Title: &todoPatchTitle}
 					presentationTodo := models.PresentationTodoRecord{
-						URL:       "http://example.com/api/v1/todos/12",
+						URL: "http://example.com/api/v1/todos/12",
+						Date: models.Date(time.Date(
+							2006, time.January, 2,
+							0, 0, 0, 0,
+							time.UTC,
+						)),
 						Title:     "test",
 						Completed: true,
 						Order:     23,
@@ -281,6 +339,7 @@ func TestRouter_ServeHTTP(t *testing.T) {
 				Header:     http.Header{"Content-Type": {"application/json"}},
 				Body: ioutil.NopCloser(bytes.NewReader([]byte(
 					`{"url":"http://example.com/api/v1/todos/12",` +
+						`"date":"2006-01-02",` +
 						`"title":"test",` +
 						`"completed":true,` +
 						`"order":23}`,
