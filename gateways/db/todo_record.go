@@ -28,7 +28,7 @@ func (db TodoRecord) GetAll(query models.Query) ([]models.TodoRecord, error) {
 		args = append(args, "%"+strings.ToLower(query.TitleFragment)+"%")
 	}
 
-	sql += " ORDER BY \"date\" DESC, \"order\", id"
+	sql += ` ORDER BY "date" DESC, "order", id`
 	if query.Pagination != (models.Pagination{}) {
 		sql += fmt.Sprintf(
 			" OFFSET %d LIMIT %d",
@@ -67,7 +67,7 @@ func (db TodoRecord) GetAll(query models.Query) ([]models.TodoRecord, error) {
 func (db TodoRecord) GetSingle(id int) (models.TodoRecord, error) {
 	var todo models.TodoRecord
 	err := db.pool.
-		QueryRow(`SELECT * FROM todo_records WHERE id = $1`, id).
+		QueryRow("SELECT * FROM todo_records WHERE id = $1", id).
 		Scan(&todo.ID, &todo.Title, &todo.Completed, &todo.Order, &todo.Date)
 	return todo, err
 }
@@ -105,12 +105,12 @@ func (db TodoRecord) Update(id int, todo models.TodoRecord) error {
 
 // DeleteAll ...
 func (db TodoRecord) DeleteAll() error {
-	_, err := db.pool.Exec(`DELETE FROM todo_records`)
+	_, err := db.pool.Exec("DELETE FROM todo_records")
 	return err
 }
 
 // DeleteSingle ...
 func (db TodoRecord) DeleteSingle(id int) error {
-	_, err := db.pool.Exec(`DELETE FROM todo_records WHERE id = $1`, id)
+	_, err := db.pool.Exec("DELETE FROM todo_records WHERE id = $1", id)
 	return err
 }
