@@ -56,6 +56,32 @@ func (handler TodoRecord) GetAll(
 	writer http.ResponseWriter,
 	request *http.Request,
 ) {
+	minimalDate, err := httputils.GetDateFormValue(request, "minimal_date")
+	if err != nil && err != httputils.ErrKeyIsMissed {
+		httputils.HandleError(
+			writer,
+			handler.Logger,
+			http.StatusBadRequest,
+			"unable to get the minimal_date parameter: %v",
+			err,
+		)
+
+		return
+	}
+
+	maximalDate, err := httputils.GetDateFormValue(request, "maximal_date")
+	if err != nil && err != httputils.ErrKeyIsMissed {
+		httputils.HandleError(
+			writer,
+			handler.Logger,
+			http.StatusBadRequest,
+			"unable to get the maximal_date parameter: %v",
+			err,
+		)
+
+		return
+	}
+
 	pageSize, err := httputils.GetIntFormValue(request, "page_size", 1, math.MaxInt32)
 	if err != nil && err != httputils.ErrKeyIsMissed {
 		httputils.HandleError(
@@ -84,6 +110,8 @@ func (handler TodoRecord) GetAll(
 
 	baseURL := handler.getBaseURL(request)
 	presentationTodos, err := handler.UseCase.GetAll(baseURL, models.Query{
+		MinimalDate:   minimalDate,
+		MaximalDate:   maximalDate,
 		TitleFragment: request.FormValue("title_fragment"),
 		Pagination:    models.Pagination{PageSize: pageSize, Page: page},
 	})
