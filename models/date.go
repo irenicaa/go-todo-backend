@@ -3,6 +3,7 @@ package models
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -29,12 +30,12 @@ func (date *Date) UnmarshalJSON(data []byte) error {
 
 	var formattedDate string
 	if err := json.Unmarshal(data, &formattedDate); err != nil {
-		return err
+		return fmt.Errorf("unable to unmarshal the string: %v", err)
 	}
 
 	parsedDate, err := ParseDate(formattedDate)
 	if err != nil {
-		return err
+		return fmt.Errorf("unable to parse the date: %v", err)
 	}
 
 	*date = parsedDate
