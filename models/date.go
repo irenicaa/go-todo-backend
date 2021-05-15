@@ -11,6 +11,16 @@ const dateFormat = "2006-01-02"
 // Date ...
 type Date time.Time
 
+// ParseDate ...
+func ParseDate(data string) (Date, error) {
+	parsedDate, err := time.Parse(dateFormat, data)
+	if err != nil {
+		return Date{}, err
+	}
+
+	return Date(parsedDate), nil
+}
+
 // UnmarshalJSON ...
 func (date *Date) UnmarshalJSON(data []byte) error {
 	if bytes.Equal(data, []byte("null")) {
@@ -22,12 +32,12 @@ func (date *Date) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	parsedDate, err := time.Parse(dateFormat, formattedDate)
+	parsedDate, err := ParseDate(formattedDate)
 	if err != nil {
 		return err
 	}
 
-	*date = Date(parsedDate)
+	*date = parsedDate
 	return nil
 }
 
