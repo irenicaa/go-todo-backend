@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"regexp"
 	"strconv"
+
+	"github.com/irenicaa/go-todo-backend/models"
 )
 
 // Logger ...
@@ -59,6 +61,21 @@ func GetIntFormValue(
 	}
 
 	return valueAsInt, nil
+}
+
+// GetDateFormValue ...
+func GetDateFormValue(request *http.Request, key string) (models.Date, error) {
+	value := request.FormValue(key)
+	if value == "" {
+		return models.Date{}, ErrKeyIsMissed
+	}
+
+	parsedDate, err := models.ParseDate(value)
+	if err != nil {
+		return models.Date{}, fmt.Errorf("unable to parse the date: %v", err)
+	}
+
+	return parsedDate, nil
 }
 
 // GetJSONData ...

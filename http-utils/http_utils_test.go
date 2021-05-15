@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"testing"
 	"testing/iotest"
+	"time"
 
 	"github.com/irenicaa/go-todo-backend/models"
 	"github.com/stretchr/testify/assert"
@@ -148,6 +149,58 @@ func TestGetIntFormValue(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err :=
 				GetIntFormValue(tt.args.request, tt.args.key, tt.args.min, tt.args.max)
+
+			assert.Equal(t, tt.want, got)
+			tt.wantErr(t, err)
+		})
+	}
+}
+
+func TestGetDateFormValue(t *testing.T) {
+	type args struct {
+		request *http.Request
+		key     string
+	}
+
+	tests := []struct {
+		name    string
+		args    args
+		want    models.Date
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "success",
+			args: args{
+				request: httptest.NewRequest(http.MethodGet, "/test?key=2006-01-02", nil),
+				key:     "key",
+			},
+			want:    models.Date(time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC)),
+			wantErr: assert.NoError,
+		},
+		{
+			name: "error with a missed key",
+			args: args{
+				request: httptest.NewRequest(http.MethodGet, "/test", nil),
+				key:     "key",
+			},
+			want: models.Date(time.Time{}),
+			wantErr: func(t assert.TestingT, err error, msgAndArgs ...interface{}) bool {
+				return assert.Equal(t, ErrKeyIsMissed, err, msgAndArgs...)
+			},
+		},
+		{
+			name: "error with an incorrect key",
+			args: args{
+				request: httptest.NewRequest(http.MethodGet, "/test?key=value", nil),
+				key:     "key",
+			},
+			want:    models.Date(time.Time{}),
+			wantErr: assert.Error,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := GetDateFormValue(tt.args.request, tt.args.key)
 
 			assert.Equal(t, tt.want, got)
 			tt.wantErr(t, err)
