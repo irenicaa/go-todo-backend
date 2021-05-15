@@ -47,6 +47,14 @@ paths:
       summary: delete the to-do records
     get:
       parameters:
+      - description: filtration by the minimal date in the RFC 3339 format
+        in: query
+        name: minimal_date
+        type: string
+      - description: filtration by the maximal date in the RFC 3339 format
+        in: query
+        name: maximal_date
+        type: string
       - description: search by the title fragment
         in: query
         name: title_fragment

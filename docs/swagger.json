@@ -19,6 +19,18 @@
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "filtration by the minimal date in the RFC 3339 format",
+                        "name": "minimal_date",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "filtration by the maximal date in the RFC 3339 format",
+                        "name": "maximal_date",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "search by the title fragment",
                         "name": "title_fragment",
                         "in": "query"
