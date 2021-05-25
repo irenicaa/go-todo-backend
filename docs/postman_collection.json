@@ -78,12 +78,23 @@
 		},
 		{
 			"name": "/api/v1/todos",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"date\", randomDate());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"Title\": \"{{$randomPhrase}}\",\n    \"Completed\": {{$randomBoolean}},\n    \"Order\": {{$randomInt}}\n}\n",
+					"raw": "{\n    \"Date\": \"{{date}}\",\n    \"Title\": \"{{$randomPhrase}}\",\n    \"Completed\": {{$randomBoolean}},\n    \"Order\": {{$randomInt}}\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -108,12 +119,23 @@
 		},
 		{
 			"name": "/api/v1/todos/:id",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"date\", randomDate());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"Title\": \"{{$randomPhrase}}\",\n    \"Completed\": {{$randomBoolean}},\n    \"Order\": {{$randomInt}}\n}\n",
+					"raw": "{\n    \"Date\": \"{{date}}\",\n    \"Title\": \"{{$randomPhrase}}\",\n    \"Completed\": {{$randomBoolean}},\n    \"Order\": {{$randomInt}}\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -145,12 +167,23 @@
 		},
 		{
 			"name": "/api/v1/todos/:id",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"date\", randomDate());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "PATCH",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"Title\": \"{{$randomPhrase}}\"\n}\n",
+					"raw": "{\n    \"Date\": \"{{date}}\",\n    \"Title\": \"{{$randomPhrase}}\"\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -228,6 +261,22 @@
 				}
 			},
 			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"randomDate = function() {",
+					"    const maximumDate = new Date(); // now",
+					"    const minimumDate = new Date(maximumDate.getFullYear() - 1, maximumDate.getMonth(), maximumDate.getDate()); // year ago",
+					"    const randomDate = new Date(Math.random() * (maximumDate.getTime() - minimumDate.getTime()) + minimumDate.getTime());",
+					"    return randomDate.toISOString().slice(0, 10);",
+					"}"
+				]
+			}
 		}
 	]
 }
