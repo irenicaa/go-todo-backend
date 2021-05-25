@@ -3,7 +3,9 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/irenicaa/go-todo-backend/models"
 )
@@ -23,8 +25,21 @@ func (db TodoRecord) GetAll(query models.Query) ([]models.TodoRecord, error) {
 	sql := "SELECT * FROM todo_records"
 	var args []interface{}
 
+	sql += " WHERE TRUE"
+	var argNumber int
+	if query.MinimalDate != (models.Date{}) {
+		argNumber++
+		sql += " AND date >= $" + strconv.Itoa(argNumber)
+		args = append(args, time.Time(query.MinimalDate))
+	}
+	if query.MaximalDate != (models.Date{}) {
+		argNumber++
+		sql += " AND date <= $" + strconv.Itoa(argNumber)
+		args = append(args, time.Time(query.MaximalDate))
+	}
 	if query.TitleFragment != "" {
-		sql += " WHERE lower(title) LIKE $1"
+		argNumber++
+		sql += " AND lower(title) LIKE $" + strconv.Itoa(argNumber)
 		args = append(args, "%"+strings.ToLower(query.TitleFragment)+"%")
 	}
 
