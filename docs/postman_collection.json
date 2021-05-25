@@ -11,7 +11,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/todos",
+					"raw": "http://localhost:8080/api/v1/todos?minimal_date=&maximal_date=&title_fragment=&page_size=&page=",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -21,6 +21,28 @@
 						"api",
 						"v1",
 						"todos"
+					],
+					"query": [
+						{
+							"key": "minimal_date",
+							"value": ""
+						},
+						{
+							"key": "maximal_date",
+							"value": ""
+						},
+						{
+							"key": "title_fragment",
+							"value": ""
+						},
+						{
+							"key": "page_size",
+							"value": ""
+						},
+						{
+							"key": "page",
+							"value": ""
+						}
 					]
 				}
 			},
