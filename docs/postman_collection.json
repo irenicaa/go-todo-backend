@@ -49,12 +49,12 @@
 			"response": []
 		},
 		{
-			"name": "/api/v1/todos/{id}",
+			"name": "/api/v1/todos/:id",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/todos/1",
+					"raw": "http://localhost:8080/api/v1/todos/:id",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -64,7 +64,13 @@
 						"api",
 						"v1",
 						"todos",
-						"1"
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
 					]
 				}
 			},
@@ -101,7 +107,7 @@
 			"response": []
 		},
 		{
-			"name": "/api/v1/todos/{id}",
+			"name": "/api/v1/todos/:id",
 			"request": {
 				"method": "PUT",
 				"header": [],
@@ -115,7 +121,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/todos/1",
+					"raw": "http://localhost:8080/api/v1/todos/:id",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -125,14 +131,20 @@
 						"api",
 						"v1",
 						"todos",
-						"1"
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "/api/v1/todos/{id}",
+			"name": "/api/v1/todos/:id",
 			"request": {
 				"method": "PATCH",
 				"header": [],
@@ -146,7 +158,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/v1/todos/1",
+					"raw": "http://localhost:8080/api/v1/todos/:id",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -156,7 +168,13 @@
 						"api",
 						"v1",
 						"todos",
-						"1"
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
 					]
 				}
 			},
@@ -184,12 +202,12 @@
 			"response": []
 		},
 		{
-			"name": "/api/v1/todos/{id}",
+			"name": "/api/v1/todos/:id",
 			"request": {
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/todos/1",
+					"raw": "http://localhost:8080/api/v1/todos/:id",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -199,7 +217,13 @@
 						"api",
 						"v1",
 						"todos",
-						"1"
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
 					]
 				}
 			},
