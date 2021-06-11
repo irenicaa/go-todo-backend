@@ -13,6 +13,13 @@ The web service that implements specs of the [Todo-Backend](https://www.todoback
 $ go get github.com/irenicaa/go-todo-backend/...
 ```
 
+## Migrations
+
+```
+$ docker run -v $(pwd)/migrations:/migrations --network host migrate/migrate:v4.14.1 \
+  -verbose -path=/migrations -database postgresql://postgres:postgres@localhost:5432/postgres?sslmode=disable up
+```
+
 ## Usage
 
 ```
@@ -27,6 +34,22 @@ Environment variables:
 
 - `PORT` &mdash; server port (default: `8080`);
 - `DB_DSN` &mdash; DB connection string (default: `postgresql://postgres:postgres@localhost:5432/postgres?sslmode=disable`).
+
+## Testing
+
+Running of the unit tests:
+
+```
+$ go test -race -cover ./...
+```
+
+Running of both the unit and integration tests:
+
+```
+$ go test -race -cover -tags integration ./...
+```
+
+Running the tests of the [Todo-Backend](https://www.todobackend.com/) project: follow link https://www.todobackend.com/specs/index.html?http://localhost:8080/api/v1/todos
 
 ## Docs
 
