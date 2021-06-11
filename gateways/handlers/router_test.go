@@ -199,10 +199,10 @@ func TestRouter_ServeHTTP(t *testing.T) {
 					http.MethodPost,
 					"http://example.com/api/v1/todos/",
 					bytes.NewReader([]byte(`{
-						"Date": "2006-01-02",
-						"Title": "test",
-						"Completed": true,
-						"Order": 23
+						"date": "2006-01-02",
+						"title": "test",
+						"completed": true,
+						"order": 23
 					}`)),
 				),
 			},
@@ -267,10 +267,10 @@ func TestRouter_ServeHTTP(t *testing.T) {
 					http.MethodPut,
 					"http://example.com/api/v1/todos/12",
 					bytes.NewReader([]byte(`{
-						"Date": "2006-01-02",
-						"Title": "test",
-						"Completed": true,
-						"Order": 23
+						"date": "2006-01-02",
+						"title": "test",
+						"completed": true,
+						"order": 23
 					}`)),
 				),
 			},
@@ -326,7 +326,7 @@ func TestRouter_ServeHTTP(t *testing.T) {
 				request: httptest.NewRequest(
 					http.MethodPatch,
 					"http://example.com/api/v1/todos/12",
-					bytes.NewReader([]byte(`{"Title": "test"}`)),
+					bytes.NewReader([]byte(`{"title": "test"}`)),
 				),
 			},
 			wantResponse: &http.Response{
