@@ -94,7 +94,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"Date\": \"{{date}}\",\n    \"Title\": \"{{$randomPhrase}}\",\n    \"Completed\": {{$randomBoolean}},\n    \"Order\": {{$randomInt}}\n}\n",
+					"raw": "{\n    \"date\": \"{{date}}\",\n    \"title\": \"{{$randomPhrase}}\",\n    \"completed\": {{$randomBoolean}},\n    \"order\": {{$randomInt}}\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -135,7 +135,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"Date\": \"{{date}}\",\n    \"Title\": \"{{$randomPhrase}}\",\n    \"Completed\": {{$randomBoolean}},\n    \"Order\": {{$randomInt}}\n}\n",
+					"raw": "{\n    \"date\": \"{{date}}\",\n    \"title\": \"{{$randomPhrase}}\",\n    \"completed\": {{$randomBoolean}},\n    \"order\": {{$randomInt}}\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -183,7 +183,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"Date\": \"{{date}}\",\n    \"Title\": \"{{$randomPhrase}}\"\n}\n",
+					"raw": "{\n    \"date\": \"{{date}}\",\n    \"title\": \"{{$randomPhrase}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
