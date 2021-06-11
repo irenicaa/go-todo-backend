@@ -14,13 +14,13 @@ definitions:
     type: object
   models.TodoRecordPatch:
     properties:
-      Completed:
+      completed:
         type: boolean
-      Date:
+      date:
         type: string
-      Order:
+      order:
         type: integer
-      Title:
+      title:
         type: string
     type: object
 host: localhost:8080
@@ -29,12 +29,10 @@ info:
   license:
     name: MIT
   title: go-todo-backend API
-  version: 1.0.0
+  version: 1.1.0
 paths:
   /api/v1/todos:
     delete:
-      produces:
-      - application/json
       responses:
         "204":
           description: No Content
@@ -117,8 +115,6 @@ paths:
         name: id
         required: true
         type: integer
-      produces:
-      - application/json
       responses:
         "204":
           description: No Content

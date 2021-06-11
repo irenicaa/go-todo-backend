@@ -339,7 +339,6 @@ func (handler TodoRecord) Patch(
 // DeleteAll ...
 //   @router /api/v1/todos [DELETE]
 //   @summary delete the to-do records
-//   @produce json
 //   @success 204 {string} string
 //   @failure 500 {string} string
 func (handler TodoRecord) DeleteAll(
@@ -365,7 +364,6 @@ func (handler TodoRecord) DeleteAll(
 //   @router /api/v1/todos/{id} [DELETE]
 //   @summary delete the to-do record
 //   @param id path integer true "to-do record ID"
-//   @produce json
 //   @success 204 {string} string
 //   @failure 400 {string} string
 //   @failure 500 {string} string
