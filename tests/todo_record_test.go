@@ -10,6 +10,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strconv"
 	"testing"
 	"time"
@@ -185,6 +186,305 @@ func TestTodoRecord_withGetting(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.Equal(t, createdTodos, gotTodos)
+}
+
+func TestTodoRecord_withQuerying(t *testing.T) {
+	tests := []struct {
+		name            string
+		originalTodos   []models.PresentationTodoRecord
+		queryParameters url.Values
+		wantTodos       []models.PresentationTodoRecord
+	}{
+		{
+			name: "with filtration by the minimal date",
+			originalTodos: func() []models.PresentationTodoRecord {
+				var originalTodos []models.PresentationTodoRecord
+				for i := 0; i <= 10; i++ {
+					originalTodo := models.PresentationTodoRecord{
+						Date: models.Date(time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						)),
+						Title:     "test" + strconv.Itoa(i),
+						Completed: true,
+						Order:     i,
+					}
+					originalTodos = append(originalTodos, originalTodo)
+				}
+
+				return originalTodos
+			}(),
+			queryParameters: url.Values{"minimal_date": {"2006-01-07"}},
+			wantTodos: func() []models.PresentationTodoRecord {
+				var wantTodos []models.PresentationTodoRecord
+				for i := 10; i >= 5; i-- {
+					wantTodo := models.PresentationTodoRecord{
+						Date: models.Date(time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						)),
+						Title:     "test" + strconv.Itoa(i),
+						Completed: true,
+						Order:     i,
+					}
+					wantTodos = append(wantTodos, wantTodo)
+				}
+
+				return wantTodos
+			}(),
+		},
+		{
+			name: "with filtration by the maximal date",
+			originalTodos: func() []models.PresentationTodoRecord {
+				var originalTodos []models.PresentationTodoRecord
+				for i := 0; i <= 10; i++ {
+					originalTodo := models.PresentationTodoRecord{
+						Date: models.Date(time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						)),
+						Title:     "test" + strconv.Itoa(i),
+						Completed: true,
+						Order:     i,
+					}
+					originalTodos = append(originalTodos, originalTodo)
+				}
+
+				return originalTodos
+			}(),
+			queryParameters: url.Values{"maximal_date": {"2006-01-07"}},
+			wantTodos: func() []models.PresentationTodoRecord {
+				var wantTodos []models.PresentationTodoRecord
+				for i := 5; i >= 0; i-- {
+					wantTodo := models.PresentationTodoRecord{
+						Date: models.Date(time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						)),
+						Title:     "test" + strconv.Itoa(i),
+						Completed: true,
+						Order:     i,
+					}
+					wantTodos = append(wantTodos, wantTodo)
+				}
+
+				return wantTodos
+			}(),
+		},
+		{
+			name: "with filtration by the date range",
+			originalTodos: func() []models.PresentationTodoRecord {
+				var originalTodos []models.PresentationTodoRecord
+				for i := 0; i <= 10; i++ {
+					originalTodo := models.PresentationTodoRecord{
+						Date: models.Date(time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						)),
+						Title:     "test" + strconv.Itoa(i),
+						Completed: true,
+						Order:     i,
+					}
+					originalTodos = append(originalTodos, originalTodo)
+				}
+
+				return originalTodos
+			}(),
+			queryParameters: url.Values{
+				"minimal_date": {"2006-01-05"},
+				"maximal_date": {"2006-01-09"},
+			},
+			wantTodos: func() []models.PresentationTodoRecord {
+				var wantTodos []models.PresentationTodoRecord
+				for i := 7; i >= 3; i-- {
+					wantTodo := models.PresentationTodoRecord{
+						Date: models.Date(time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						)),
+						Title:     "test" + strconv.Itoa(i),
+						Completed: true,
+						Order:     i,
+					}
+					wantTodos = append(wantTodos, wantTodo)
+				}
+
+				return wantTodos
+			}(),
+		},
+		{
+			name: "with search by the title fragment",
+			originalTodos: func() []models.PresentationTodoRecord {
+				var originalTodos []models.PresentationTodoRecord
+				for i := 0; i <= 10; i++ {
+					var mark string
+					if i%2 == 0 {
+						mark = "even"
+					} else {
+						mark = "odd"
+					}
+
+					originalTodo := models.PresentationTodoRecord{
+						Date: models.Date(time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						)),
+						Title:     fmt.Sprintf("test%d (%s)", i, mark),
+						Completed: true,
+						Order:     i,
+					}
+					originalTodos = append(originalTodos, originalTodo)
+				}
+
+				return originalTodos
+			}(),
+			queryParameters: url.Values{"title_fragment": {"even"}},
+			wantTodos: func() []models.PresentationTodoRecord {
+				var wantTodos []models.PresentationTodoRecord
+				for i := 10; i >= 0; i -= 2 {
+					wantTodo := models.PresentationTodoRecord{
+						Date: models.Date(time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						)),
+						Title:     fmt.Sprintf("test%d (even)", i),
+						Completed: true,
+						Order:     i,
+					}
+					wantTodos = append(wantTodos, wantTodo)
+				}
+
+				return wantTodos
+			}(),
+		},
+		{
+			name: "with pagination",
+			originalTodos: func() []models.PresentationTodoRecord {
+				var originalTodos []models.PresentationTodoRecord
+				for i := 0; i <= 10; i++ {
+					originalTodo := models.PresentationTodoRecord{
+						Date: models.Date(time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						)),
+						Title:     "test" + strconv.Itoa(i),
+						Completed: true,
+						Order:     i,
+					}
+					originalTodos = append(originalTodos, originalTodo)
+				}
+
+				return originalTodos
+			}(),
+			queryParameters: url.Values{"page_size": {"2"}, "page": {"3"}},
+			wantTodos: func() []models.PresentationTodoRecord {
+				var wantTodos []models.PresentationTodoRecord
+				for i := 6; i >= 5; i-- {
+					wantTodo := models.PresentationTodoRecord{
+						Date: models.Date(time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						)),
+						Title:     "test" + strconv.Itoa(i),
+						Completed: true,
+						Order:     i,
+					}
+					wantTodos = append(wantTodos, wantTodo)
+				}
+
+				return wantTodos
+			}(),
+		},
+		{
+			name: "with all parameters",
+			originalTodos: func() []models.PresentationTodoRecord {
+				var originalTodos []models.PresentationTodoRecord
+				for i := 0; i <= 20; i++ {
+					var mark string
+					if i%2 == 0 {
+						mark = "even"
+					} else {
+						mark = "odd"
+					}
+
+					originalTodo := models.PresentationTodoRecord{
+						Date: models.Date(time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						)),
+						Title:     fmt.Sprintf("test%d (%s)", i, mark),
+						Completed: true,
+						Order:     i,
+					}
+					originalTodos = append(originalTodos, originalTodo)
+				}
+
+				return originalTodos
+			}(),
+			queryParameters: url.Values{
+				"minimal_date":   {"2006-01-05"},
+				"maximal_date":   {"2006-01-19"},
+				"title_fragment": {"even"},
+				"page_size":      {"2"},
+				"page":           {"3"},
+			},
+			wantTodos: func() []models.PresentationTodoRecord {
+				var wantTodos []models.PresentationTodoRecord
+				for i := 8; i >= 6; i -= 2 {
+					wantTodo := models.PresentationTodoRecord{
+						Date: models.Date(time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						)),
+						Title:     fmt.Sprintf("test%d (even)", i),
+						Completed: true,
+						Order:     i,
+					}
+					wantTodos = append(wantTodos, wantTodo)
+				}
+
+				return wantTodos
+			}(),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			url := fmt.Sprintf("http://localhost:%d/api/v1/todos", *port)
+			_, err := sendRequest(http.MethodDelete, url, nil)
+			require.NoError(t, err)
+
+			for _, originalTodo := range tt.originalTodos {
+				_, err2 := sendRequest(http.MethodPost, url, originalTodo)
+				require.NoError(t, err2)
+			}
+
+			queryURL := url + "?" + tt.queryParameters.Encode()
+			response, err := sendRequest(http.MethodGet, queryURL, nil)
+			require.NoError(t, err)
+			defer response.Body.Close()
+
+			var gotTodos []models.PresentationTodoRecord
+			err = httputils.GetJSONData(response.Body, &gotTodos)
+			require.NoError(t, err)
+			for index := range gotTodos {
+				gotTodos[index].URL = ""
+			}
+
+			assert.Equal(t, tt.wantTodos, gotTodos)
+		})
+	}
 }
 
 func TestTodoRecord_withDeleting(t *testing.T) {
