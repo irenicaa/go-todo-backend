@@ -80,10 +80,16 @@ Running the tests of the [Todo-Backend](https://www.todobackend.com/) project: f
 2021/04/16 20:00:15.154795 POST /api/v1/todos 10.100347ms
 2021/04/16 20:00:15.165769 POST /api/v1/todos 8.72751ms
 2021/04/16 20:00:15.167434 GET /api/v1/todos 393.922µs
-2021/04/16 20:00:15.176842 POST /api/v1/todos 7.238819ms
-2021/04/16 20:00:15.187969 DELETE /api/v1/todos/1032 9.564257ms
-2021/04/16 20:00:15.190187 unable to get the to-do record: sql: no rows in result set
-2021/04/16 20:00:15.190232 GET /api/v1/todos/1032 765.518µs
+2021/04/16 20:00:15.348377 GET /api/v1/todos?minimal_date=2006-01-07 1.575302ms
+2021/04/16 20:00:15.428437 GET /api/v1/todos?maximal_date=2006-01-07 1.279132ms
+2021/04/16 20:00:15.508703 GET /api/v1/todos?maximal_date=2006-01-09&minimal_date=2006-01-05 1.501993ms
+2021/04/16 20:00:15.588316 GET /api/v1/todos?title_fragment=even 1.352159ms
+2021/04/16 20:00:15.669183 GET /api/v1/todos?page=3&page_size=2 1.303843ms
+2021/04/16 20:00:15.814140 GET /api/v1/todos?maximal_date=2006-01-19&minimal_date=2006-01-05&page=3&page_size=2&title_fragment=even 1.50664ms
+2021/04/16 20:00:15.819337 POST /api/v1/todos 7.238819ms
+2021/04/16 20:00:15.822753 DELETE /api/v1/todos/1032 9.564257ms
+2021/04/16 20:00:15.825053 unable to get the to-do record: sql: no rows in result set
+2021/04/16 20:00:15.825092 GET /api/v1/todos/1032 765.518µs
 ```
 
 ## License
