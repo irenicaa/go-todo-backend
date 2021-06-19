@@ -25,21 +25,29 @@ var port = flag.Int("port", 8080, "server port")
 func TestTodoRecord_withSingleModel(t *testing.T) {
 	tests := []struct {
 		name         string
-		originalTodo models.TodoRecord
+		originalTodo models.PresentationTodoRecord
 		action       func(t *testing.T, todoURL string)
 		wantTodo     models.PresentationTodoRecord
 	}{
 		{
 			name: "creation",
-			originalTodo: models.TodoRecord{
-				Date:      time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC),
+			originalTodo: models.PresentationTodoRecord{
+				Date: models.Date(time.Date(
+					2006, time.January, 2,
+					0, 0, 0, 0,
+					time.UTC,
+				)),
 				Title:     "test",
 				Completed: true,
 				Order:     42,
 			},
 			action: func(t *testing.T, todoURL string) {},
 			wantTodo: models.PresentationTodoRecord{
-				Date:      time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC),
+				Date: models.Date(time.Date(
+					2006, time.January, 2,
+					0, 0, 0, 0,
+					time.UTC,
+				)),
 				Title:     "test",
 				Completed: true,
 				Order:     42,
@@ -47,15 +55,23 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 		},
 		{
 			name: "updating",
-			originalTodo: models.TodoRecord{
-				Date:      time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC),
+			originalTodo: models.PresentationTodoRecord{
+				Date: models.Date(time.Date(
+					2006, time.January, 2,
+					0, 0, 0, 0,
+					time.UTC,
+				)),
 				Title:     "test",
 				Completed: true,
 				Order:     23,
 			},
 			action: func(t *testing.T, todoURL string) {
-				newTodo := models.TodoRecord{
-					Date:      time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC),
+				newTodo := models.PresentationTodoRecord{
+					Date: models.Date(time.Date(
+						2006, time.January, 3,
+						0, 0, 0, 0,
+						time.UTC,
+					)),
 					Title:     "test2",
 					Completed: true,
 					Order:     42,
@@ -65,7 +81,11 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 				require.NoError(t, err)
 			},
 			wantTodo: models.PresentationTodoRecord{
-				Date:      time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC),
+				Date: models.Date(time.Date(
+					2006, time.January, 3,
+					0, 0, 0, 0,
+					time.UTC,
+				)),
 				Title:     "test2",
 				Completed: true,
 				Order:     42,
@@ -73,8 +93,12 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 		},
 		{
 			name: "patching",
-			originalTodo: models.TodoRecord{
-				Date:      time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC),
+			originalTodo: models.PresentationTodoRecord{
+				Date: models.Date(time.Date(
+					2006, time.January, 2,
+					0, 0, 0, 0,
+					time.UTC,
+				)),
 				Title:     "test",
 				Completed: true,
 				Order:     42,
@@ -87,7 +111,11 @@ func TestTodoRecord_withSingleModel(t *testing.T) {
 				require.NoError(t, err)
 			},
 			wantTodo: models.PresentationTodoRecord{
-				Date:      time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC),
+				Date: models.Date(time.Date(
+					2006, time.January, 2,
+					0, 0, 0, 0,
+					time.UTC,
+				)),
 				Title:     "test2",
 				Completed: true,
 				Order:     42,
@@ -124,8 +152,12 @@ func TestTodoRecord_withGetting(t *testing.T) {
 
 	var createdTodos []models.PresentationTodoRecord
 	for i := 0; i <= 10; i++ {
-		originalTodo := models.TodoRecord{
-			Date:      time.Date(2006, time.January, 2+i, 0, 0, 0, 0, time.UTC),
+		originalTodo := models.PresentationTodoRecord{
+			Date: models.Date(time.Date(
+				2006, time.January, 2+i,
+				0, 0, 0, 0,
+				time.UTC,
+			)),
 			Title:     "test" + strconv.Itoa(i),
 			Completed: true,
 			Order:     i,
@@ -138,6 +170,10 @@ func TestTodoRecord_withGetting(t *testing.T) {
 		require.NoError(t, err)
 
 		createdTodos = append(createdTodos, createdTodo)
+	}
+	// reversing
+	for i, j := 0, len(createdTodos)-1; i < j; i, j = i+1, j-1 {
+		createdTodos[i], createdTodos[j] = createdTodos[j], createdTodos[i]
 	}
 
 	response, err := sendRequest(http.MethodGet, url, nil)
@@ -152,8 +188,12 @@ func TestTodoRecord_withGetting(t *testing.T) {
 }
 
 func TestTodoRecord_withDeleting(t *testing.T) {
-	originalTodo := models.TodoRecord{
-		Date:      time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC),
+	originalTodo := models.PresentationTodoRecord{
+		Date: models.Date(time.Date(
+			2006, time.January, 2,
+			0, 0, 0, 0,
+			time.UTC,
+		)),
 		Title:     "test",
 		Completed: true,
 		Order:     42,
