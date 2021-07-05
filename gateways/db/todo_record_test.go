@@ -52,8 +52,8 @@ func TestDB_GetAll(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			pool, err := OpenDB(*dataSourceName)
 			require.NoError(t, err)
-
 			db := NewTodoRecord(pool)
+
 			err = db.DeleteAll()
 			require.NoError(t, err)
 
@@ -62,6 +62,10 @@ func TestDB_GetAll(t *testing.T) {
 				require.NoError(t, err2)
 
 				tt.args.todos[index].ID = id
+			}
+			// reversing
+			for i, j := 0, len(tt.args.todos)-1; i < j; i, j = i+1, j-1 {
+				tt.args.todos[i], tt.args.todos[j] = tt.args.todos[j], tt.args.todos[i]
 			}
 
 			todos, err := db.GetAll(models.Query{})
@@ -198,8 +202,8 @@ func TestDB_DeleteAll(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			pool, err := OpenDB(*dataSourceName)
 			require.NoError(t, err)
-
 			db := NewTodoRecord(pool)
+
 			for _, todo := range tt.args.todos {
 				_, err2 := db.Create(todo)
 				require.NoError(t, err2)
