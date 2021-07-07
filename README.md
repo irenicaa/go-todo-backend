@@ -43,13 +43,23 @@ Running of the unit tests:
 $ go test -race -cover ./...
 ```
 
-Running of both the unit and integration tests:
+Running of the integration tests:
 
 ```
-$ go test -race -cover -tags integration ./...
+$ docker-compose up -d
+$ go test -race -cover -tags integration ./gateways/db/
+$ go test -race -cover -tags integration ./tests/
 ```
 
-Running the tests of the [Todo-Backend](https://www.todobackend.com/) project: follow link https://www.todobackend.com/specs/index.html?http://localhost:8080/api/v1/todos
+Running the tests of the [Todo-Backend](https://www.todobackend.com/) project:
+
+1. Run the server:
+
+   ```
+   $ docker-compose up -d
+   ```
+
+2. Follow link https://www.todobackend.com/specs/index.html?http://localhost:8080/api/v1/todos
 
 ## Docs
 
