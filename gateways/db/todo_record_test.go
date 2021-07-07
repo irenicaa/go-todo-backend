@@ -20,7 +20,7 @@ var dataSourceName = flag.String(
 	"DB connection string",
 )
 
-func TestDB_withGetting(t *testing.T) {
+func TestTodoRecord_withGetting(t *testing.T) {
 	pool, err := OpenDB(*dataSourceName)
 	require.NoError(t, err)
 	db := NewTodoRecord(pool)
@@ -57,7 +57,7 @@ func TestDB_withGetting(t *testing.T) {
 	assert.Equal(t, createdTodos, gotTodos)
 }
 
-func TestDB_withModifying(t *testing.T) {
+func TestTodoRecord_withModifying(t *testing.T) {
 	tests := []struct {
 		name         string
 		originalTodo models.TodoRecord
@@ -128,7 +128,7 @@ func TestDB_withModifying(t *testing.T) {
 	}
 }
 
-func TestDB_DeleteSingle(t *testing.T) {
+func TestTodoRecord_DeleteSingle(t *testing.T) {
 	pool, err := OpenDB(*dataSourceName)
 	require.NoError(t, err)
 	db := NewTodoRecord(pool)
