@@ -73,6 +73,64 @@ func TestGetIDFromURL(t *testing.T) {
 	}
 }
 
+func TestGetDateFromURL(t *testing.T) {
+	type args struct {
+		request *http.Request
+	}
+
+	tests := []struct {
+		name    string
+		args    args
+		want    models.Date
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "success",
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos/2006-01-02",
+					nil,
+				),
+			},
+			want:    models.Date(time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC)),
+			wantErr: assert.NoError,
+		},
+		{
+			name: "error on finding",
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos",
+					nil,
+				),
+			},
+			want:    models.Date{},
+			wantErr: assert.Error,
+		},
+		{
+			name: "error on parsing",
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos/9999-99-99",
+					nil,
+				),
+			},
+			want:    models.Date{},
+			wantErr: assert.Error,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := GetDateFromURL(tt.args.request)
+
+			assert.Equal(t, tt.want, got)
+			tt.wantErr(t, err)
+		})
+	}
+}
+
 func TestGetIntFormValue(t *testing.T) {
 	type args struct {
 		request *http.Request
