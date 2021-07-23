@@ -5,6 +5,7 @@ package db
 import (
 	"database/sql"
 	"flag"
+	"fmt"
 	"strconv"
 	"testing"
 	"time"
@@ -55,6 +56,330 @@ func TestTodoRecord_withGetting(t *testing.T) {
 	}
 
 	assert.Equal(t, createdTodos, gotTodos)
+}
+
+func TestTodoRecord_withQuerying(t *testing.T) {
+	tests := []struct {
+		name          string
+		originalTodos []models.TodoRecord
+		query         models.Query
+		wantTodos     []models.TodoRecord
+	}{
+		{
+			name: "with filtration by the minimal date",
+			originalTodos: func() []models.TodoRecord {
+				var originalTodos []models.TodoRecord
+				for i := 0; i <= 10; i++ {
+					originalTodo := models.TodoRecord{
+						Date: time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						),
+						Title:     "test" + strconv.Itoa(i),
+						Completed: true,
+						Order:     i,
+					}
+					originalTodos = append(originalTodos, originalTodo)
+				}
+
+				return originalTodos
+			}(),
+			query: models.Query{
+				MinimalDate: models.Date(time.Date(
+					2006, time.January, 7,
+					0, 0, 0, 0,
+					time.UTC,
+				)),
+			},
+			wantTodos: func() []models.TodoRecord {
+				var wantTodos []models.TodoRecord
+				for i := 10; i >= 5; i-- {
+					wantTodo := models.TodoRecord{
+						Date: time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						),
+						Title:     "test" + strconv.Itoa(i),
+						Completed: true,
+						Order:     i,
+					}
+					wantTodos = append(wantTodos, wantTodo)
+				}
+
+				return wantTodos
+			}(),
+		},
+		{
+			name: "with filtration by the maximal date",
+			originalTodos: func() []models.TodoRecord {
+				var originalTodos []models.TodoRecord
+				for i := 0; i <= 10; i++ {
+					originalTodo := models.TodoRecord{
+						Date: time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						),
+						Title:     "test" + strconv.Itoa(i),
+						Completed: true,
+						Order:     i,
+					}
+					originalTodos = append(originalTodos, originalTodo)
+				}
+
+				return originalTodos
+			}(),
+			query: models.Query{
+				MaximalDate: models.Date(time.Date(
+					2006, time.January, 7,
+					0, 0, 0, 0,
+					time.UTC,
+				)),
+			},
+			wantTodos: func() []models.TodoRecord {
+				var wantTodos []models.TodoRecord
+				for i := 5; i >= 0; i-- {
+					wantTodo := models.TodoRecord{
+						Date: time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						),
+						Title:     "test" + strconv.Itoa(i),
+						Completed: true,
+						Order:     i,
+					}
+					wantTodos = append(wantTodos, wantTodo)
+				}
+
+				return wantTodos
+			}(),
+		},
+		{
+			name: "with filtration by the date range",
+			originalTodos: func() []models.TodoRecord {
+				var originalTodos []models.TodoRecord
+				for i := 0; i <= 10; i++ {
+					originalTodo := models.TodoRecord{
+						Date: time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						),
+						Title:     "test" + strconv.Itoa(i),
+						Completed: true,
+						Order:     i,
+					}
+					originalTodos = append(originalTodos, originalTodo)
+				}
+
+				return originalTodos
+			}(),
+			query: models.Query{
+				MinimalDate: models.Date(time.Date(
+					2006, time.January, 5,
+					0, 0, 0, 0,
+					time.UTC,
+				)),
+				MaximalDate: models.Date(time.Date(
+					2006, time.January, 9,
+					0, 0, 0, 0,
+					time.UTC,
+				)),
+			},
+			wantTodos: func() []models.TodoRecord {
+				var wantTodos []models.TodoRecord
+				for i := 7; i >= 3; i-- {
+					wantTodo := models.TodoRecord{
+						Date: time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						),
+						Title:     "test" + strconv.Itoa(i),
+						Completed: true,
+						Order:     i,
+					}
+					wantTodos = append(wantTodos, wantTodo)
+				}
+
+				return wantTodos
+			}(),
+		},
+		{
+			name: "with search by the title fragment",
+			originalTodos: func() []models.TodoRecord {
+				var originalTodos []models.TodoRecord
+				for i := 0; i <= 10; i++ {
+					var mark string
+					if i%2 == 0 {
+						mark = "even"
+					} else {
+						mark = "odd"
+					}
+
+					originalTodo := models.TodoRecord{
+						Date: time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						),
+						Title:     fmt.Sprintf("test%d (%s)", i, mark),
+						Completed: true,
+						Order:     i,
+					}
+					originalTodos = append(originalTodos, originalTodo)
+				}
+
+				return originalTodos
+			}(),
+			query: models.Query{TitleFragment: "even"},
+			wantTodos: func() []models.TodoRecord {
+				var wantTodos []models.TodoRecord
+				for i := 10; i >= 0; i -= 2 {
+					wantTodo := models.TodoRecord{
+						Date: time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						),
+						Title:     fmt.Sprintf("test%d (even)", i),
+						Completed: true,
+						Order:     i,
+					}
+					wantTodos = append(wantTodos, wantTodo)
+				}
+
+				return wantTodos
+			}(),
+		},
+		{
+			name: "with pagination",
+			originalTodos: func() []models.TodoRecord {
+				var originalTodos []models.TodoRecord
+				for i := 0; i <= 10; i++ {
+					originalTodo := models.TodoRecord{
+						Date: time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						),
+						Title:     "test" + strconv.Itoa(i),
+						Completed: true,
+						Order:     i,
+					}
+					originalTodos = append(originalTodos, originalTodo)
+				}
+
+				return originalTodos
+			}(),
+			query: models.Query{Pagination: models.Pagination{PageSize: 2, Page: 3}},
+			wantTodos: func() []models.TodoRecord {
+				var wantTodos []models.TodoRecord
+				for i := 6; i >= 5; i-- {
+					wantTodo := models.TodoRecord{
+						Date: time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						),
+						Title:     "test" + strconv.Itoa(i),
+						Completed: true,
+						Order:     i,
+					}
+					wantTodos = append(wantTodos, wantTodo)
+				}
+
+				return wantTodos
+			}(),
+		},
+		{
+			name: "with all parameters",
+			originalTodos: func() []models.TodoRecord {
+				var originalTodos []models.TodoRecord
+				for i := 0; i <= 20; i++ {
+					var mark string
+					if i%2 == 0 {
+						mark = "even"
+					} else {
+						mark = "odd"
+					}
+
+					originalTodo := models.TodoRecord{
+						Date: time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						),
+						Title:     fmt.Sprintf("test%d (%s)", i, mark),
+						Completed: true,
+						Order:     i,
+					}
+					originalTodos = append(originalTodos, originalTodo)
+				}
+
+				return originalTodos
+			}(),
+			query: models.Query{
+				MinimalDate: models.Date(time.Date(
+					2006, time.January, 5,
+					0, 0, 0, 0,
+					time.UTC,
+				)),
+				MaximalDate: models.Date(time.Date(
+					2006, time.January, 19,
+					0, 0, 0, 0,
+					time.UTC,
+				)),
+				TitleFragment: "even",
+				Pagination:    models.Pagination{PageSize: 2, Page: 3},
+			},
+			wantTodos: func() []models.TodoRecord {
+				var wantTodos []models.TodoRecord
+				for i := 8; i >= 6; i -= 2 {
+					wantTodo := models.TodoRecord{
+						Date: time.Date(
+							2006, time.January, 2+i,
+							0, 0, 0, 0,
+							time.UTC,
+						),
+						Title:     fmt.Sprintf("test%d (even)", i),
+						Completed: true,
+						Order:     i,
+					}
+					wantTodos = append(wantTodos, wantTodo)
+				}
+
+				return wantTodos
+			}(),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			pool, err := OpenDB(*dataSourceName)
+			require.NoError(t, err)
+			db := NewTodoRecord(pool)
+
+			err = db.DeleteAll()
+			require.NoError(t, err)
+
+			for _, originalTodo := range tt.originalTodos {
+				_, err2 := db.Create(originalTodo)
+				require.NoError(t, err2)
+			}
+
+			gotTodos, err := db.GetAll(tt.query)
+			require.NoError(t, err)
+			for index := range gotTodos {
+				gotTodos[index].ID = 0
+				gotTodos[index].Date = gotTodos[index].Date.In(time.UTC)
+			}
+
+			assert.Equal(t, tt.wantTodos, gotTodos)
+		})
+	}
 }
 
 func TestTodoRecord_withModifying(t *testing.T) {
@@ -128,7 +453,7 @@ func TestTodoRecord_withModifying(t *testing.T) {
 	}
 }
 
-func TestTodoRecord_DeleteSingle(t *testing.T) {
+func TestTodoRecord_withDeleting(t *testing.T) {
 	pool, err := OpenDB(*dataSourceName)
 	require.NoError(t, err)
 	db := NewTodoRecord(pool)
