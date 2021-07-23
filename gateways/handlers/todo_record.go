@@ -137,6 +137,86 @@ func (handler TodoRecord) GetAll(
 	httputils.HandleJSON(writer, handler.Logger, presentationTodos)
 }
 
+// GetAllByDate ...
+//   @router /api/v1/todos/{date} [GET]
+//   @summary get all to-do records
+//   @param date path string true "to-do record date in the RFC 3339 format"
+//   @param title_fragment query string false "search by the title fragment"
+//   @param page_size query integer false "specify the page size for pagination" minimum(1)
+//   @param page query integer false "specify the page for pagination" minimum(1)
+//   @produce json
+//   @success 200 {array} models.PresentationTodoRecord
+//   @failure 500 {string} string
+func (handler TodoRecord) GetAllByDate(
+	writer http.ResponseWriter,
+	request *http.Request,
+) {
+	date, err := httputils.GetDateFromURL(request)
+	if err != nil {
+		httputils.HandleError(
+			writer,
+			handler.Logger,
+			http.StatusBadRequest,
+			"unable to get a date: %s",
+			err,
+		)
+
+		return
+	}
+
+	pageSize, err := httputils.GetIntFormValue(request, "page_size", 1, math.MaxInt32)
+	if err != nil && err != httputils.ErrKeyIsMissed {
+		httputils.HandleError(
+			writer,
+			handler.Logger,
+			http.StatusBadRequest,
+			"unable to get the page_size parameter: %v",
+			err,
+		)
+
+		return
+	}
+
+	page, err := httputils.GetIntFormValue(request, "page", 1, math.MaxInt32)
+	if err != nil && err != httputils.ErrKeyIsMissed {
+		httputils.HandleError(
+			writer,
+			handler.Logger,
+			http.StatusBadRequest,
+			"unable to get the page parameter: %v",
+			err,
+		)
+
+		return
+	}
+
+	baseURL := handler.getBaseURL(request)
+	presentationTodos, err := handler.UseCase.GetAll(baseURL, models.Query{
+		MinimalDate:   date,
+		MaximalDate:   date,
+		TitleFragment: request.FormValue("title_fragment"),
+		Pagination:    models.Pagination{PageSize: pageSize, Page: page},
+	})
+	if err != nil {
+		httputils.HandleError(
+			writer,
+			handler.Logger,
+			http.StatusInternalServerError,
+			"%s",
+			err,
+		)
+
+		return
+	}
+
+	// force empty array instead of null in the JSON representation
+	if presentationTodos == nil {
+		presentationTodos = []models.PresentationTodoRecord{}
+	}
+
+	httputils.HandleJSON(writer, handler.Logger, presentationTodos)
+}
+
 // GetSingle ...
 //   @router /api/v1/todos/{id} [GET]
 //   @summary get the single to-do record

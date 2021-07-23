@@ -661,6 +661,507 @@ func TestTodoRecord_GetAll(t *testing.T) {
 	}
 }
 
+func TestTodoRecord_GetAllByDate(t *testing.T) {
+	type fields struct {
+		URLScheme string
+		UseCase   TodoRecordUseCase
+		Logger    httputils.Logger
+	}
+	type args struct {
+		request *http.Request
+	}
+
+	tests := []struct {
+		name         string
+		fields       fields
+		args         args
+		wantResponse *http.Response
+	}{
+		{
+			name: "success with to-do records",
+			fields: fields{
+				URLScheme: "http",
+				UseCase: func() TodoRecordUseCase {
+					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
+					presentationTodos := []models.PresentationTodoRecord{
+						{
+							URL: "http://example.com/api/v1/todos/5",
+							Date: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+							Title:     "test",
+							Completed: true,
+							Order:     12,
+						},
+						{
+							URL: "http://example.com/api/v1/todos/23",
+							Date: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+							Title:     "test2",
+							Completed: false,
+							Order:     42,
+						},
+					}
+
+					useCase := &MockTodoRecordUseCase{}
+					useCase.InnerMock.
+						On("GetAll", baseURL, models.Query{
+							MinimalDate: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+							MaximalDate: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+						}).
+						Return(presentationTodos, nil)
+
+					return useCase
+				}(),
+				Logger: &MockLogger{},
+			},
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos/2006-01-02",
+					nil,
+				),
+			},
+			wantResponse: &http.Response{
+				Status: strconv.Itoa(http.StatusOK) + " " +
+					http.StatusText(http.StatusOK),
+				StatusCode: http.StatusOK,
+				Proto:      "HTTP/1.1",
+				ProtoMajor: 1,
+				ProtoMinor: 1,
+				Header:     http.Header{"Content-Type": {"application/json"}},
+				Body: ioutil.NopCloser(bytes.NewReader([]byte(
+					`[{"url":"http://example.com/api/v1/todos/5",` +
+						`"date":"2006-01-02",` +
+						`"title":"test",` +
+						`"completed":true,` +
+						`"order":12},` +
+						`{"url":"http://example.com/api/v1/todos/23",` +
+						`"date":"2006-01-02",` +
+						`"title":"test2",` +
+						`"completed":false,` +
+						`"order":42}]`,
+				))),
+				ContentLength: -1,
+			},
+		},
+		{
+			name: "success without to-do records",
+			fields: fields{
+				URLScheme: "http",
+				UseCase: func() TodoRecordUseCase {
+					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
+					presentationTodos := []models.PresentationTodoRecord(nil)
+
+					useCase := &MockTodoRecordUseCase{}
+					useCase.InnerMock.
+						On("GetAll", baseURL, models.Query{
+							MinimalDate: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+							MaximalDate: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+						}).
+						Return(presentationTodos, nil)
+
+					return useCase
+				}(),
+				Logger: &MockLogger{},
+			},
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos/2006-01-02",
+					nil,
+				),
+			},
+			wantResponse: &http.Response{
+				Status: strconv.Itoa(http.StatusOK) + " " +
+					http.StatusText(http.StatusOK),
+				StatusCode:    http.StatusOK,
+				Proto:         "HTTP/1.1",
+				ProtoMajor:    1,
+				ProtoMinor:    1,
+				Header:        http.Header{"Content-Type": {"application/json"}},
+				Body:          ioutil.NopCloser(bytes.NewReader([]byte(`[]`))),
+				ContentLength: -1,
+			},
+		},
+		{
+			name: "success with the title fragment",
+			fields: fields{
+				URLScheme: "http",
+				UseCase: func() TodoRecordUseCase {
+					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
+					presentationTodos := []models.PresentationTodoRecord{
+						{
+							URL: "http://example.com/api/v1/todos/5",
+							Date: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+							Title:     "test",
+							Completed: true,
+							Order:     12,
+						},
+						{
+							URL: "http://example.com/api/v1/todos/23",
+							Date: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+							Title:     "test2",
+							Completed: false,
+							Order:     42,
+						},
+					}
+
+					useCase := &MockTodoRecordUseCase{}
+					useCase.InnerMock.
+						On("GetAll", baseURL, models.Query{
+							MinimalDate: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+							MaximalDate: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+							TitleFragment: "test",
+						}).
+						Return(presentationTodos, nil)
+
+					return useCase
+				}(),
+				Logger: &MockLogger{},
+			},
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos/2006-01-02?title_fragment=test",
+					nil,
+				),
+			},
+			wantResponse: &http.Response{
+				Status: strconv.Itoa(http.StatusOK) + " " +
+					http.StatusText(http.StatusOK),
+				StatusCode: http.StatusOK,
+				Proto:      "HTTP/1.1",
+				ProtoMajor: 1,
+				ProtoMinor: 1,
+				Header:     http.Header{"Content-Type": {"application/json"}},
+				Body: ioutil.NopCloser(bytes.NewReader([]byte(
+					`[{"url":"http://example.com/api/v1/todos/5",` +
+						`"date":"2006-01-02",` +
+						`"title":"test",` +
+						`"completed":true,` +
+						`"order":12},` +
+						`{"url":"http://example.com/api/v1/todos/23",` +
+						`"date":"2006-01-02",` +
+						`"title":"test2",` +
+						`"completed":false,` +
+						`"order":42}]`,
+				))),
+				ContentLength: -1,
+			},
+		},
+		{
+			name: "success with the pagination",
+			fields: fields{
+				URLScheme: "http",
+				UseCase: func() TodoRecordUseCase {
+					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
+					presentationTodos := []models.PresentationTodoRecord{
+						{
+							URL: "http://example.com/api/v1/todos/5",
+							Date: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+							Title:     "test",
+							Completed: true,
+							Order:     12,
+						},
+						{
+							URL: "http://example.com/api/v1/todos/23",
+							Date: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+							Title:     "test2",
+							Completed: false,
+							Order:     42,
+						},
+					}
+
+					useCase := &MockTodoRecordUseCase{}
+					useCase.InnerMock.
+						On("GetAll", baseURL, models.Query{
+							MinimalDate: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+							MaximalDate: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+							Pagination: models.Pagination{PageSize: 23, Page: 42},
+						}).
+						Return(presentationTodos, nil)
+
+					return useCase
+				}(),
+				Logger: &MockLogger{},
+			},
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos/2006-01-02?page_size=23&page=42",
+					nil,
+				),
+			},
+			wantResponse: &http.Response{
+				Status: strconv.Itoa(http.StatusOK) + " " +
+					http.StatusText(http.StatusOK),
+				StatusCode: http.StatusOK,
+				Proto:      "HTTP/1.1",
+				ProtoMajor: 1,
+				ProtoMinor: 1,
+				Header:     http.Header{"Content-Type": {"application/json"}},
+				Body: ioutil.NopCloser(bytes.NewReader([]byte(
+					`[{"url":"http://example.com/api/v1/todos/5",` +
+						`"date":"2006-01-02",` +
+						`"title":"test",` +
+						`"completed":true,` +
+						`"order":12},` +
+						`{"url":"http://example.com/api/v1/todos/23",` +
+						`"date":"2006-01-02",` +
+						`"title":"test2",` +
+						`"completed":false,` +
+						`"order":42}]`,
+				))),
+				ContentLength: -1,
+			},
+		},
+		{
+			name: "error on date getting",
+			fields: fields{
+				URLScheme: "http",
+				UseCase:   &MockTodoRecordUseCase{},
+				Logger: func() httputils.Logger {
+					message := "unable to get a date: " +
+						"unable to find a date"
+					logger := &MockLogger{}
+					logger.InnerMock.
+						On("Print", []interface{}{message}).
+						Return().
+						Times(1)
+
+					return logger
+				}(),
+			},
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos/incorrect",
+					nil,
+				),
+			},
+			wantResponse: &http.Response{
+				Status: strconv.Itoa(http.StatusBadRequest) + " " +
+					http.StatusText(http.StatusBadRequest),
+				StatusCode: http.StatusBadRequest,
+				Proto:      "HTTP/1.1",
+				ProtoMajor: 1,
+				ProtoMinor: 1,
+				Header:     http.Header{},
+				Body: ioutil.NopCloser(bytes.NewReader([]byte(
+					"unable to get a date: " +
+						"unable to find a date",
+				))),
+				ContentLength: -1,
+			},
+		},
+		{
+			name: "error with the page_size parameter",
+			fields: fields{
+				URLScheme: "http",
+				UseCase:   &MockTodoRecordUseCase{},
+				Logger: func() httputils.Logger {
+					message := "unable to get the page_size parameter: " +
+						"value is incorrect: " +
+						"strconv.Atoi: parsing \"incorrect\": invalid syntax"
+					logger := &MockLogger{}
+					logger.InnerMock.
+						On("Print", []interface{}{message}).
+						Return().
+						Times(1)
+
+					return logger
+				}(),
+			},
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos/2006-01-02?page_size=incorrect",
+					nil,
+				),
+			},
+			wantResponse: &http.Response{
+				Status: strconv.Itoa(http.StatusBadRequest) + " " +
+					http.StatusText(http.StatusBadRequest),
+				StatusCode: http.StatusBadRequest,
+				Proto:      "HTTP/1.1",
+				ProtoMajor: 1,
+				ProtoMinor: 1,
+				Header:     http.Header{},
+				Body: ioutil.NopCloser(bytes.NewReader([]byte(
+					"unable to get the page_size parameter: " +
+						"value is incorrect: " +
+						"strconv.Atoi: parsing \"incorrect\": invalid syntax",
+				))),
+				ContentLength: -1,
+			},
+		},
+		{
+			name: "error with the page parameter",
+			fields: fields{
+				URLScheme: "http",
+				UseCase:   &MockTodoRecordUseCase{},
+				Logger: func() httputils.Logger {
+					message := "unable to get the page parameter: " +
+						"value is incorrect: " +
+						"strconv.Atoi: parsing \"incorrect\": invalid syntax"
+					logger := &MockLogger{}
+					logger.InnerMock.
+						On("Print", []interface{}{message}).
+						Return().
+						Times(1)
+
+					return logger
+				}(),
+			},
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos/2006-01-02?page=incorrect",
+					nil,
+				),
+			},
+			wantResponse: &http.Response{
+				Status: strconv.Itoa(http.StatusBadRequest) + " " +
+					http.StatusText(http.StatusBadRequest),
+				StatusCode: http.StatusBadRequest,
+				Proto:      "HTTP/1.1",
+				ProtoMajor: 1,
+				ProtoMinor: 1,
+				Header:     http.Header{},
+				Body: ioutil.NopCloser(bytes.NewReader([]byte(
+					"unable to get the page parameter: " +
+						"value is incorrect: " +
+						"strconv.Atoi: parsing \"incorrect\": invalid syntax",
+				))),
+				ContentLength: -1,
+			},
+		},
+		{
+			name: "error with the use case",
+			fields: fields{
+				URLScheme: "http",
+				UseCase: func() TodoRecordUseCase {
+					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
+
+					useCase := &MockTodoRecordUseCase{}
+					useCase.InnerMock.
+						On("GetAll", baseURL, models.Query{
+							MinimalDate: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+							MaximalDate: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+						}).
+						Return([]models.PresentationTodoRecord(nil), iotest.ErrTimeout)
+
+					return useCase
+				}(),
+				Logger: func() httputils.Logger {
+					logger := &MockLogger{}
+					logger.InnerMock.
+						On("Print", []interface{}{"timeout"}).
+						Return().
+						Times(1)
+
+					return logger
+				}(),
+			},
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos/2006-01-02",
+					nil,
+				),
+			},
+			wantResponse: &http.Response{
+				Status: strconv.Itoa(http.StatusInternalServerError) + " " +
+					http.StatusText(http.StatusInternalServerError),
+				StatusCode:    http.StatusInternalServerError,
+				Proto:         "HTTP/1.1",
+				ProtoMajor:    1,
+				ProtoMinor:    1,
+				Header:        http.Header{},
+				Body:          ioutil.NopCloser(bytes.NewReader([]byte("timeout"))),
+				ContentLength: -1,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			responseRecorder := httptest.NewRecorder()
+			handler := TodoRecord{
+				URLScheme: tt.fields.URLScheme,
+				UseCase:   tt.fields.UseCase,
+				Logger:    tt.fields.Logger,
+			}
+			handler.GetAllByDate(responseRecorder, tt.args.request)
+
+			tt.fields.UseCase.(*MockTodoRecordUseCase).InnerMock.AssertExpectations(t)
+			tt.fields.Logger.(*MockLogger).InnerMock.AssertExpectations(t)
+			assert.Equal(t, tt.wantResponse, responseRecorder.Result())
+		})
+	}
+}
+
 func TestTodoRecord_GetSingle(t *testing.T) {
 	type fields struct {
 		URLScheme string
