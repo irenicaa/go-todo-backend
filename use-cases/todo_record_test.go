@@ -40,7 +40,7 @@ func TestTodoRecord_GetAll(t *testing.T) {
 			args: args{
 				baseURL: &url.URL{Scheme: "https", Host: "example.com"},
 			},
-			want:    nil,
+			want:    []models.PresentationTodoRecord{},
 			wantErr: assert.NoError,
 		},
 		{

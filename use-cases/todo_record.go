@@ -32,7 +32,8 @@ func (useCase TodoRecord) GetAll(baseURL *url.URL, query models.Query) (
 		return nil, fmt.Errorf("unable to get the to-do records: %v", err)
 	}
 
-	var presentationTodos []models.PresentationTodoRecord
+	// force the empty array instead of the nil one
+	presentationTodos := []models.PresentationTodoRecord{}
 	for _, record := range todos {
 		presentationTodo := models.NewPresentationTodoRecord(baseURL, record)
 		presentationTodos = append(presentationTodos, presentationTodo)

@@ -108,7 +108,7 @@ func TestTodoRecord_GetAll(t *testing.T) {
 				URLScheme: "http",
 				UseCase: func() TodoRecordUseCase {
 					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
-					presentationTodos := []models.PresentationTodoRecord(nil)
+					presentationTodos := []models.PresentationTodoRecord{}
 
 					useCase := &MockTodoRecordUseCase{}
 					useCase.InnerMock.
@@ -764,7 +764,7 @@ func TestTodoRecord_GetAllByDate(t *testing.T) {
 				URLScheme: "http",
 				UseCase: func() TodoRecordUseCase {
 					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
-					presentationTodos := []models.PresentationTodoRecord(nil)
+					presentationTodos := []models.PresentationTodoRecord{}
 
 					useCase := &MockTodoRecordUseCase{}
 					useCase.InnerMock.
