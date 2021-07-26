@@ -126,6 +126,60 @@
                 }
             }
         },
+        "/api/v1/todos/{date}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "get all to-do records",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "to-do record date in the RFC 3339 format",
+                        "name": "date",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "search by the title fragment",
+                        "name": "title_fragment",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "specify the page size for pagination",
+                        "name": "page_size",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "specify the page for pagination",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.PresentationTodoRecord"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/todos/{id}": {
             "get": {
                 "produces": [

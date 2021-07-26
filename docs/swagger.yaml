@@ -107,6 +107,42 @@ paths:
           schema:
             type: string
       summary: create a to-do record
+  /api/v1/todos/{date}:
+    get:
+      parameters:
+      - description: to-do record date in the RFC 3339 format
+        in: path
+        name: date
+        required: true
+        type: string
+      - description: search by the title fragment
+        in: query
+        name: title_fragment
+        type: string
+      - description: specify the page size for pagination
+        in: query
+        minimum: 1
+        name: page_size
+        type: integer
+      - description: specify the page for pagination
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.PresentationTodoRecord'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: get all to-do records
   /api/v1/todos/{id}:
     delete:
       parameters:
