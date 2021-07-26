@@ -104,6 +104,88 @@ func TestRouter_ServeHTTP(t *testing.T) {
 			},
 		},
 		{
+			name: "success with getting of all records by a date",
+			fields: fields{
+				BaseURL:   "/api/v1",
+				URLScheme: "http",
+				UseCase: func() TodoRecordUseCase {
+					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
+					presentationTodos := []models.PresentationTodoRecord{
+						{
+							URL: "http://example.com/api/v1/todos/5",
+							Date: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+							Title:     "test",
+							Completed: true,
+							Order:     12,
+						},
+						{
+							URL: "http://example.com/api/v1/todos/23",
+							Date: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+							Title:     "test2",
+							Completed: false,
+							Order:     42,
+						},
+					}
+
+					useCase := &MockTodoRecordUseCase{}
+					useCase.InnerMock.
+						On("GetAll", baseURL, models.Query{
+							MinimalDate: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+							MaximalDate: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+						}).
+						Return(presentationTodos, nil)
+
+					return useCase
+				}(),
+				Logger: &MockLogger{},
+			},
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos/2006-01-02",
+					nil,
+				),
+			},
+			wantResponse: &http.Response{
+				Status: strconv.Itoa(http.StatusOK) + " " +
+					http.StatusText(http.StatusOK),
+				StatusCode: http.StatusOK,
+				Proto:      "HTTP/1.1",
+				ProtoMajor: 1,
+				ProtoMinor: 1,
+				Header:     http.Header{"Content-Type": {"application/json"}},
+				Body: ioutil.NopCloser(bytes.NewReader([]byte(
+					`[{"url":"http://example.com/api/v1/todos/5",` +
+						`"date":"2006-01-02",` +
+						`"title":"test",` +
+						`"completed":true,` +
+						`"order":12},` +
+						`{"url":"http://example.com/api/v1/todos/23",` +
+						`"date":"2006-01-02",` +
+						`"title":"test2",` +
+						`"completed":false,` +
+						`"order":42}]`,
+				))),
+				ContentLength: -1,
+			},
+		},
+		{
 			name: "success with getting of a single record",
 			fields: fields{
 				BaseURL:   "/api/v1",

@@ -26,6 +26,8 @@ func (router Router) ServeHTTP(
 		case http.MethodGet:
 			if request.URL.Path == router.BaseURL+"/todos" {
 				router.TodoRecord.GetAll(writer, request)
+			} else if httputils.DatePattern.MatchString(request.URL.Path) {
+				router.TodoRecord.GetAllByDate(writer, request)
 			} else {
 				router.TodoRecord.GetSingle(writer, request)
 			}

@@ -20,12 +20,16 @@ type Logger interface {
 
 // ErrKeyIsMissed ...
 var ErrKeyIsMissed = errors.New("key is missed")
-var idPattern = regexp.MustCompile(`/\d+`)
-var datePattern = regexp.MustCompile(`/\d{4}-\d{2}-\d{2}`)
+
+// ...
+var (
+	IDPattern   = regexp.MustCompile(`/\d+`)
+	DatePattern = regexp.MustCompile(`/\d{4}-\d{2}-\d{2}`)
+)
 
 // GetIDFromURL ...
 func GetIDFromURL(request *http.Request) (int, error) {
-	idAsStr := idPattern.FindString(request.URL.Path)
+	idAsStr := IDPattern.FindString(request.URL.Path)
 	if idAsStr == "" {
 		return 0, errors.New("unable to find an ID")
 	}
@@ -40,7 +44,7 @@ func GetIDFromURL(request *http.Request) (int, error) {
 
 // GetDateFromURL ...
 func GetDateFromURL(request *http.Request) (models.Date, error) {
-	dateAsStr := datePattern.FindString(request.URL.Path)
+	dateAsStr := DatePattern.FindString(request.URL.Path)
 	if dateAsStr == "" {
 		return models.Date{}, errors.New("unable to find a date")
 	}
