@@ -8,7 +8,7 @@ services:
       - 8080:8080
 
   db:
-    image: postgres:13.2-alpine
+    image: postgres:13.5-alpine
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
@@ -17,12 +17,12 @@ services:
       - 5432:5432
 
   adminer:
-    image: adminer:4.8.0
+    image: adminer:4.8.1
     ports:
       - 9090:8080
 
   swagger:
-    image: swaggerapi/swagger-ui:v3.45.1
+    image: swaggerapi/swagger-ui:v3.52.5
     environment:
       SWAGGER_JSON: /etc/go-todo-backend/swagger.json
     ports:
