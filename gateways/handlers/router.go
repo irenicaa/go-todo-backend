@@ -46,10 +46,6 @@ func (router Router) ServeHTTP(
 		return
 	}
 
-	httputils.HandleError(
-		writer,
-		router.Logger,
-		http.StatusNotFound,
-		http.StatusText(http.StatusNotFound),
-	)
+	status, message := http.StatusNotFound, http.StatusText(http.StatusNotFound)
+	httputils.HandleError(writer, router.Logger, status, message)
 }

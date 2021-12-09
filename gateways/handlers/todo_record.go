@@ -60,52 +60,37 @@ func (handler TodoRecord) GetAll(
 ) {
 	minimalDate, err := httputils.GetDateFormValue(request, "minimal_date")
 	if err != nil && err != httputils.ErrKeyIsMissed {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusBadRequest,
-			"unable to get the minimal_date parameter: %v",
-			err,
-		)
+		status, message :=
+			http.StatusBadRequest, "unable to get the minimal_date parameter: %v"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
 
 	maximalDate, err := httputils.GetDateFormValue(request, "maximal_date")
 	if err != nil && err != httputils.ErrKeyIsMissed {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusBadRequest,
-			"unable to get the maximal_date parameter: %v",
-			err,
-		)
+		status, message :=
+			http.StatusBadRequest, "unable to get the maximal_date parameter: %v"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
 
-	pageSize, err := httputils.GetIntFormValue(request, "page_size", 1, math.MaxInt32)
+	pageSize, err :=
+		httputils.GetIntFormValue(request, "page_size", 1, math.MaxInt32)
 	if err != nil && err != httputils.ErrKeyIsMissed {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusBadRequest,
-			"unable to get the page_size parameter: %v",
-			err,
-		)
+		status, message :=
+			http.StatusBadRequest, "unable to get the page_size parameter: %v"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
 
 	page, err := httputils.GetIntFormValue(request, "page", 1, math.MaxInt32)
 	if err != nil && err != httputils.ErrKeyIsMissed {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusBadRequest,
-			"unable to get the page parameter: %v",
-			err,
-		)
+		status, message :=
+			http.StatusBadRequest, "unable to get the page parameter: %v"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
@@ -118,13 +103,8 @@ func (handler TodoRecord) GetAll(
 		Pagination:    models.Pagination{PageSize: pageSize, Page: page},
 	})
 	if err != nil {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusInternalServerError,
-			"%s",
-			err,
-		)
+		status, message := http.StatusInternalServerError, "%s"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
@@ -148,39 +128,27 @@ func (handler TodoRecord) GetAllByDate(
 ) {
 	date, err := httputils.GetDateFromURL(request)
 	if err != nil {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusBadRequest,
-			"unable to get a date: %s",
-			err,
-		)
+		status, message := http.StatusBadRequest, "unable to get a date: %s"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
 
-	pageSize, err := httputils.GetIntFormValue(request, "page_size", 1, math.MaxInt32)
+	pageSize, err :=
+		httputils.GetIntFormValue(request, "page_size", 1, math.MaxInt32)
 	if err != nil && err != httputils.ErrKeyIsMissed {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusBadRequest,
-			"unable to get the page_size parameter: %v",
-			err,
-		)
+		status, message :=
+			http.StatusBadRequest, "unable to get the page_size parameter: %v"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
 
 	page, err := httputils.GetIntFormValue(request, "page", 1, math.MaxInt32)
 	if err != nil && err != httputils.ErrKeyIsMissed {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusBadRequest,
-			"unable to get the page parameter: %v",
-			err,
-		)
+		status, message :=
+			http.StatusBadRequest, "unable to get the page parameter: %v"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
@@ -193,13 +161,8 @@ func (handler TodoRecord) GetAllByDate(
 		Pagination:    models.Pagination{PageSize: pageSize, Page: page},
 	})
 	if err != nil {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusInternalServerError,
-			"%s",
-			err,
-		)
+		status, message := http.StatusInternalServerError, "%s"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
@@ -221,13 +184,8 @@ func (handler TodoRecord) GetSingle(
 ) {
 	id, err := httputils.GetIDFromURL(request)
 	if err != nil {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusBadRequest,
-			"unable to get an ID: %s",
-			err,
-		)
+		status, message := http.StatusBadRequest, "unable to get an ID: %s"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
@@ -235,13 +193,8 @@ func (handler TodoRecord) GetSingle(
 	baseURL := handler.getBaseURL(request)
 	presentationTodo, err := handler.UseCase.GetSingle(baseURL, id)
 	if err != nil {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusInternalServerError,
-			"%s",
-			err,
-		)
+		status, message := http.StatusInternalServerError, "%s"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
@@ -264,13 +217,8 @@ func (handler TodoRecord) Create(
 ) {
 	var presentationTodo models.PresentationTodoRecord
 	if err := httputils.GetJSONData(request.Body, &presentationTodo); err != nil {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusBadRequest,
-			"unable to get the request body: %s",
-			err,
-		)
+		status, message := http.StatusBadRequest, "unable to get the request body: %s"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
@@ -278,13 +226,8 @@ func (handler TodoRecord) Create(
 	baseURL := handler.getBaseURL(request)
 	presentationTodo, err := handler.UseCase.Create(baseURL, presentationTodo)
 	if err != nil {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusInternalServerError,
-			"%s",
-			err,
-		)
+		status, message := http.StatusInternalServerError, "%s"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
@@ -308,26 +251,16 @@ func (handler TodoRecord) Update(
 ) {
 	id, err := httputils.GetIDFromURL(request)
 	if err != nil {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusBadRequest,
-			"unable to get an ID: %s",
-			err,
-		)
+		status, message := http.StatusBadRequest, "unable to get an ID: %s"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
 
 	var presentationTodo models.PresentationTodoRecord
 	if err := httputils.GetJSONData(request.Body, &presentationTodo); err != nil {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusBadRequest,
-			"unable to get the request body: %s",
-			err,
-		)
+		status, message := http.StatusBadRequest, "unable to get the request body: %s"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
@@ -335,13 +268,8 @@ func (handler TodoRecord) Update(
 	baseURL := handler.getBaseURL(request)
 	presentationTodo, err = handler.UseCase.Update(baseURL, id, presentationTodo)
 	if err != nil {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusInternalServerError,
-			"%s",
-			err,
-		)
+		status, message := http.StatusInternalServerError, "%s"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
@@ -365,26 +293,16 @@ func (handler TodoRecord) Patch(
 ) {
 	id, err := httputils.GetIDFromURL(request)
 	if err != nil {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusBadRequest,
-			"unable to get an ID: %s",
-			err,
-		)
+		status, message := http.StatusBadRequest, "unable to get an ID: %s"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
 
 	var todoPatch models.TodoRecordPatch
 	if err := httputils.GetJSONData(request.Body, &todoPatch); err != nil {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusBadRequest,
-			"unable to get the request body: %s",
-			err,
-		)
+		status, message := http.StatusBadRequest, "unable to get the request body: %s"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
@@ -392,13 +310,8 @@ func (handler TodoRecord) Patch(
 	baseURL := handler.getBaseURL(request)
 	presentationTodo, err := handler.UseCase.Patch(baseURL, id, todoPatch)
 	if err != nil {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusInternalServerError,
-			"%s",
-			err,
-		)
+		status, message := http.StatusInternalServerError, "%s"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
@@ -416,13 +329,8 @@ func (handler TodoRecord) DeleteAll(
 	request *http.Request,
 ) {
 	if err := handler.UseCase.DeleteAll(); err != nil {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusInternalServerError,
-			"%s",
-			err,
-		)
+		status, message := http.StatusInternalServerError, "%s"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
@@ -443,25 +351,15 @@ func (handler TodoRecord) DeleteSingle(
 ) {
 	id, err := httputils.GetIDFromURL(request)
 	if err != nil {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusBadRequest,
-			"unable to get an ID: %s",
-			err,
-		)
+		status, message := http.StatusBadRequest, "unable to get an ID: %s"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
 
 	if err := handler.UseCase.DeleteSingle(id); err != nil {
-		httputils.HandleError(
-			writer,
-			handler.Logger,
-			http.StatusInternalServerError,
-			"%s",
-			err,
-		)
+		status, message := http.StatusInternalServerError, "%s"
+		httputils.HandleError(writer, handler.Logger, status, message, err)
 
 		return
 	}
