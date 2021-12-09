@@ -9,8 +9,9 @@
         "version": "1.1.0"
     },
     "host": "localhost:8080",
+    "basePath": "/api/v1",
     "paths": {
-        "/api/v1/todos": {
+        "/todos": {
             "get": {
                 "produces": [
                     "application/json"
@@ -126,7 +127,7 @@
                 }
             }
         },
-        "/api/v1/todos/{date}": {
+        "/todos/{date}": {
             "get": {
                 "produces": [
                     "application/json"
@@ -180,7 +181,7 @@
                 }
             }
         },
-        "/api/v1/todos/{id}": {
+        "/todos/{id}": {
             "get": {
                 "produces": [
                     "application/json"

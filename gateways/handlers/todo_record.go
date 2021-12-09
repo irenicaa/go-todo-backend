@@ -44,7 +44,7 @@ type TodoRecord struct {
 }
 
 // GetAll ...
-//   @router /api/v1/todos [GET]
+//   @router /todos [GET]
 //   @summary get all to-do records
 //   @param minimal_date query string false "filtration by the minimal date in the RFC 3339 format"
 //   @param maximal_date query string false "filtration by the maximal date in the RFC 3339 format"
@@ -133,7 +133,7 @@ func (handler TodoRecord) GetAll(
 }
 
 // GetAllByDate ...
-//   @router /api/v1/todos/{date} [GET]
+//   @router /todos/{date} [GET]
 //   @summary get all to-do records
 //   @param date path string true "to-do record date in the RFC 3339 format"
 //   @param title_fragment query string false "search by the title fragment"
@@ -208,7 +208,7 @@ func (handler TodoRecord) GetAllByDate(
 }
 
 // GetSingle ...
-//   @router /api/v1/todos/{id} [GET]
+//   @router /todos/{id} [GET]
 //   @summary get the single to-do record
 //   @param id path integer true "to-do record ID"
 //   @produce json
@@ -250,7 +250,7 @@ func (handler TodoRecord) GetSingle(
 }
 
 // Create ...
-//   @router /api/v1/todos [POST]
+//   @router /todos [POST]
 //   @summary create a to-do record
 //   @param body body models.PresentationTodoRecord true "to-do record data"
 //   @accept json
@@ -293,7 +293,7 @@ func (handler TodoRecord) Create(
 }
 
 // Update ...
-//   @router /api/v1/todos/{id} [PUT]
+//   @router /todos/{id} [PUT]
 //   @summary update the to-do record
 //   @param id path integer true "to-do record ID"
 //   @param body body models.PresentationTodoRecord true "to-do record data"
@@ -350,7 +350,7 @@ func (handler TodoRecord) Update(
 }
 
 // Patch ...
-//   @router /api/v1/todos/{id} [PATCH]
+//   @router /todos/{id} [PATCH]
 //   @summary patch the to-do record
 //   @param id path integer true "to-do record ID"
 //   @param body body models.TodoRecordPatch true "to-do record patch"
@@ -407,7 +407,7 @@ func (handler TodoRecord) Patch(
 }
 
 // DeleteAll ...
-//   @router /api/v1/todos [DELETE]
+//   @router /todos [DELETE]
 //   @summary delete the to-do records
 //   @success 204 {string} string
 //   @failure 500 {string} string
@@ -431,7 +431,7 @@ func (handler TodoRecord) DeleteAll(
 }
 
 // DeleteSingle ...
-//   @router /api/v1/todos/{id} [DELETE]
+//   @router /todos/{id} [DELETE]
 //   @summary delete the to-do record
 //   @param id path integer true "to-do record ID"
 //   @success 204 {string} string

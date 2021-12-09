@@ -6,3 +6,4 @@ package todobackend
 // @version 1.1.0
 // @license.name MIT
 // @host localhost:8080
+// @basePath /api/v1

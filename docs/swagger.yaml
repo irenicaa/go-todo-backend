@@ -1,3 +1,4 @@
+basePath: /api/v1
 definitions:
   models.PresentationTodoRecord:
     properties:
@@ -31,7 +32,7 @@ info:
   title: go-todo-backend API
   version: 1.1.0
 paths:
-  /api/v1/todos:
+  /todos:
     delete:
       responses:
         "204":
@@ -107,7 +108,7 @@ paths:
           schema:
             type: string
       summary: create a to-do record
-  /api/v1/todos/{date}:
+  /todos/{date}:
     get:
       parameters:
       - description: to-do record date in the RFC 3339 format
@@ -143,7 +144,7 @@ paths:
           schema:
             type: string
       summary: get all to-do records
-  /api/v1/todos/{id}:
+  /todos/{id}:
     delete:
       parameters:
       - description: to-do record ID
