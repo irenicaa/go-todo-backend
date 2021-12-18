@@ -22,6 +22,9 @@ func CORSMiddleware(handler http.Handler) http.Handler {
 			"Access-Control-Allow-Headers",
 			request.Header.Get("Access-Control-Request-Headers"),
 		)
+		if request.Method == http.MethodOptions {
+			return
+		}
 
 		handler.ServeHTTP(writer, request)
 	})

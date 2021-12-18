@@ -65,7 +65,7 @@ func TestCORSMiddleware(t *testing.T) {
 				}),
 				request: func() *http.Request {
 					request := httptest.NewRequest(
-						http.MethodOptions,
+						http.MethodGet,
 						"http://example.com/test",
 						nil,
 					)
@@ -90,6 +90,44 @@ func TestCORSMiddleware(t *testing.T) {
 					"Access-Control-Allow-Headers": []string{"Content-Type"},
 				},
 				Body:          ioutil.NopCloser(bytes.NewReader([]byte("Hello, world!"))),
+				ContentLength: -1,
+			},
+		},
+		{
+			name: "with the OPTIONS HTTP method",
+			args: args{
+				handler: http.HandlerFunc(func(
+					writer http.ResponseWriter,
+					request *http.Request,
+				) {
+					writer.Write([]byte("Hello, world!"))
+				}),
+				request: func() *http.Request {
+					request := httptest.NewRequest(
+						http.MethodOptions,
+						"http://example.com/test",
+						nil,
+					)
+					request.Header.Set("Origin", "http://example.com")
+					request.Header.Set("Access-Control-Request-Method", http.MethodPost)
+					request.Header.Set("Access-Control-Request-Headers", "Content-Type")
+
+					return request
+				}(),
+			},
+			wantResponse: &http.Response{
+				Status: strconv.Itoa(http.StatusOK) + " " +
+					http.StatusText(http.StatusOK),
+				StatusCode: http.StatusOK,
+				Proto:      "HTTP/1.1",
+				ProtoMajor: 1,
+				ProtoMinor: 1,
+				Header: http.Header{
+					"Access-Control-Allow-Origin":  []string{"http://example.com"},
+					"Access-Control-Allow-Methods": []string{http.MethodPost},
+					"Access-Control-Allow-Headers": []string{"Content-Type"},
+				},
+				Body:          ioutil.NopCloser(bytes.NewReader(nil)),
 				ContentLength: -1,
 			},
 		},
