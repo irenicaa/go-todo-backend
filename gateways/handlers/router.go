@@ -23,6 +23,7 @@ func (router Router) ServeHTTP(
 		switch request.Method {
 		case http.MethodPost:
 			router.TodoRecord.Create(writer, request)
+			return
 		case http.MethodGet:
 			if request.URL.Path == router.BaseURL+"/todos" {
 				router.TodoRecord.GetAll(writer, request)
@@ -31,19 +32,23 @@ func (router Router) ServeHTTP(
 			} else {
 				router.TodoRecord.GetSingle(writer, request)
 			}
+
+			return
 		case http.MethodPut:
 			router.TodoRecord.Update(writer, request)
+			return
 		case http.MethodPatch:
 			router.TodoRecord.Patch(writer, request)
+			return
 		case http.MethodDelete:
 			if request.URL.Path == router.BaseURL+"/todos" {
 				router.TodoRecord.DeleteAll(writer, request)
 			} else {
 				router.TodoRecord.DeleteSingle(writer, request)
 			}
-		}
 
-		return
+			return
+		}
 	}
 
 	status, message := http.StatusNotFound, http.StatusText(http.StatusNotFound)

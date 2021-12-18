@@ -494,7 +494,44 @@ func TestRouter_ServeHTTP(t *testing.T) {
 			},
 		},
 		{
-			name: "error",
+			name: "error with an unknown HTTP method",
+			fields: fields{
+				BaseURL:   "/api/v1",
+				URLScheme: "http",
+				UseCase:   &MockTodoRecordUseCase{},
+				Logger: func() httputils.Logger {
+					logger := &MockLogger{}
+					logger.InnerMock.
+						On("Print", []interface{}{http.StatusText(http.StatusNotFound)}).
+						Return().
+						Times(1)
+
+					return logger
+				}(),
+			},
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodHead,
+					"http://example.com/api/v1/todos",
+					nil,
+				),
+			},
+			wantResponse: &http.Response{
+				Status: strconv.Itoa(http.StatusNotFound) + " " +
+					http.StatusText(http.StatusNotFound),
+				StatusCode: http.StatusNotFound,
+				Proto:      "HTTP/1.1",
+				ProtoMajor: 1,
+				ProtoMinor: 1,
+				Header:     http.Header{},
+				Body: ioutil.NopCloser(bytes.NewReader([]byte(
+					http.StatusText(http.StatusNotFound),
+				))),
+				ContentLength: -1,
+			},
+		},
+		{
+			name: "error with an unknown route",
 			fields: fields{
 				BaseURL:   "/api/v1",
 				URLScheme: "http",
