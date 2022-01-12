@@ -23,129 +23,6 @@ import (
 
 var port = flag.Int("port", 8080, "server port")
 
-func TestTodoRecord_withSingleModel(t *testing.T) {
-	tests := []struct {
-		name         string
-		originalTodo models.PresentationTodoRecord
-		action       func(t *testing.T, todoURL string)
-		wantTodo     models.PresentationTodoRecord
-	}{
-		{
-			name: "creation",
-			originalTodo: models.PresentationTodoRecord{
-				Date: models.Date(time.Date(
-					2006, time.January, 2,
-					0, 0, 0, 0,
-					time.UTC,
-				)),
-				Title:     "test",
-				Completed: true,
-				Order:     42,
-			},
-			action: func(t *testing.T, todoURL string) {},
-			wantTodo: models.PresentationTodoRecord{
-				Date: models.Date(time.Date(
-					2006, time.January, 2,
-					0, 0, 0, 0,
-					time.UTC,
-				)),
-				Title:     "test",
-				Completed: true,
-				Order:     42,
-			},
-		},
-		{
-			name: "updating",
-			originalTodo: models.PresentationTodoRecord{
-				Date: models.Date(time.Date(
-					2006, time.January, 2,
-					0, 0, 0, 0,
-					time.UTC,
-				)),
-				Title:     "test",
-				Completed: true,
-				Order:     23,
-			},
-			action: func(t *testing.T, todoURL string) {
-				newTodo := models.PresentationTodoRecord{
-					Date: models.Date(time.Date(
-						2006, time.January, 3,
-						0, 0, 0, 0,
-						time.UTC,
-					)),
-					Title:     "test2",
-					Completed: true,
-					Order:     42,
-				}
-
-				_, err := sendRequest(http.MethodPut, todoURL, newTodo)
-				require.NoError(t, err)
-			},
-			wantTodo: models.PresentationTodoRecord{
-				Date: models.Date(time.Date(
-					2006, time.January, 3,
-					0, 0, 0, 0,
-					time.UTC,
-				)),
-				Title:     "test2",
-				Completed: true,
-				Order:     42,
-			},
-		},
-		{
-			name: "patching",
-			originalTodo: models.PresentationTodoRecord{
-				Date: models.Date(time.Date(
-					2006, time.January, 2,
-					0, 0, 0, 0,
-					time.UTC,
-				)),
-				Title:     "test",
-				Completed: true,
-				Order:     42,
-			},
-			action: func(t *testing.T, todoURL string) {
-				todoPatchTitle := "test2"
-				todoPatch := models.TodoRecordPatch{Title: &todoPatchTitle}
-
-				_, err := sendRequest(http.MethodPatch, todoURL, todoPatch)
-				require.NoError(t, err)
-			},
-			wantTodo: models.PresentationTodoRecord{
-				Date: models.Date(time.Date(
-					2006, time.January, 2,
-					0, 0, 0, 0,
-					time.UTC,
-				)),
-				Title:     "test2",
-				Completed: true,
-				Order:     42,
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			url := fmt.Sprintf("http://localhost:%d/api/v1/todos", *port)
-			response, err := sendRequest(http.MethodPost, url, tt.originalTodo)
-			require.NoError(t, err)
-
-			createdTodo, err := unmarshalTodoRecord(response.Body)
-			require.NoError(t, err)
-
-			tt.action(t, createdTodo.URL)
-
-			response, err = sendRequest(http.MethodGet, createdTodo.URL, nil)
-			require.NoError(t, err)
-
-			gotTodo, err := unmarshalTodoRecord(response.Body)
-			require.NoError(t, err)
-
-			tt.wantTodo.URL = createdTodo.URL
-			assert.Equal(t, tt.wantTodo, gotTodo)
-		})
-	}
-}
-
 func TestTodoRecord_withGetting(t *testing.T) {
 	url := fmt.Sprintf("http://localhost:%d/api/v1/todos", *port)
 	_, err := sendRequest(http.MethodDelete, url, nil)
@@ -483,6 +360,129 @@ func TestTodoRecord_withQuerying(t *testing.T) {
 			}
 
 			assert.Equal(t, tt.wantTodos, gotTodos)
+		})
+	}
+}
+
+func TestTodoRecord_withModifying(t *testing.T) {
+	tests := []struct {
+		name         string
+		originalTodo models.PresentationTodoRecord
+		action       func(t *testing.T, todoURL string)
+		wantTodo     models.PresentationTodoRecord
+	}{
+		{
+			name: "creation",
+			originalTodo: models.PresentationTodoRecord{
+				Date: models.Date(time.Date(
+					2006, time.January, 2,
+					0, 0, 0, 0,
+					time.UTC,
+				)),
+				Title:     "test",
+				Completed: true,
+				Order:     42,
+			},
+			action: func(t *testing.T, todoURL string) {},
+			wantTodo: models.PresentationTodoRecord{
+				Date: models.Date(time.Date(
+					2006, time.January, 2,
+					0, 0, 0, 0,
+					time.UTC,
+				)),
+				Title:     "test",
+				Completed: true,
+				Order:     42,
+			},
+		},
+		{
+			name: "updating",
+			originalTodo: models.PresentationTodoRecord{
+				Date: models.Date(time.Date(
+					2006, time.January, 2,
+					0, 0, 0, 0,
+					time.UTC,
+				)),
+				Title:     "test",
+				Completed: true,
+				Order:     23,
+			},
+			action: func(t *testing.T, todoURL string) {
+				newTodo := models.PresentationTodoRecord{
+					Date: models.Date(time.Date(
+						2006, time.January, 3,
+						0, 0, 0, 0,
+						time.UTC,
+					)),
+					Title:     "test2",
+					Completed: true,
+					Order:     42,
+				}
+
+				_, err := sendRequest(http.MethodPut, todoURL, newTodo)
+				require.NoError(t, err)
+			},
+			wantTodo: models.PresentationTodoRecord{
+				Date: models.Date(time.Date(
+					2006, time.January, 3,
+					0, 0, 0, 0,
+					time.UTC,
+				)),
+				Title:     "test2",
+				Completed: true,
+				Order:     42,
+			},
+		},
+		{
+			name: "patching",
+			originalTodo: models.PresentationTodoRecord{
+				Date: models.Date(time.Date(
+					2006, time.January, 2,
+					0, 0, 0, 0,
+					time.UTC,
+				)),
+				Title:     "test",
+				Completed: true,
+				Order:     42,
+			},
+			action: func(t *testing.T, todoURL string) {
+				todoPatchTitle := "test2"
+				todoPatch := models.TodoRecordPatch{Title: &todoPatchTitle}
+
+				_, err := sendRequest(http.MethodPatch, todoURL, todoPatch)
+				require.NoError(t, err)
+			},
+			wantTodo: models.PresentationTodoRecord{
+				Date: models.Date(time.Date(
+					2006, time.January, 2,
+					0, 0, 0, 0,
+					time.UTC,
+				)),
+				Title:     "test2",
+				Completed: true,
+				Order:     42,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			url := fmt.Sprintf("http://localhost:%d/api/v1/todos", *port)
+			response, err := sendRequest(http.MethodPost, url, tt.originalTodo)
+			require.NoError(t, err)
+
+			createdTodo, err := unmarshalTodoRecord(response.Body)
+			require.NoError(t, err)
+
+			tt.action(t, createdTodo.URL)
+
+			response, err = sendRequest(http.MethodGet, createdTodo.URL, nil)
+			require.NoError(t, err)
+
+			gotTodo, err := unmarshalTodoRecord(response.Body)
+			require.NoError(t, err)
+
+			tt.wantTodo.URL = createdTodo.URL
+			assert.Equal(t, tt.wantTodo, gotTodo)
 		})
 	}
 }

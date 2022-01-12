@@ -26,7 +26,7 @@ func TestTodoRecord_GetAll(t *testing.T) {
 		wantErr assert.ErrorAssertionFunc
 	}{
 		{
-			name: "success without todos",
+			name: "success without to-do records",
 			fields: fields{
 				Storage: func() TodoRecordStorage {
 					storage := &MockStorage{}
@@ -44,7 +44,7 @@ func TestTodoRecord_GetAll(t *testing.T) {
 			wantErr: assert.NoError,
 		},
 		{
-			name: "success with todos",
+			name: "success with to-do records",
 			fields: fields{
 				Storage: func() TodoRecordStorage {
 					todos := []models.TodoRecord{

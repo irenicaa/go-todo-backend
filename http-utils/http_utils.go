@@ -131,13 +131,9 @@ func HandleError(
 func HandleJSON(writer http.ResponseWriter, logger Logger, data interface{}) {
 	dataBytes, err := json.Marshal(data)
 	if err != nil {
-		HandleError(
-			writer,
-			logger,
-			http.StatusInternalServerError,
-			"unable to marshal the data: %v",
-			err,
-		)
+		status, message :=
+			http.StatusInternalServerError, "unable to marshal the data: %v"
+		HandleError(writer, logger, status, message, err)
 
 		return
 	}

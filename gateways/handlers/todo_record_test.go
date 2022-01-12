@@ -33,6 +33,42 @@ func TestTodoRecord_GetAll(t *testing.T) {
 		wantResponse *http.Response
 	}{
 		{
+			name: "success without to-do records",
+			fields: fields{
+				URLScheme: "http",
+				UseCase: func() TodoRecordUseCase {
+					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
+					presentationTodos := []models.PresentationTodoRecord{}
+
+					useCase := &MockTodoRecordUseCase{}
+					useCase.InnerMock.
+						On("GetAll", baseURL, models.Query{}).
+						Return(presentationTodos, nil)
+
+					return useCase
+				}(),
+				Logger: &MockLogger{},
+			},
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos",
+					nil,
+				),
+			},
+			wantResponse: &http.Response{
+				Status: strconv.Itoa(http.StatusOK) + " " +
+					http.StatusText(http.StatusOK),
+				StatusCode:    http.StatusOK,
+				Proto:         "HTTP/1.1",
+				ProtoMajor:    1,
+				ProtoMinor:    1,
+				Header:        http.Header{"Content-Type": {"application/json"}},
+				Body:          ioutil.NopCloser(bytes.NewReader([]byte(`[]`))),
+				ContentLength: -1,
+			},
+		},
+		{
 			name: "success with to-do records",
 			fields: fields{
 				URLScheme: "http",
@@ -99,42 +135,6 @@ func TestTodoRecord_GetAll(t *testing.T) {
 						`"completed":false,` +
 						`"order":42}]`,
 				))),
-				ContentLength: -1,
-			},
-		},
-		{
-			name: "success without to-do records",
-			fields: fields{
-				URLScheme: "http",
-				UseCase: func() TodoRecordUseCase {
-					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
-					presentationTodos := []models.PresentationTodoRecord{}
-
-					useCase := &MockTodoRecordUseCase{}
-					useCase.InnerMock.
-						On("GetAll", baseURL, models.Query{}).
-						Return(presentationTodos, nil)
-
-					return useCase
-				}(),
-				Logger: &MockLogger{},
-			},
-			args: args{
-				request: httptest.NewRequest(
-					http.MethodGet,
-					"http://example.com/api/v1/todos",
-					nil,
-				),
-			},
-			wantResponse: &http.Response{
-				Status: strconv.Itoa(http.StatusOK) + " " +
-					http.StatusText(http.StatusOK),
-				StatusCode:    http.StatusOK,
-				Proto:         "HTTP/1.1",
-				ProtoMajor:    1,
-				ProtoMinor:    1,
-				Header:        http.Header{"Content-Type": {"application/json"}},
-				Body:          ioutil.NopCloser(bytes.NewReader([]byte(`[]`))),
 				ContentLength: -1,
 			},
 		},
@@ -678,6 +678,53 @@ func TestTodoRecord_GetAllByDate(t *testing.T) {
 		wantResponse *http.Response
 	}{
 		{
+			name: "success without to-do records",
+			fields: fields{
+				URLScheme: "http",
+				UseCase: func() TodoRecordUseCase {
+					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
+					presentationTodos := []models.PresentationTodoRecord{}
+
+					useCase := &MockTodoRecordUseCase{}
+					useCase.InnerMock.
+						On("GetAll", baseURL, models.Query{
+							MinimalDate: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+							MaximalDate: models.Date(time.Date(
+								2006, time.January, 2,
+								0, 0, 0, 0,
+								time.UTC,
+							)),
+						}).
+						Return(presentationTodos, nil)
+
+					return useCase
+				}(),
+				Logger: &MockLogger{},
+			},
+			args: args{
+				request: httptest.NewRequest(
+					http.MethodGet,
+					"http://example.com/api/v1/todos/2006-01-02",
+					nil,
+				),
+			},
+			wantResponse: &http.Response{
+				Status: strconv.Itoa(http.StatusOK) + " " +
+					http.StatusText(http.StatusOK),
+				StatusCode:    http.StatusOK,
+				Proto:         "HTTP/1.1",
+				ProtoMajor:    1,
+				ProtoMinor:    1,
+				Header:        http.Header{"Content-Type": {"application/json"}},
+				Body:          ioutil.NopCloser(bytes.NewReader([]byte(`[]`))),
+				ContentLength: -1,
+			},
+		},
+		{
 			name: "success with to-do records",
 			fields: fields{
 				URLScheme: "http",
@@ -755,53 +802,6 @@ func TestTodoRecord_GetAllByDate(t *testing.T) {
 						`"completed":false,` +
 						`"order":42}]`,
 				))),
-				ContentLength: -1,
-			},
-		},
-		{
-			name: "success without to-do records",
-			fields: fields{
-				URLScheme: "http",
-				UseCase: func() TodoRecordUseCase {
-					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
-					presentationTodos := []models.PresentationTodoRecord{}
-
-					useCase := &MockTodoRecordUseCase{}
-					useCase.InnerMock.
-						On("GetAll", baseURL, models.Query{
-							MinimalDate: models.Date(time.Date(
-								2006, time.January, 2,
-								0, 0, 0, 0,
-								time.UTC,
-							)),
-							MaximalDate: models.Date(time.Date(
-								2006, time.January, 2,
-								0, 0, 0, 0,
-								time.UTC,
-							)),
-						}).
-						Return(presentationTodos, nil)
-
-					return useCase
-				}(),
-				Logger: &MockLogger{},
-			},
-			args: args{
-				request: httptest.NewRequest(
-					http.MethodGet,
-					"http://example.com/api/v1/todos/2006-01-02",
-					nil,
-				),
-			},
-			wantResponse: &http.Response{
-				Status: strconv.Itoa(http.StatusOK) + " " +
-					http.StatusText(http.StatusOK),
-				StatusCode:    http.StatusOK,
-				Proto:         "HTTP/1.1",
-				ProtoMajor:    1,
-				ProtoMinor:    1,
-				Header:        http.Header{"Content-Type": {"application/json"}},
-				Body:          ioutil.NopCloser(bytes.NewReader([]byte(`[]`))),
 				ContentLength: -1,
 			},
 		},
