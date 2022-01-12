@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "68dda2a7-fda3-402c-b3e7-c12a70c4449f",
-		"name": "go-todo-backend",
+		"name": "go-todo-backend API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
