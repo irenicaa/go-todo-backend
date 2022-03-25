@@ -15,6 +15,7 @@ import (
 	"testing"
 	"time"
 
+	utilmodels "github.com/irenicaa/go-http-utils/models"
 	httputils "github.com/irenicaa/go-todo-backend/http-utils"
 	"github.com/irenicaa/go-todo-backend/models"
 	"github.com/stretchr/testify/assert"
@@ -31,7 +32,7 @@ func TestTodoRecord_withGetting(t *testing.T) {
 	var createdTodos []models.PresentationTodoRecord
 	for i := 0; i <= 10; i++ {
 		originalTodo := models.PresentationTodoRecord{
-			Date: models.Date(time.Date(
+			Date: utilmodels.Date(time.Date(
 				2006, time.January, 2+i,
 				0, 0, 0, 0,
 				time.UTC,
@@ -78,7 +79,7 @@ func TestTodoRecord_withQuerying(t *testing.T) {
 				var originalTodos []models.PresentationTodoRecord
 				for i := 0; i <= 10; i++ {
 					originalTodo := models.PresentationTodoRecord{
-						Date: models.Date(time.Date(
+						Date: utilmodels.Date(time.Date(
 							2006, time.January, 2+i,
 							0, 0, 0, 0,
 							time.UTC,
@@ -97,7 +98,7 @@ func TestTodoRecord_withQuerying(t *testing.T) {
 				var wantTodos []models.PresentationTodoRecord
 				for i := 10; i >= 5; i-- {
 					wantTodo := models.PresentationTodoRecord{
-						Date: models.Date(time.Date(
+						Date: utilmodels.Date(time.Date(
 							2006, time.January, 2+i,
 							0, 0, 0, 0,
 							time.UTC,
@@ -118,7 +119,7 @@ func TestTodoRecord_withQuerying(t *testing.T) {
 				var originalTodos []models.PresentationTodoRecord
 				for i := 0; i <= 10; i++ {
 					originalTodo := models.PresentationTodoRecord{
-						Date: models.Date(time.Date(
+						Date: utilmodels.Date(time.Date(
 							2006, time.January, 2+i,
 							0, 0, 0, 0,
 							time.UTC,
@@ -137,7 +138,7 @@ func TestTodoRecord_withQuerying(t *testing.T) {
 				var wantTodos []models.PresentationTodoRecord
 				for i := 5; i >= 0; i-- {
 					wantTodo := models.PresentationTodoRecord{
-						Date: models.Date(time.Date(
+						Date: utilmodels.Date(time.Date(
 							2006, time.January, 2+i,
 							0, 0, 0, 0,
 							time.UTC,
@@ -158,7 +159,7 @@ func TestTodoRecord_withQuerying(t *testing.T) {
 				var originalTodos []models.PresentationTodoRecord
 				for i := 0; i <= 10; i++ {
 					originalTodo := models.PresentationTodoRecord{
-						Date: models.Date(time.Date(
+						Date: utilmodels.Date(time.Date(
 							2006, time.January, 2+i,
 							0, 0, 0, 0,
 							time.UTC,
@@ -180,7 +181,7 @@ func TestTodoRecord_withQuerying(t *testing.T) {
 				var wantTodos []models.PresentationTodoRecord
 				for i := 7; i >= 3; i-- {
 					wantTodo := models.PresentationTodoRecord{
-						Date: models.Date(time.Date(
+						Date: utilmodels.Date(time.Date(
 							2006, time.January, 2+i,
 							0, 0, 0, 0,
 							time.UTC,
@@ -208,7 +209,7 @@ func TestTodoRecord_withQuerying(t *testing.T) {
 					}
 
 					originalTodo := models.PresentationTodoRecord{
-						Date: models.Date(time.Date(
+						Date: utilmodels.Date(time.Date(
 							2006, time.January, 2+i,
 							0, 0, 0, 0,
 							time.UTC,
@@ -227,7 +228,7 @@ func TestTodoRecord_withQuerying(t *testing.T) {
 				var wantTodos []models.PresentationTodoRecord
 				for i := 10; i >= 0; i -= 2 {
 					wantTodo := models.PresentationTodoRecord{
-						Date: models.Date(time.Date(
+						Date: utilmodels.Date(time.Date(
 							2006, time.January, 2+i,
 							0, 0, 0, 0,
 							time.UTC,
@@ -248,7 +249,7 @@ func TestTodoRecord_withQuerying(t *testing.T) {
 				var originalTodos []models.PresentationTodoRecord
 				for i := 0; i <= 10; i++ {
 					originalTodo := models.PresentationTodoRecord{
-						Date: models.Date(time.Date(
+						Date: utilmodels.Date(time.Date(
 							2006, time.January, 2+i,
 							0, 0, 0, 0,
 							time.UTC,
@@ -267,7 +268,7 @@ func TestTodoRecord_withQuerying(t *testing.T) {
 				var wantTodos []models.PresentationTodoRecord
 				for i := 6; i >= 5; i-- {
 					wantTodo := models.PresentationTodoRecord{
-						Date: models.Date(time.Date(
+						Date: utilmodels.Date(time.Date(
 							2006, time.January, 2+i,
 							0, 0, 0, 0,
 							time.UTC,
@@ -295,7 +296,7 @@ func TestTodoRecord_withQuerying(t *testing.T) {
 					}
 
 					originalTodo := models.PresentationTodoRecord{
-						Date: models.Date(time.Date(
+						Date: utilmodels.Date(time.Date(
 							2006, time.January, 2+i,
 							0, 0, 0, 0,
 							time.UTC,
@@ -320,7 +321,7 @@ func TestTodoRecord_withQuerying(t *testing.T) {
 				var wantTodos []models.PresentationTodoRecord
 				for i := 8; i >= 6; i -= 2 {
 					wantTodo := models.PresentationTodoRecord{
-						Date: models.Date(time.Date(
+						Date: utilmodels.Date(time.Date(
 							2006, time.January, 2+i,
 							0, 0, 0, 0,
 							time.UTC,
@@ -374,7 +375,7 @@ func TestTodoRecord_withModifying(t *testing.T) {
 		{
 			name: "creation",
 			originalTodo: models.PresentationTodoRecord{
-				Date: models.Date(time.Date(
+				Date: utilmodels.Date(time.Date(
 					2006, time.January, 2,
 					0, 0, 0, 0,
 					time.UTC,
@@ -385,7 +386,7 @@ func TestTodoRecord_withModifying(t *testing.T) {
 			},
 			action: func(t *testing.T, todoURL string) {},
 			wantTodo: models.PresentationTodoRecord{
-				Date: models.Date(time.Date(
+				Date: utilmodels.Date(time.Date(
 					2006, time.January, 2,
 					0, 0, 0, 0,
 					time.UTC,
@@ -398,7 +399,7 @@ func TestTodoRecord_withModifying(t *testing.T) {
 		{
 			name: "updating",
 			originalTodo: models.PresentationTodoRecord{
-				Date: models.Date(time.Date(
+				Date: utilmodels.Date(time.Date(
 					2006, time.January, 2,
 					0, 0, 0, 0,
 					time.UTC,
@@ -409,7 +410,7 @@ func TestTodoRecord_withModifying(t *testing.T) {
 			},
 			action: func(t *testing.T, todoURL string) {
 				newTodo := models.PresentationTodoRecord{
-					Date: models.Date(time.Date(
+					Date: utilmodels.Date(time.Date(
 						2006, time.January, 3,
 						0, 0, 0, 0,
 						time.UTC,
@@ -423,7 +424,7 @@ func TestTodoRecord_withModifying(t *testing.T) {
 				require.NoError(t, err)
 			},
 			wantTodo: models.PresentationTodoRecord{
-				Date: models.Date(time.Date(
+				Date: utilmodels.Date(time.Date(
 					2006, time.January, 3,
 					0, 0, 0, 0,
 					time.UTC,
@@ -436,7 +437,7 @@ func TestTodoRecord_withModifying(t *testing.T) {
 		{
 			name: "patching",
 			originalTodo: models.PresentationTodoRecord{
-				Date: models.Date(time.Date(
+				Date: utilmodels.Date(time.Date(
 					2006, time.January, 2,
 					0, 0, 0, 0,
 					time.UTC,
@@ -453,7 +454,7 @@ func TestTodoRecord_withModifying(t *testing.T) {
 				require.NoError(t, err)
 			},
 			wantTodo: models.PresentationTodoRecord{
-				Date: models.Date(time.Date(
+				Date: utilmodels.Date(time.Date(
 					2006, time.January, 2,
 					0, 0, 0, 0,
 					time.UTC,
@@ -489,7 +490,7 @@ func TestTodoRecord_withModifying(t *testing.T) {
 
 func TestTodoRecord_withDeleting(t *testing.T) {
 	originalTodo := models.PresentationTodoRecord{
-		Date: models.Date(time.Date(
+		Date: utilmodels.Date(time.Date(
 			2006, time.January, 2,
 			0, 0, 0, 0,
 			time.UTC,

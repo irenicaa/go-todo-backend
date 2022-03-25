@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	utilmodels "github.com/irenicaa/go-http-utils/models"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -33,7 +34,7 @@ func TestNewPresentationTodoRecord(t *testing.T) {
 			},
 			want: PresentationTodoRecord{
 				URL:       "https://example.com/api/v1/todos/23",
-				Date:      Date(time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC)),
+				Date:      utilmodels.Date(time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC)),
 				Title:     "test",
 				Completed: true,
 				Order:     42,

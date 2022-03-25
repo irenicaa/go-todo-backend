@@ -10,7 +10,7 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/irenicaa/go-todo-backend/models"
+	utilmodels "github.com/irenicaa/go-http-utils/models"
 )
 
 // Logger ...
@@ -43,15 +43,15 @@ func GetIDFromURL(request *http.Request) (int, error) {
 }
 
 // GetDateFromURL ...
-func GetDateFromURL(request *http.Request) (models.Date, error) {
+func GetDateFromURL(request *http.Request) (utilmodels.Date, error) {
 	dateAsStr := DatePattern.FindString(request.URL.Path)
 	if dateAsStr == "" {
-		return models.Date{}, errors.New("unable to find a date")
+		return utilmodels.Date{}, errors.New("unable to find a date")
 	}
 
-	date, err := models.ParseDate(dateAsStr[1:])
+	date, err := utilmodels.ParseDate(dateAsStr[1:])
 	if err != nil {
-		return models.Date{}, fmt.Errorf("unable to parse the date: %s", err)
+		return utilmodels.Date{}, fmt.Errorf("unable to parse the date: %s", err)
 	}
 
 	return date, nil
@@ -84,15 +84,15 @@ func GetIntFormValue(
 }
 
 // GetDateFormValue ...
-func GetDateFormValue(request *http.Request, key string) (models.Date, error) {
+func GetDateFormValue(request *http.Request, key string) (utilmodels.Date, error) {
 	value := request.FormValue(key)
 	if value == "" {
-		return models.Date{}, ErrKeyIsMissed
+		return utilmodels.Date{}, ErrKeyIsMissed
 	}
 
-	parsedDate, err := models.ParseDate(value)
+	parsedDate, err := utilmodels.ParseDate(value)
 	if err != nil {
-		return models.Date{}, fmt.Errorf("unable to parse the date: %v", err)
+		return utilmodels.Date{}, fmt.Errorf("unable to parse the date: %v", err)
 	}
 
 	return parsedDate, nil

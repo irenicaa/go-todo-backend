@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	utilmodels "github.com/irenicaa/go-http-utils/models"
 	"github.com/irenicaa/go-todo-backend/models"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -86,7 +87,7 @@ func TestTodoRecord_withQuerying(t *testing.T) {
 				return originalTodos
 			}(),
 			query: models.Query{
-				MinimalDate: models.Date(time.Date(
+				MinimalDate: utilmodels.Date(time.Date(
 					2006, time.January, 7,
 					0, 0, 0, 0,
 					time.UTC,
@@ -132,7 +133,7 @@ func TestTodoRecord_withQuerying(t *testing.T) {
 				return originalTodos
 			}(),
 			query: models.Query{
-				MaximalDate: models.Date(time.Date(
+				MaximalDate: utilmodels.Date(time.Date(
 					2006, time.January, 7,
 					0, 0, 0, 0,
 					time.UTC,
@@ -178,12 +179,12 @@ func TestTodoRecord_withQuerying(t *testing.T) {
 				return originalTodos
 			}(),
 			query: models.Query{
-				MinimalDate: models.Date(time.Date(
+				MinimalDate: utilmodels.Date(time.Date(
 					2006, time.January, 5,
 					0, 0, 0, 0,
 					time.UTC,
 				)),
-				MaximalDate: models.Date(time.Date(
+				MaximalDate: utilmodels.Date(time.Date(
 					2006, time.January, 9,
 					0, 0, 0, 0,
 					time.UTC,
@@ -323,12 +324,12 @@ func TestTodoRecord_withQuerying(t *testing.T) {
 				return originalTodos
 			}(),
 			query: models.Query{
-				MinimalDate: models.Date(time.Date(
+				MinimalDate: utilmodels.Date(time.Date(
 					2006, time.January, 5,
 					0, 0, 0, 0,
 					time.UTC,
 				)),
-				MaximalDate: models.Date(time.Date(
+				MaximalDate: utilmodels.Date(time.Date(
 					2006, time.January, 19,
 					0, 0, 0, 0,
 					time.UTC,

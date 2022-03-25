@@ -11,6 +11,7 @@ import (
 	"testing/iotest"
 	"time"
 
+	utilmodels "github.com/irenicaa/go-http-utils/models"
 	"github.com/irenicaa/go-todo-backend/models"
 	"github.com/stretchr/testify/assert"
 )
@@ -81,7 +82,7 @@ func TestGetDateFromURL(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    models.Date
+		want    utilmodels.Date
 		wantErr assert.ErrorAssertionFunc
 	}{
 		{
@@ -93,7 +94,7 @@ func TestGetDateFromURL(t *testing.T) {
 					nil,
 				),
 			},
-			want:    models.Date(time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC)),
+			want:    utilmodels.Date(time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC)),
 			wantErr: assert.NoError,
 		},
 		{
@@ -105,7 +106,7 @@ func TestGetDateFromURL(t *testing.T) {
 					nil,
 				),
 			},
-			want:    models.Date{},
+			want:    utilmodels.Date{},
 			wantErr: assert.Error,
 		},
 		{
@@ -117,7 +118,7 @@ func TestGetDateFromURL(t *testing.T) {
 					nil,
 				),
 			},
-			want:    models.Date{},
+			want:    utilmodels.Date{},
 			wantErr: assert.Error,
 		},
 	}
@@ -223,7 +224,7 @@ func TestGetDateFormValue(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    models.Date
+		want    utilmodels.Date
 		wantErr assert.ErrorAssertionFunc
 	}{
 		{
@@ -232,7 +233,7 @@ func TestGetDateFormValue(t *testing.T) {
 				request: httptest.NewRequest(http.MethodGet, "/test?key=2006-01-02", nil),
 				key:     "key",
 			},
-			want:    models.Date(time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC)),
+			want:    utilmodels.Date(time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC)),
 			wantErr: assert.NoError,
 		},
 		{
@@ -241,7 +242,7 @@ func TestGetDateFormValue(t *testing.T) {
 				request: httptest.NewRequest(http.MethodGet, "/test", nil),
 				key:     "key",
 			},
-			want: models.Date(time.Time{}),
+			want: utilmodels.Date(time.Time{}),
 			wantErr: func(t assert.TestingT, err error, msgAndArgs ...interface{}) bool {
 				return assert.Equal(t, ErrKeyIsMissed, err, msgAndArgs...)
 			},
@@ -252,7 +253,7 @@ func TestGetDateFormValue(t *testing.T) {
 				request: httptest.NewRequest(http.MethodGet, "/test?key=value", nil),
 				key:     "key",
 			},
-			want:    models.Date(time.Time{}),
+			want:    utilmodels.Date(time.Time{}),
 			wantErr: assert.Error,
 		},
 	}

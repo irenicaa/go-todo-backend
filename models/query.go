@@ -1,9 +1,11 @@
 package models
 
+import utilmodels "github.com/irenicaa/go-http-utils/models"
+
 // Query ...
 type Query struct {
-	MinimalDate   Date
-	MaximalDate   Date
+	MinimalDate   utilmodels.Date
+	MaximalDate   utilmodels.Date
 	TitleFragment string
 	Pagination    Pagination
 }

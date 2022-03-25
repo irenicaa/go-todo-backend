@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	utilmodels "github.com/irenicaa/go-http-utils/models"
 	httputils "github.com/irenicaa/go-todo-backend/http-utils"
 	"github.com/irenicaa/go-todo-backend/models"
 	"github.com/stretchr/testify/assert"
@@ -42,7 +43,7 @@ func TestRouter_ServeHTTP(t *testing.T) {
 					presentationTodos := []models.PresentationTodoRecord{
 						{
 							URL: "http://example.com/api/v1/todos/5",
-							Date: models.Date(time.Date(
+							Date: utilmodels.Date(time.Date(
 								2006, time.January, 2,
 								0, 0, 0, 0,
 								time.UTC,
@@ -53,7 +54,7 @@ func TestRouter_ServeHTTP(t *testing.T) {
 						},
 						{
 							URL: "http://example.com/api/v1/todos/23",
-							Date: models.Date(time.Date(
+							Date: utilmodels.Date(time.Date(
 								2006, time.January, 3,
 								0, 0, 0, 0,
 								time.UTC,
@@ -113,7 +114,7 @@ func TestRouter_ServeHTTP(t *testing.T) {
 					presentationTodos := []models.PresentationTodoRecord{
 						{
 							URL: "http://example.com/api/v1/todos/5",
-							Date: models.Date(time.Date(
+							Date: utilmodels.Date(time.Date(
 								2006, time.January, 2,
 								0, 0, 0, 0,
 								time.UTC,
@@ -124,7 +125,7 @@ func TestRouter_ServeHTTP(t *testing.T) {
 						},
 						{
 							URL: "http://example.com/api/v1/todos/23",
-							Date: models.Date(time.Date(
+							Date: utilmodels.Date(time.Date(
 								2006, time.January, 2,
 								0, 0, 0, 0,
 								time.UTC,
@@ -138,12 +139,12 @@ func TestRouter_ServeHTTP(t *testing.T) {
 					useCase := &MockTodoRecordUseCase{}
 					useCase.InnerMock.
 						On("GetAll", baseURL, models.Query{
-							MinimalDate: models.Date(time.Date(
+							MinimalDate: utilmodels.Date(time.Date(
 								2006, time.January, 2,
 								0, 0, 0, 0,
 								time.UTC,
 							)),
-							MaximalDate: models.Date(time.Date(
+							MaximalDate: utilmodels.Date(time.Date(
 								2006, time.January, 2,
 								0, 0, 0, 0,
 								time.UTC,
@@ -194,7 +195,7 @@ func TestRouter_ServeHTTP(t *testing.T) {
 					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
 					presentationTodo := models.PresentationTodoRecord{
 						URL: "http://example.com/api/v1/todos/12",
-						Date: models.Date(time.Date(
+						Date: utilmodels.Date(time.Date(
 							2006, time.January, 2,
 							0, 0, 0, 0,
 							time.UTC,
@@ -246,7 +247,7 @@ func TestRouter_ServeHTTP(t *testing.T) {
 				UseCase: func() TodoRecordUseCase {
 					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
 					presentationTodoIn := models.PresentationTodoRecord{
-						Date: models.Date(time.Date(
+						Date: utilmodels.Date(time.Date(
 							2006, time.January, 2,
 							0, 0, 0, 0,
 							time.UTC,
@@ -257,7 +258,7 @@ func TestRouter_ServeHTTP(t *testing.T) {
 					}
 					presentationTodoOut := models.PresentationTodoRecord{
 						URL: "http://example.com/api/v1/todos/12",
-						Date: models.Date(time.Date(
+						Date: utilmodels.Date(time.Date(
 							2006, time.January, 2,
 							0, 0, 0, 0,
 							time.UTC,
@@ -314,7 +315,7 @@ func TestRouter_ServeHTTP(t *testing.T) {
 				UseCase: func() TodoRecordUseCase {
 					baseURL := &url.URL{Scheme: "http", Host: "example.com"}
 					presentationTodoIn := models.PresentationTodoRecord{
-						Date: models.Date(time.Date(
+						Date: utilmodels.Date(time.Date(
 							2006, time.January, 2,
 							0, 0, 0, 0,
 							time.UTC,
@@ -325,7 +326,7 @@ func TestRouter_ServeHTTP(t *testing.T) {
 					}
 					presentationTodoOut := models.PresentationTodoRecord{
 						URL: "http://example.com/api/v1/todos/12",
-						Date: models.Date(time.Date(
+						Date: utilmodels.Date(time.Date(
 							2006, time.January, 2,
 							0, 0, 0, 0,
 							time.UTC,
@@ -385,7 +386,7 @@ func TestRouter_ServeHTTP(t *testing.T) {
 					todoPatch := models.TodoRecordPatch{Title: &todoPatchTitle}
 					presentationTodo := models.PresentationTodoRecord{
 						URL: "http://example.com/api/v1/todos/12",
-						Date: models.Date(time.Date(
+						Date: utilmodels.Date(time.Date(
 							2006, time.January, 2,
 							0, 0, 0, 0,
 							time.UTC,

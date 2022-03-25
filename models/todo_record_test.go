@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	utilmodels "github.com/irenicaa/go-http-utils/models"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -22,7 +23,7 @@ func TestNewTodoRecord(t *testing.T) {
 			args: args{
 				presentationTodo: PresentationTodoRecord{
 					URL:       "https://example.com/api/v1/todos/23",
-					Date:      Date(time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC)),
+					Date:      utilmodels.Date(time.Date(2006, time.January, 2, 0, 0, 0, 0, time.UTC)),
 					Title:     "test",
 					Completed: true,
 					Order:     42,
@@ -74,8 +75,8 @@ func TestTodoRecord_Patch(t *testing.T) {
 			},
 			args: args{
 				patch: TodoRecordPatch{
-					Date: func() *Date {
-						date := Date(time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC))
+					Date: func() *utilmodels.Date {
+						date := utilmodels.Date(time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC))
 						return &date
 					}(),
 					Title: func() *string {
@@ -145,8 +146,8 @@ func TestTodoRecord_Patch(t *testing.T) {
 			},
 			args: args{
 				patch: TodoRecordPatch{
-					Date: func() *Date {
-						date := Date(time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC))
+					Date: func() *utilmodels.Date {
+						date := utilmodels.Date(time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC))
 						return &date
 					}(),
 					Title: nil,
@@ -179,8 +180,8 @@ func TestTodoRecord_Patch(t *testing.T) {
 			},
 			args: args{
 				patch: TodoRecordPatch{
-					Date: func() *Date {
-						date := Date(time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC))
+					Date: func() *utilmodels.Date {
+						date := utilmodels.Date(time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC))
 						return &date
 					}(),
 					Title: func() *string {
@@ -213,8 +214,8 @@ func TestTodoRecord_Patch(t *testing.T) {
 			},
 			args: args{
 				patch: TodoRecordPatch{
-					Date: func() *Date {
-						date := Date(time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC))
+					Date: func() *utilmodels.Date {
+						date := utilmodels.Date(time.Date(2006, time.January, 3, 0, 0, 0, 0, time.UTC))
 						return &date
 					}(),
 					Title: func() *string {

@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	utilmodels "github.com/irenicaa/go-http-utils/models"
 	"github.com/irenicaa/go-todo-backend/models"
 )
 
@@ -27,12 +28,12 @@ func (db TodoRecord) GetAll(query models.Query) ([]models.TodoRecord, error) {
 
 	sql += " WHERE TRUE"
 	var argNumber int
-	if query.MinimalDate != (models.Date{}) {
+	if query.MinimalDate != (utilmodels.Date{}) {
 		argNumber++
 		sql += " AND date >= $" + strconv.Itoa(argNumber)
 		args = append(args, time.Time(query.MinimalDate))
 	}
-	if query.MaximalDate != (models.Date{}) {
+	if query.MaximalDate != (utilmodels.Date{}) {
 		argNumber++
 		sql += " AND date <= $" + strconv.Itoa(argNumber)
 		args = append(args, time.Time(query.MaximalDate))
