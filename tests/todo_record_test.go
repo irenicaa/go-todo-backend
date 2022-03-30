@@ -60,7 +60,7 @@ func TestTodoRecord_withGetting(t *testing.T) {
 	defer response.Body.Close()
 
 	var gotTodos []models.PresentationTodoRecord
-	err = httputils.GetJSONData(response.Body, &gotTodos)
+	err = httputils.ReadJSONData(response.Body, &gotTodos)
 	require.NoError(t, err)
 
 	assert.Equal(t, createdTodos, gotTodos)
@@ -354,7 +354,7 @@ func TestTodoRecord_withQuerying(t *testing.T) {
 			defer response.Body.Close()
 
 			var gotTodos []models.PresentationTodoRecord
-			err = httputils.GetJSONData(response.Body, &gotTodos)
+			err = httputils.ReadJSONData(response.Body, &gotTodos)
 			require.NoError(t, err)
 			for index := range gotTodos {
 				gotTodos[index].URL = ""
@@ -559,7 +559,7 @@ func unmarshalTodoRecord(reader io.ReadCloser) (
 	defer reader.Close()
 
 	var todo models.PresentationTodoRecord
-	if err := httputils.GetJSONData(reader, &todo); err != nil {
+	if err := httputils.ReadJSONData(reader, &todo); err != nil {
 		return models.PresentationTodoRecord{}, err
 	}
 
