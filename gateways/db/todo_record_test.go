@@ -11,7 +11,7 @@ import (
 	"time"
 
 	utilmodels "github.com/irenicaa/go-http-utils/models"
-	"github.com/irenicaa/go-todo-backend/models"
+	"github.com/irenicaa/go-todo-backend/v2/models"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

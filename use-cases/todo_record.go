@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/irenicaa/go-todo-backend/models"
+	"github.com/irenicaa/go-todo-backend/v2/models"
 )
 
 // TodoRecordStorage ...

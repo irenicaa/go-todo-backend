@@ -1,7 +1,7 @@
 package usecases
 
 import (
-	"github.com/irenicaa/go-todo-backend/models"
+	"github.com/irenicaa/go-todo-backend/v2/models"
 	"github.com/stretchr/testify/mock"
 )
 

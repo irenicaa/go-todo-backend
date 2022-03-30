@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"github.com/irenicaa/go-http-utils/middlewares"
-	"github.com/irenicaa/go-todo-backend/gateways/db"
-	"github.com/irenicaa/go-todo-backend/gateways/handlers"
-	usecases "github.com/irenicaa/go-todo-backend/use-cases"
+	"github.com/irenicaa/go-todo-backend/v2/gateways/db"
+	"github.com/irenicaa/go-todo-backend/v2/gateways/handlers"
+	usecases "github.com/irenicaa/go-todo-backend/v2/use-cases"
 )
 
 func main() {

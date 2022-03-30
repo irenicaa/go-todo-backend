@@ -1,7 +1,7 @@
 # go-todo-backend
 
-[![GoDoc](https://godoc.org/github.com/irenicaa/go-todo-backend?status.svg)](https://godoc.org/github.com/irenicaa/go-todo-backend)
-[![Go Report Card](https://goreportcard.com/badge/github.com/irenicaa/go-todo-backend)](https://goreportcard.com/report/github.com/irenicaa/go-todo-backend)
+[![GoDoc](https://godoc.org/github.com/irenicaa/go-todo-backend/v2?status.svg)](https://godoc.org/github.com/irenicaa/go-todo-backend/v2)
+[![Go Report Card](https://goreportcard.com/badge/github.com/irenicaa/go-todo-backend/v2)](https://goreportcard.com/report/github.com/irenicaa/go-todo-backend/v2)
 [![Build Status](https://app.travis-ci.com/irenicaa/go-todo-backend.svg?branch=master)](https://app.travis-ci.com/irenicaa/go-todo-backend)
 [![codecov](https://codecov.io/gh/irenicaa/go-todo-backend/branch/master/graph/badge.svg)](https://codecov.io/gh/irenicaa/go-todo-backend)
 

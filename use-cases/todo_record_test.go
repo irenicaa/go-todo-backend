@@ -5,7 +5,7 @@ import (
 	"testing"
 	"testing/iotest"
 
-	"github.com/irenicaa/go-todo-backend/models"
+	"github.com/irenicaa/go-todo-backend/v2/models"
 	"github.com/stretchr/testify/assert"
 )
 

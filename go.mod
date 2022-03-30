@@ -1,4 +1,4 @@
-module github.com/irenicaa/go-todo-backend
+module github.com/irenicaa/go-todo-backend/v2
 
 go 1.15
 

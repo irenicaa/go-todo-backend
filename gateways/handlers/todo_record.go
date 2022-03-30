@@ -6,7 +6,7 @@ import (
 	"net/url"
 
 	httputils "github.com/irenicaa/go-http-utils"
-	"github.com/irenicaa/go-todo-backend/models"
+	"github.com/irenicaa/go-todo-backend/v2/models"
 )
 
 // TodoRecordUseCase ...
