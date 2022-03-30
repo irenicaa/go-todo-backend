@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	httputils "github.com/irenicaa/go-todo-backend/http-utils"
+	httputils "github.com/irenicaa/go-http-utils"
 )
 
 // Router ...

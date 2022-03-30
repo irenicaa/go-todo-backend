@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"net/url"
 
-	httputils "github.com/irenicaa/go-todo-backend/http-utils"
+	httputils "github.com/irenicaa/go-http-utils"
 	"github.com/irenicaa/go-todo-backend/models"
 )
 
@@ -216,7 +216,7 @@ func (handler TodoRecord) Create(
 	request *http.Request,
 ) {
 	var presentationTodo models.PresentationTodoRecord
-	if err := httputils.GetJSONData(request.Body, &presentationTodo); err != nil {
+	if err := httputils.ReadJSONData(request.Body, &presentationTodo); err != nil {
 		status, message := http.StatusBadRequest, "unable to get the request body: %s"
 		httputils.HandleError(writer, handler.Logger, status, message, err)
 
@@ -258,7 +258,7 @@ func (handler TodoRecord) Update(
 	}
 
 	var presentationTodo models.PresentationTodoRecord
-	if err := httputils.GetJSONData(request.Body, &presentationTodo); err != nil {
+	if err := httputils.ReadJSONData(request.Body, &presentationTodo); err != nil {
 		status, message := http.StatusBadRequest, "unable to get the request body: %s"
 		httputils.HandleError(writer, handler.Logger, status, message, err)
 
@@ -300,7 +300,7 @@ func (handler TodoRecord) Patch(
 	}
 
 	var todoPatch models.TodoRecordPatch
-	if err := httputils.GetJSONData(request.Body, &todoPatch); err != nil {
+	if err := httputils.ReadJSONData(request.Body, &todoPatch); err != nil {
 		status, message := http.StatusBadRequest, "unable to get the request body: %s"
 		httputils.HandleError(writer, handler.Logger, status, message, err)
 

@@ -7,9 +7,9 @@ import (
 	"os"
 	"time"
 
+	"github.com/irenicaa/go-http-utils/middlewares"
 	"github.com/irenicaa/go-todo-backend/gateways/db"
 	"github.com/irenicaa/go-todo-backend/gateways/handlers"
-	httputils "github.com/irenicaa/go-todo-backend/http-utils"
 	usecases "github.com/irenicaa/go-todo-backend/use-cases"
 )
 
@@ -30,8 +30,8 @@ func main() {
 		logger.Fatal(err)
 	}
 
-	handler := httputils.LoggingMiddleware(
-		httputils.CORSMiddleware(handlers.Router{
+	handler := middlewares.LoggingMiddleware(
+		middlewares.CORSMiddleware(handlers.Router{
 			BaseURL: "/api/v1",
 			TodoRecord: handlers.TodoRecord{
 				URLScheme: "http",

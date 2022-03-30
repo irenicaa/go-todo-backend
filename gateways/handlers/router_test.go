@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
+	httputils "github.com/irenicaa/go-http-utils"
 	utilmodels "github.com/irenicaa/go-http-utils/models"
-	httputils "github.com/irenicaa/go-todo-backend/http-utils"
 	"github.com/irenicaa/go-todo-backend/models"
 	"github.com/stretchr/testify/assert"
 )
